@@ -1,0 +1,12 @@
+{
+  "name": "pourmind-ai",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@11.9.0",
+  "scripts": {
+    "dev:web": "pnpm --filter pourmind-web dev",
+    "lint:web": "pnpm --filter pourmind-web lint",
+    "build:web": "pnpm --filter pourmind-web build",
+    "test:e2e": "pnpm --filter pourmind-web exec playwright test"
+  }
+}

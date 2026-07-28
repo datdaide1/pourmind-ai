@@ -1,6 +1,6 @@
 # PourMind AI
 
-PourMind AI is an agentic cocktail platform designed for consumers and food-and-beverage teams. It combines specialized agents, structured knowledge retrieval, deterministic beverage calculations, and a streaming web interface in one product workspace.
+PourMind AI is the intelligence layer for modern mixology. It brings consumer discovery, professional beverage operations, and machine-assisted decision-making into one agentic product platform.
 
 [![CI](https://github.com/datdaide1/pourmind-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/datdaide1/pourmind-ai/actions/workflows/ci.yml)
 [![Product](https://img.shields.io/badge/Product-Agentic_AI-5B4B8A)](#product-scope)
@@ -13,17 +13,56 @@ PourMind AI is an agentic cocktail platform designed for consumers and food-and-
 [![License](https://img.shields.io/badge/License-Proprietary-4A5568)](LICENSE)
 [![Status](https://img.shields.io/badge/Status-Active_Prototype-2F855A)](#project-status)
 
-> The consumer experience helps people discover suitable drinks and understand recommendations. The professional experience supports recipe development, ingredient substitution, cost analysis, ABV calculation, and menu planning.
+> Cocktail software has traditionally been split between static recipe libraries for consumers and disconnected operational tools for professionals. PourMind AI replaces that divide with a shared agent platform that understands intent, retrieves domain knowledge, performs reliable calculations, and returns an interface appropriate to the decision being made.
+
+## Product thesis
+
+A cocktail recommendation is rarely just a search query. The useful answer depends on taste, available ingredients, dietary constraints, occasion, technique, budget, inventory, alcohol content, and commercial context. PourMind AI treats these factors as parts of one decision system rather than isolated filters.
+
+For consumers, the product acts as a personal mixologist: it translates subjective preferences into recommendations that are specific, explainable, and practical. For hospitality teams, it acts as a bar intelligence copilot: it helps turn creative ideas into recipes and menu decisions that can be evaluated against cost, ABV, ingredient availability, and operational constraints.
+
+The long-term opportunity is broader than cocktail discovery. PourMind AI is designed as an operating layer for beverage intelligence, connecting guest intent with the knowledge and economics behind every pour.
 
 ## Product scope
 
 | Experience | Primary users | Supported workflows |
 | --- | --- | --- |
-| Personal Mixologist | Home users and cocktail enthusiasts | Preference discovery, cocktail recommendations, explanations, and practical substitutions |
-| Bar Intelligence Copilot | Bartenders, bar managers, and F&B teams | Recipe exploration, ingredient decisions, cost and ABV calculation, and menu analysis |
-| Shared agent platform | Both experiences | Intent routing, semantic retrieval, deterministic tools, streamed responses, and structured UI output |
+| Personal Mixologist | Home users and cocktail enthusiasts | Converts taste, mood, occasion, ingredients, and constraints into explainable recommendations and practical next steps |
+| Bar Intelligence Copilot | Bartenders, bar managers, and F&B teams | Accelerates recipe development, substitution decisions, cost control, ABV analysis, and menu exploration |
+| Shared agent platform | Product and operational workflows | Coordinates intent routing, semantic retrieval, deterministic tools, streamed responses, and structured UI output |
 
 Recommendations are grounded in a structured cocktail knowledge base. Calculations such as recipe cost and alcohol by volume are handled by deterministic tools rather than generated estimates.
+
+## Why PourMind AI
+
+### One platform, two commercial surfaces
+
+The B2C experience creates a direct relationship with drinkers through discovery and personalization. The B2B experience converts the same intelligence foundation into professional workflows for bars, restaurants, hotels, beverage brands, and hospitality operators. A shared platform allows knowledge, tooling, and product learning to compound across both surfaces.
+
+### Agentic execution, not a chat wrapper
+
+The system does not send every prompt to one general-purpose model and hope for a plausible answer. It routes requests to specialized workflows, retrieves relevant domain context, invokes deterministic tools when precision matters, and returns typed interface components that the application can render safely.
+
+### Domain knowledge with operational consequences
+
+Recipes are connected to ingredients, substitutions, serving context, price data, and beverage calculations. This makes PourMind AI useful beyond inspiration: the platform is structured to support decisions that affect what a guest orders, what a bartender builds, and what an operator can profitably place on a menu.
+
+### Designed to become infrastructure
+
+The repository separates the agent API, web experience, knowledge pipeline, and deterministic tools so each layer can evolve independently. This creates a foundation for future integrations with inventory systems, menu platforms, point-of-sale data, supplier catalogs, and venue-specific operating rules.
+
+## How the agent works
+
+```text
+User intent
+    -> Intent router
+    -> Consumer or professional workflow
+    -> Knowledge retrieval and deterministic tools
+    -> Response synthesis
+    -> Streamed text and typed UI blocks
+```
+
+This division keeps language generation focused on understanding and explanation while delegating retrieval and numerical work to components that can be inspected and tested.
 
 ## Current capabilities
 
@@ -141,7 +180,9 @@ Use [.env.example](.env.example) as the configuration contract. Runtime credenti
 
 ## Project status
 
-PourMind AI is an active product prototype. The agent architecture, knowledge pipeline, streaming interface, and core tools are implemented. Authentication, restricted production CORS, deployment hardening, and production observability remain in progress.
+PourMind AI is an active product prototype with an implemented agent architecture, knowledge pipeline, streaming interface, semantic retrieval layer, and deterministic cost, ABV, and substitution tools.
+
+The current repository demonstrates the core product loop and technical foundation. Authentication, restricted production CORS, deployment hardening, production observability, live commercial integrations, and venue-specific operating profiles remain in progress. No production adoption or commercial performance claims are implied by this prototype.
 
 ## License
 

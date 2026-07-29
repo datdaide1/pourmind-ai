@@ -51,7 +51,13 @@ export default function ChatRoom() {
     
     const fetchHistory = async () => {
       try {
-        const response = await fetch(`/api/v1/chat/history?session_id=${sessionId}`);
+        const sessionToken = sessionStorage.getItem(`pourmind:session:${sessionId}`);
+        if (!sessionToken) {
+          throw new Error('Missing session credentials');
+        }
+        const response = await fetch(`/api/v1/chat/history?session_id=${sessionId}`, {
+          headers: { 'X-Session-Token': sessionToken },
+        });
         if (!response.ok) throw new Error('Failed to fetch history');
         const data = await response.json();
         
@@ -86,6 +92,11 @@ export default function ChatRoom() {
     if (!text.trim() || isStreaming) return;
     
     setError(null);
+    const sessionToken = sessionStorage.getItem(`pourmind:session:${sessionId}`);
+    if (!sessionToken) {
+      setError('Phiên đăng nhập không hợp lệ. Vui lòng bắt đầu phiên mới.');
+      return;
+    }
     setIsStreaming(true);
 
     const userMessageId = crypto.randomUUID();
@@ -129,7 +140,8 @@ export default function ChatRoom() {
           abortControllerRef.current = null;
         }
       },
-      abortControllerRef.current.signal
+      abortControllerRef.current.signal,
+      sessionToken
     );
   };
 
@@ -170,7 +182,15 @@ export default function ChatRoom() {
         {/* Simple reset button */}
         <button 
           onClick={() => {
-            fetch(`/api/v1/chat/${sessionId}`, { method: 'DELETE' }).then(() => router.push('/'));
+            const sessionToken = sessionStorage.getItem(`pourmind:session:${sessionId}`);
+            if (!sessionToken) return;
+            fetch(`/api/v1/chat/${sessionId}`, {
+              method: 'DELETE',
+              headers: { 'X-Session-Token': sessionToken },
+            }).then(() => {
+              sessionStorage.removeItem(`pourmind:session:${sessionId}`);
+              router.push('/');
+            });
           }}
           className="p-2 hover:bg-bg-surface rounded-full transition-colors text-red-400"
           title="Xóa phiên"

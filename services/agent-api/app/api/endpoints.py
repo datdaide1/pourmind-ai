@@ -1,8 +1,8 @@
 import uuid
 import json
 import logging
-from typing import List, Dict, Any, Optional
-from fastapi import APIRouter, HTTPException, Depends
+from typing import Annotated, List, Dict, Any, Optional
+from fastapi import APIRouter, Header, HTTPException, Query
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 from sqlalchemy.future import select
@@ -12,11 +12,15 @@ from sqlalchemy import update
 from app.db.postgres import AsyncSessionLocal
 from app.db.models import Conversation, Message, User
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.dialects.postgresql import insert
 from app.agents.graph import graph
 from app.agents.state import AgentState
 from app.tools.cost_abv_calculator import calculate_cost_and_abv
 from app.tools.qdrant_retriever import get_relevant_cocktails, get_relevant_venues
+from app.core.session_auth import create_session_token, require_session_token
 from langchain_core.messages import HumanMessage, AIMessage, ToolMessage
+from app.core.config import settings
+from app.core.request_controls import chat_request_controls
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +43,7 @@ def parse_uuid(val: Any) -> Optional[uuid.UUID]:
 # Pydantic Schemas for Payloads
 class SessionInitPayload(BaseModel):
     user_id: Optional[str] = None
-    guest_session_id: str = Field(..., max_length=255)
+    guest_session_id: str = Field(..., min_length=1, max_length=255)
     mode: str = "guest"  # "guest" or "bartender"
 
 class LocationContext(BaseModel):
@@ -50,16 +54,16 @@ class ChatContext(BaseModel):
     current_location: Optional[LocationContext] = None
 
 class ChatMessagePayload(BaseModel):
-    session_id: str
-    content: str
+    session_id: str = Field(..., min_length=1, max_length=255)
+    content: str = Field(..., min_length=1, max_length=settings.MAX_CHAT_MESSAGE_CHARS)
     context: Optional[ChatContext] = None
 
 class RecipeIngredient(BaseModel):
-    ingredient: str
+    ingredient: str = Field(..., min_length=1, max_length=255)
     amount_ml: float = Field(..., gt=0)
 
 class CalculateCostPayload(BaseModel):
-    recipe: List[RecipeIngredient]
+    recipe: List[RecipeIngredient] = Field(..., max_length=50)
 
 class MigrateSessionPayload(BaseModel):
     guest_session_id: str
@@ -67,41 +71,52 @@ class MigrateSessionPayload(BaseModel):
 
 # Endpoints
 @router.post("/session/init")
-async def session_init(payload: SessionInitPayload):
+async def session_init(
+    payload: SessionInitPayload,
+    x_session_token: Annotated[str | None, Header()] = None,
+):
     parsed_user_id = parse_uuid(payload.user_id)
     
+    if payload.user_id is not None and parsed_user_id is None:
+        raise HTTPException(status_code=400, detail="Invalid user_id format")
     async with AsyncSessionLocal() as db_session:
         if parsed_user_id is not None:
-            user_stmt = select(User).where(User.id == parsed_user_id)
+            user_stmt = select(User).where(
+                User.id == parsed_user_id,
+                User.guest_session_id == payload.guest_session_id,
+            )
             user_result = await db_session.execute(user_stmt)
             user_exists = user_result.scalar_one_or_none()
             if not user_exists:
-                raise HTTPException(status_code=400, detail="User does not exist")
+                raise HTTPException(
+                    status_code=403,
+                    detail="User is not authorized for this guest session",
+                )
 
         try:
-            stmt = select(Conversation).where(
-                Conversation.session_id == payload.guest_session_id,
-                Conversation.is_deleted == False
-            )
-            result = await db_session.execute(stmt)
-            conv = result.scalar_one_or_none()
-            
-            if not conv:
-                conv = Conversation(
-                    session_id=payload.guest_session_id,
-                    user_id=parsed_user_id,
-                    title="Guest Chat" if payload.mode == "guest" else "Bartender Chat",
-                    metadata_={"mode": payload.mode}
-                )
-                db_session.add(conv)
-                await db_session.commit()
+            create_stmt = insert(Conversation).values(
+                id=uuid.uuid4(), session_id=payload.guest_session_id,
+                user_id=parsed_user_id,
+                title="Guest Chat" if payload.mode == "guest" else "Bartender Chat",
+                metadata_={"mode": payload.mode},
+            ).on_conflict_do_nothing(
+                index_elements=[Conversation.session_id]
+            ).returning(Conversation.id)
+            created_id = (await db_session.execute(create_stmt)).scalar_one_or_none()
+            await db_session.commit()
+            conv = (await db_session.execute(select(Conversation).where(
+                Conversation.session_id == payload.guest_session_id
+            ))).scalar_one()
+
+            if created_id is not None:
                 logger.info(f"Created new conversation for guest_session_id: {payload.guest_session_id}")
             else:
-                # Update user_id if it was null and a valid user_id is provided now
+                require_session_token(payload.guest_session_id, x_session_token)
+                conv.is_deleted = False
                 if conv.user_id is None and parsed_user_id is not None:
                     conv.user_id = parsed_user_id
-                    await db_session.commit()
                     logger.info(f"Updated conversation user_id to: {parsed_user_id}")
+                await db_session.commit()
         except SQLAlchemyError as e:
             await db_session.rollback()
             logger.error(f"Database error during session init: {e}")
@@ -136,42 +151,46 @@ async def session_init(payload: SessionInitPayload):
 
     return {
         "session_id": payload.guest_session_id,
+        "access_token": create_session_token(payload.guest_session_id),
         "welcome_message": welcome_message,
         "suggested_prompts": suggested_prompts
     }
 
 @router.post("/chat/message")
-async def chat_message(payload: ChatMessagePayload):
-    async def event_generator():
-        # 1. Retrieve history from database
-        async with AsyncSessionLocal() as db_session:
-            stmt = select(Conversation).where(
-                Conversation.session_id == payload.session_id,
-                Conversation.is_deleted == False
-            ).options(selectinload(Conversation.messages))
-            result = await db_session.execute(stmt)
-            db_conv = result.scalar_one_or_none()
-            
-            if not db_conv:
-                # Create a conversation record on the fly if it does not exist
-                db_conv = Conversation(
-                    session_id=payload.session_id,
-                    title="Chat Session"
-                )
-                db_session.add(db_conv)
-                await db_session.flush()
-                conv_id = db_conv.id
-                history_messages = []
-            else:
-                conv_id = db_conv.id
-                db_messages = sorted(db_conv.messages, key=lambda m: m.created_at)
-                history_messages = []
-                for m in db_messages:
-                    if m.role == "user":
-                        history_messages.append(HumanMessage(content=m.content))
-                    elif m.role == "assistant":
-                        history_messages.append(AIMessage(content=m.content))
+async def chat_message(
+    payload: ChatMessagePayload,
+    x_session_token: Annotated[str | None, Header()] = None,
+):
+    require_session_token(payload.session_id, x_session_token)
 
+    async with AsyncSessionLocal() as authorization_session:
+        authorization_result = await authorization_session.execute(
+            select(Conversation.id).where(
+                Conversation.session_id == payload.session_id,
+                Conversation.is_deleted == False,
+            )
+        )
+        if authorization_result.scalar_one_or_none() is None:
+            raise HTTPException(status_code=404, detail="Chat session not found")
+
+    async def _event_generator():
+        # 1. Retrieve only the bounded context window used by the LLM.
+        async with AsyncSessionLocal() as db_session:
+            conv_id = (await db_session.execute(select(Conversation.id).where(
+                Conversation.session_id == payload.session_id,
+                Conversation.is_deleted == False,
+            ))).scalar_one()
+            db_messages = list(reversed((await db_session.execute(
+                select(Message).where(Message.conversation_id == conv_id)
+                .order_by(Message.created_at.desc())
+                .limit(settings.MAX_CHAT_HISTORY_MESSAGES)
+            )).scalars().all()))
+            history_messages = []
+            for m in db_messages:
+                if m.role == "user":
+                    history_messages.append(HumanMessage(content=m.content))
+                elif m.role == "assistant":
+                    history_messages.append(AIMessage(content=m.content))
         # 2. Setup graph state
         new_user_message = HumanMessage(content=payload.content)
         state = AgentState(
@@ -209,8 +228,8 @@ async def chat_message(payload: ChatMessagePayload):
                     if not event.get("parent_ids"):
                         final_state = event["data"].get("output")
         except Exception as e:
-            logger.error(f"Error during LangGraph streaming: {e}")
-            yield f"data: {json.dumps({'error': str(e)})}\n\n"
+            logger.exception("Error during LangGraph streaming")
+            yield f"data: {json.dumps({'error': 'AI service temporarily unavailable'})}\n\n"
             return
 
         final_text = "".join(final_text_accum)
@@ -328,20 +347,9 @@ async def chat_message(payload: ChatMessagePayload):
                 "content": "Recommendations tailored to flavor preferences and top-rated venues."
             })
             
-        # Dynamically generate quick replies based on final text
-        quick_replies = []
-        if final_text and len(final_text) > 20:
-            try:
-                from app.agents.nodes import llm
-                qr_prompt = f"Based on this AI response, suggest 2 very short quick replies (max 6 words each) in Vietnamese for the user to click to continue the conversation. Return ONLY a valid JSON array of strings, e.g. [\"Tư vấn thêm\", \"Giá bao nhiêu\"]. No other text. \n\nAI Response: {final_text[-500:]}"
-                qr_resp = await llm.ainvoke([HumanMessage(content=qr_prompt)])
-                clean_json = qr_resp.content.strip().strip("`").removeprefix("json").strip()
-                quick_replies = json.loads(clean_json)
-                if not isinstance(quick_replies, list):
-                    quick_replies = []
-            except Exception as e:
-                logger.error(f"Failed to generate quick replies: {e}")
-
+        # Static replies avoid an extra paid LLM call on every chat request.
+        quick_replies = (["Calculate another recipe", "Show pricing history"] if intent == "b2b"
+                         else ["Tư vấn thêm", "Xem lựa chọn khác"])
         if quick_replies:
             ui_blocks.append({
                 "type": "quick_replies",
@@ -371,7 +379,18 @@ async def chat_message(payload: ChatMessagePayload):
         except Exception as e:
             logger.error(f"Error persisting messages: {e}")
 
+    control = chat_request_controls.acquire(payload.session_id)
+    await control.__aenter__()
+
+    async def event_generator():
+        try:
+            async for chunk in _event_generator():
+                yield chunk
+        finally:
+            await control.__aexit__(None, None, None)
+
     return StreamingResponse(event_generator(), media_type="text/event-stream")
+
 
 @router.post("/tools/calculate_cost")
 async def calculate_cost_endpoint(payload: CalculateCostPayload):
@@ -389,50 +408,33 @@ async def calculate_cost_endpoint(payload: CalculateCostPayload):
             "total_volume_ml": res["total_volume_ml"],
             "estimated_abv": res["abv"]
         }
-    except Exception as e:
-        logger.error(f"Error calculating recipe cost: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    except Exception:
+        logger.exception("Error calculating recipe cost")
+        raise HTTPException(status_code=500, detail="Cost calculation failed")
 
 @router.get("/chat/conversations")
 async def get_user_conversations(user_id: str):
-    parsed_user_id = parse_uuid(user_id)
-    if not parsed_user_id:
-        return {"conversations": []}
-
-    try:
-        async with AsyncSessionLocal() as db_session:
-            stmt = select(Conversation).where(
-                Conversation.user_id == parsed_user_id,
-                Conversation.is_deleted == False
-            ).order_by(Conversation.created_at.desc())
-            result = await db_session.execute(stmt)
-            conversations = result.scalars().all()
-            
-            return {
-                "conversations": [
-                    {
-                        "session_id": conv.session_id,
-                        "title": conv.title,
-                        "created_at": conv.created_at.isoformat()
-                    }
-                    for conv in conversations
-                ]
-            }
-    except Exception as e:
-        logger.error(f"Error getting user conversations: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    raise HTTPException(
+        status_code=501,
+        detail="Conversation listing requires authenticated user identity",
+    )
 
 @router.get("/chat/history")
-async def get_chat_messages(session_id: str):
+async def get_chat_messages(
+    session_id: str,
+    x_session_token: Annotated[str | None, Header()] = None,
+):
+    require_session_token(session_id, x_session_token)
     # In frontend, we called /api/v1/chat/history?session_id=...
     # Return messages for the session
     try:
         async with AsyncSessionLocal() as db_session:
             stmt = select(Message).join(Conversation).where(
-                Conversation.session_id == session_id
-            ).order_by(Message.created_at.asc())
+                Conversation.session_id == session_id,
+                Conversation.is_deleted == False,
+            ).order_by(Message.created_at.desc()).limit(settings.MAX_CHAT_HISTORY_MESSAGES)
             result = await db_session.execute(stmt)
-            messages = result.scalars().all()
+            messages = list(reversed(result.scalars().all()))
             
             return {
                 "messages": [
@@ -446,12 +448,16 @@ async def get_chat_messages(session_id: str):
                     for msg in messages
                 ]
             }
-    except Exception as e:
-        logger.error(f"Error getting chat messages: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    except Exception:
+        logger.exception("Error getting chat messages")
+        raise HTTPException(status_code=500, detail="Unable to load chat history")
 
 @router.delete("/chat/{session_id}")
-async def delete_chat_session(session_id: str):
+async def delete_chat_session(
+    session_id: str,
+    x_session_token: Annotated[str | None, Header()] = None,
+):
+    require_session_token(session_id, x_session_token)
     try:
         async with AsyncSessionLocal() as db_session:
             stmt = update(Conversation).where(
@@ -465,12 +471,15 @@ async def delete_chat_session(session_id: str):
                 "success": True,
                 "message": "Chat deleted"
             }
-    except Exception as e:
-        logger.error(f"Error deleting chat session {session_id}: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    except Exception:
+        logger.exception("Error deleting chat session %s", session_id)
+        raise HTTPException(status_code=500, detail="Unable to delete chat session")
 
 @router.get("/search")
-async def search_items(query: str = "", type: str = "cocktail", limit: int = 10):
+async def search_items(
+    query: str = Query("", max_length=500), type: str = "cocktail",
+    limit: int = Query(10, ge=1, le=settings.SEARCH_MAX_LIMIT),
+):
     from app.tools.qdrant_retriever import get_relevant_cocktails, get_relevant_venues
     try:
         if type == "cocktail":
@@ -480,26 +489,39 @@ async def search_items(query: str = "", type: str = "cocktail", limit: int = 10)
         else:
             raise HTTPException(status_code=400, detail="Invalid type. Must be 'cocktail' or 'venue'")
         return {"results": results}
-    except Exception as e:
-        logger.error(f"Search API Error: {e}")
+    except HTTPException:
+        raise
+    except Exception:
+        logger.exception("Search API error")
         raise HTTPException(status_code=500, detail="Internal server error during search")
 
 @router.post("/session/migrate")
-async def session_migrate(payload: MigrateSessionPayload):
+async def session_migrate(
+    payload: MigrateSessionPayload,
+    x_session_token: Annotated[str | None, Header()] = None,
+):
+    require_session_token(payload.guest_session_id, x_session_token)
     parsed_user_id = parse_uuid(payload.user_id)
     if not parsed_user_id:
         raise HTTPException(status_code=400, detail="Invalid user_id format")
 
     async with AsyncSessionLocal() as db_session:
-        user_stmt = select(User).where(User.id == parsed_user_id)
+        user_stmt = select(User).where(
+            User.id == parsed_user_id,
+            User.guest_session_id == payload.guest_session_id,
+        )
         user_result = await db_session.execute(user_stmt)
         user_exists = user_result.scalar_one_or_none()
         if not user_exists:
-            raise HTTPException(status_code=400, detail="User does not exist")
+            raise HTTPException(
+                status_code=403,
+                detail="User is not authorized for this guest session",
+            )
 
         try:
             stmt = update(Conversation).where(
-                Conversation.session_id == payload.guest_session_id
+                Conversation.session_id == payload.guest_session_id,
+                Conversation.user_id.is_(None),
             ).values(user_id=parsed_user_id)
             await db_session.execute(stmt)
             await db_session.commit()

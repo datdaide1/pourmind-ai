@@ -34,10 +34,14 @@ export default function LandingPage() {
       const data = await response.json();
       
       // Navigate to chat room with the returned session_id
-      if (data.session_id) {
+      if (data.session_id && data.access_token) {
+        sessionStorage.setItem(
+          `pourmind:session:${data.session_id}`,
+          data.access_token
+        );
         router.push(`/chat/${data.session_id}`);
       } else {
-        throw new Error('No session ID returned');
+        throw new Error('No session credentials returned');
       }
     } catch (err) {
       console.error(err);

@@ -1,3 +1,4 @@
+import os
 import pytest
 import asyncio
 
@@ -63,6 +64,20 @@ def event_loop():
     loop = policy.new_event_loop()
     yield loop
     loop.close()
+
+DB_TEST_MODULES = {
+    "test_adversarial_endpoints.py", "test_endpoints.py", "test_migration.py",
+    "test_migration_stress.py", "test_telemetry.py",
+}
+
+def pytest_collection_modifyitems(config, items):
+    """Keep local tests away from configured external DBs; CI opts into isolated Postgres."""
+    if os.environ.get("RUN_DB_TESTS") == "1":
+        return
+    skip_db = pytest.mark.skip(reason="requires isolated PostgreSQL; set RUN_DB_TESTS=1")
+    for item in items:
+        if item.path.name in DB_TEST_MODULES:
+            item.add_marker(skip_db)
 
 @pytest.fixture(scope="session")
 def asyncio_default_test_loop_scope():

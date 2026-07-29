@@ -39,45 +39,22 @@ def mock_external_calls():
 
 @pytest.mark.asyncio
 async def test_session_init_invalid_uuid_format():
-    """Verify that an invalid UUID format in user_id is handled gracefully and parsed to None (returns 200)."""
-    session_id = f"test-adv-{uuid.uuid4()}"
     async with get_client() as client:
-        response = await client.post(
-            "/api/v1/session/init",
-            json={
-                "guest_session_id": session_id,
-                "user_id": "not-a-uuid-string",
-                "mode": "guest"
-            }
-        )
-    assert response.status_code == 200
-    data = response.json()
-    assert data["session_id"] == session_id
-    
-    # Verify created in DB with user_id = None
-    async with AsyncSessionLocal() as session:
-        conv = (await session.execute(
-            select(Conversation).where(Conversation.session_id == session_id)
-        )).scalar_one_or_none()
-        assert conv is not None
-        assert conv.user_id is None
+        response = await client.post("/api/v1/session/init", json={
+            "guest_session_id": f"test-adv-{uuid.uuid4()}",
+            "user_id": "not-a-uuid-string", "mode": "guest",
+        })
+    assert response.status_code == 400
+    assert response.json()["detail"] == "Invalid user_id format"
 
 @pytest.mark.asyncio
 async def test_session_init_non_existent_uuid():
-    """Verify that a valid UUID format but non-existent user_id returns HTTP 400."""
-    session_id = f"test-adv-{uuid.uuid4()}"
-    non_existent_user_id = str(uuid.uuid4())
     async with get_client() as client:
-        response = await client.post(
-            "/api/v1/session/init",
-            json={
-                "guest_session_id": session_id,
-                "user_id": non_existent_user_id,
-                "mode": "guest"
-            }
-        )
-    assert response.status_code == 400
-    assert response.json()["detail"] == "User does not exist"
+        response = await client.post("/api/v1/session/init", json={
+            "guest_session_id": f"test-adv-{uuid.uuid4()}",
+            "user_id": str(uuid.uuid4()), "mode": "guest",
+        })
+    assert response.status_code == 403
 
 @pytest.mark.asyncio
 async def test_session_init_missing_session_id():
@@ -93,18 +70,9 @@ async def test_session_init_missing_session_id():
 
 @pytest.mark.asyncio
 async def test_session_init_empty_session_id():
-    """Verify that an empty string for guest_session_id is accepted by Pydantic but inserted into DB."""
     async with get_client() as client:
-        response = await client.post(
-            "/api/v1/session/init",
-            json={
-                "guest_session_id": "",
-                "mode": "guest"
-            }
-        )
-    assert response.status_code == 200
-    data = response.json()
-    assert data["session_id"] == ""
+        response = await client.post("/api/v1/session/init", json={"guest_session_id": "", "mode": "guest"})
+    assert response.status_code == 400
 
 @pytest.mark.asyncio
 async def test_session_init_extreme_session_id():
@@ -146,80 +114,17 @@ async def test_chat_message_missing_session_id():
 
 @pytest.mark.asyncio
 async def test_chat_message_empty_content():
-    """Verify that empty content in chat message is processed but might yield a default or error message."""
-    session_id = f"test-chat-adv-{uuid.uuid4()}"
-    
-    mock_events = [
-        {"event": "on_chat_model_stream", "data": {"chunk": MagicMock(content="I'm sorry, I could not generate a response.")}},
-        {
-            "event": "on_chain_end",
-            "parent_ids": [],
-            "data": {
-                "output": {
-                    "intent": "b2c",
-                    "messages": [
-                        HumanMessage(content=""),
-                        AIMessage(content="I'm sorry, I could not generate a response.")
-                    ]
-                }
-            }
-        }
-    ]
-    
-    async def mock_generator(*args, **kwargs):
-        for ev in mock_events:
-            yield ev
-            
-    with patch("app.api.endpoints.graph.astream_events", side_effect=mock_generator):
-        async with get_client() as client:
-            response = await client.post(
-                "/api/v1/chat/message",
-                json={
-                    "session_id": session_id,
-                    "content": ""
-                }
-            )
-        assert response.status_code == 200
-        assert "I'm sorry" in response.text
+    async with get_client() as client:
+        response = await client.post("/api/v1/chat/message", json={"session_id": "s", "content": ""})
+    assert response.status_code == 400
 
 @pytest.mark.asyncio
 async def test_chat_message_extreme_content():
-    """Verify that extremely long content in chat message is parsed and handles database insertion."""
-    session_id = f"test-chat-adv-{uuid.uuid4()}"
-    long_content = "Please recommend " + ("a" * 10000)
-    
-    mock_events = [
-        {"event": "on_chat_model_stream", "data": {"chunk": MagicMock(content="Here is a cocktail recommendation.")}},
-        {
-            "event": "on_chain_end",
-            "parent_ids": [],
-            "data": {
-                "output": {
-                    "intent": "b2c",
-                    "messages": [
-                        HumanMessage(content=long_content),
-                        AIMessage(content="Here is a cocktail recommendation.")
-                    ]
-                }
-            }
-        }
-    ]
-    
-    async def mock_generator(*args, **kwargs):
-        for ev in mock_events:
-            yield ev
-            
-    with patch("app.api.endpoints.graph.astream_events", side_effect=mock_generator):
-        async with get_client() as client:
-            response = await client.post(
-                "/api/v1/chat/message",
-                json={
-                    "session_id": session_id,
-                    "content": long_content
-                }
-            )
-        assert response.status_code == 200
-        assert "Here is a cocktail" in response.text
+    async with get_client() as client:
+        response = await client.post("/api/v1/chat/message", json={
+            "session_id": "s", "content": "x" * 10000,
+        })
+    assert response.status_code == 400
 
 @pytest.mark.asyncio
 async def test_chat_message_invalid_method():
@@ -311,12 +216,9 @@ async def test_calculate_cost_invalid_method():
 
 @pytest.mark.asyncio
 async def test_chat_history_invalid_uuid():
-    """Verify that invalid UUID string in user_id query parameter returns empty list gracefully instead of raising error."""
     async with get_client() as client:
         response = await client.get("/api/v1/chat/history?user_id=invalid-uuid-string")
-    assert response.status_code == 200
-    data = response.json()
-    assert data["conversations"] == []
+    assert response.status_code == 422
 
 @pytest.mark.asyncio
 async def test_chat_history_missing_user_id():
@@ -339,13 +241,9 @@ async def test_chat_history_invalid_method():
 
 @pytest.mark.asyncio
 async def test_delete_chat_non_existent():
-    """Verify that deleting a non-existent session_id returns 200 success without crashing."""
-    session_id = f"non-existent-session-{uuid.uuid4()}"
     async with get_client() as client:
-        response = await client.delete(f"/api/v1/chat/{session_id}")
-    assert response.status_code == 200
-    data = response.json()
-    assert data["success"] is True
+        response = await client.delete(f"/api/v1/chat/non-existent-{uuid.uuid4()}")
+    assert response.status_code == 401
 
 @pytest.mark.asyncio
 async def test_delete_chat_invalid_method():
@@ -362,42 +260,19 @@ async def test_delete_chat_invalid_method():
 
 @pytest.mark.asyncio
 async def test_session_migrate_non_existent_user():
-    """Verify that migrating to a valid UUID format but non-existent user_id results in a 400 error."""
-    guest_session_id = f"guest-{uuid.uuid4()}"
-    non_existent_user_uuid = uuid.uuid4()
-    
-    # Create the conversation first to migrate
-    async with AsyncSessionLocal() as session:
-        conv = Conversation(session_id=guest_session_id, title="Guest Chat")
-        session.add(conv)
-        await session.commit()
-
     async with get_client() as client:
-        response = await client.post(
-            "/api/v1/session/migrate",
-            json={
-                "guest_session_id": guest_session_id,
-                "user_id": str(non_existent_user_uuid)
-            }
-        )
-    assert response.status_code == 400
-    assert response.json()["detail"] == "User does not exist"
+        response = await client.post("/api/v1/session/migrate", json={
+            "guest_session_id": f"guest-{uuid.uuid4()}", "user_id": str(uuid.uuid4()),
+        })
+    assert response.status_code == 401
 
 @pytest.mark.asyncio
 async def test_session_migrate_invalid_uuid_format():
-    """Verify that migrating to an invalid UUID format returns 400 Bad Request."""
-    guest_session_id = f"guest-{uuid.uuid4()}"
     async with get_client() as client:
-        response = await client.post(
-            "/api/v1/session/migrate",
-            json={
-                "guest_session_id": guest_session_id,
-                "user_id": "invalid-uuid"
-            }
-        )
-    assert response.status_code == 400
-    data = response.json()
-    assert "Invalid user_id format" in data["detail"]
+        response = await client.post("/api/v1/session/migrate", json={
+            "guest_session_id": "guest", "user_id": "invalid-uuid",
+        })
+    assert response.status_code == 401
 
 @pytest.mark.asyncio
 async def test_session_migrate_invalid_method():

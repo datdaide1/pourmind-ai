@@ -120,7 +120,8 @@ export async function connectSSEChat(
   url: string,
   payload: ChatPayload,
   callbacks: SSEClientCallbacks,
-  signal?: AbortSignal
+  signal?: AbortSignal,
+  sessionToken?: string
 ): Promise<void> {
   const { onToken, onBlocks, onComplete, onError } = callbacks;
 
@@ -130,6 +131,7 @@ export async function connectSSEChat(
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'text/event-stream',
+        ...(sessionToken ? { 'X-Session-Token': sessionToken } : {}),
       },
       body: JSON.stringify(payload),
       signal,

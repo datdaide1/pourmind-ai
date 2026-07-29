@@ -47,6 +47,7 @@ async def test_session_init_new():
     assert response.status_code == 200
     data = response.json()
     assert data["session_id"] == session_id
+    assert data["access_token"]
     assert "welcome_message" in data
     assert "suggested_prompts" in data
     
@@ -79,15 +80,24 @@ async def test_chat_message_streaming():
     
     # 1. Initialize session
     async with get_client() as client:
-        await client.post(
+        init_response = await client.post(
             "/api/v1/session/init",
             json={"guest_session_id": session_id, "mode": "guest"}
         )
+        session_token = init_response.json()["access_token"]
     
     # Mock graph.astream_events
     mock_events = [
-        {"event": "on_chat_model_stream", "data": {"chunk": MagicMock(content="Mocked ")}},
-        {"event": "on_chat_model_stream", "data": {"chunk": MagicMock(content="token.")}},
+        {
+            "event": "on_chat_model_stream",
+            "metadata": {"langgraph_node": "b2c_mixologist"},
+            "data": {"chunk": MagicMock(content="Mocked ")},
+        },
+        {
+            "event": "on_chat_model_stream",
+            "metadata": {"langgraph_node": "b2c_mixologist"},
+            "data": {"chunk": MagicMock(content="token.")},
+        },
         {
             "event": "on_chain_end",
             "parent_ids": [],
@@ -117,7 +127,8 @@ async def test_chat_message_streaming():
                     "context": {
                         "current_location": {"lat": 10.7, "lng": 106.6}
                     }
-                }
+                },
+                headers={"X-Session-Token": session_token},
             )
         assert response.status_code == 200
         text = response.text
@@ -132,10 +143,15 @@ async def test_chat_message_streaming():
             ).options(selectinload(Conversation.messages))
             conv = (await session.execute(stmt)).scalar_one_or_none()
             assert conv is not None
-            assert len(conv.messages) == 2
-            assert conv.messages[0].role == "user"
-            assert conv.messages[1].role == "assistant"
-            assert conv.messages[1].ui_blocks is not None
+            assert len(conv.messages) == 3
+            assert sum(msg.role == "user" for msg in conv.messages) == 1
+            assert sum(msg.role == "assistant" for msg in conv.messages) == 2
+            assert any(
+                msg.role == "assistant"
+                and msg.content == "Mocked token."
+                and msg.ui_blocks is not None
+                for msg in conv.messages
+            )
 
 @pytest.mark.asyncio
 async def test_calculate_cost_endpoint():
@@ -167,41 +183,55 @@ async def test_calculate_cost_endpoint():
 async def test_chat_history_and_delete():
     user_uuid = uuid.uuid4()
     session_id = f"test-hist-{uuid.uuid4()}"
-    
-    # 0. Insert User into database first to prevent foreign key violation
+
     async with AsyncSessionLocal() as session:
         user = User(id=user_uuid, guest_session_id=session_id)
         session.add(user)
         await session.commit()
-    
-    # Init session with user_id
+
     async with get_client() as client:
-        await client.post(
+        init_response = await client.post(
             "/api/v1/session/init",
             json={
                 "guest_session_id": session_id,
                 "user_id": str(user_uuid),
-                "mode": "guest"
-            }
+                "mode": "guest",
+            },
         )
-    
-        # Get history
-        response = await client.get(f"/api/v1/chat/history?user_id={user_uuid}")
+        session_token = init_response.json()["access_token"]
+        headers = {"X-Session-Token": session_token}
+
+        response = await client.get(
+            f"/api/v1/chat/history?session_id={session_id}",
+            headers=headers,
+        )
         assert response.status_code == 200
-        data = response.json()
-        assert len(data["conversations"]) == 1
-        assert data["conversations"][0]["session_id"] == session_id
-        
-        # Delete chat
-        del_response = await client.delete(f"/api/v1/chat/{session_id}")
+        assert len(response.json()["messages"]) == 1
+
+        unauthorized = await client.get(
+            f"/api/v1/chat/history?session_id={session_id}"
+        )
+        assert unauthorized.status_code == 401
+
+        wrong_token = await client.delete(
+            f"/api/v1/chat/{session_id}",
+            headers={"X-Session-Token": "wrong-token"},
+        )
+        assert wrong_token.status_code == 403
+
+        del_response = await client.delete(
+            f"/api/v1/chat/{session_id}",
+            headers=headers,
+        )
         assert del_response.status_code == 200
         assert del_response.json()["success"] is True
-        
-        # History should be empty now
-        response = await client.get(f"/api/v1/chat/history?user_id={user_uuid}")
-        assert response.status_code == 200
-        assert len(response.json()["conversations"]) == 0
 
+        response = await client.get(
+            f"/api/v1/chat/history?session_id={session_id}",
+            headers=headers,
+        )
+        assert response.status_code == 200
+        assert response.json()["messages"] == []
 @pytest.mark.asyncio
 async def test_session_migration():
     guest_session_id = f"guest-{uuid.uuid4()}"
@@ -215,10 +245,11 @@ async def test_session_migration():
     
     # Init guest session
     async with get_client() as client:
-        await client.post(
+        init_response = await client.post(
             "/api/v1/session/init",
             json={"guest_session_id": guest_session_id, "mode": "guest"}
         )
+        session_token = init_response.json()["access_token"]
         
         # Migrate session
         migrate_response = await client.post(
@@ -226,7 +257,8 @@ async def test_session_migration():
             json={
                 "guest_session_id": guest_session_id,
                 "user_id": str(user_uuid)
-            }
+            },
+            headers={"X-Session-Token": session_token},
         )
         assert migrate_response.status_code == 200
         assert migrate_response.json()["success"] is True

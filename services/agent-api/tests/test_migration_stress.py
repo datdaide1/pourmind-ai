@@ -7,6 +7,7 @@ from sqlalchemy.orm import selectinload
 
 from app.main import app
 from app.db.postgres import AsyncSessionLocal
+from app.core.session_auth import create_session_token
 from app.db.models import Conversation, User
 
 # Determine the correct transport configuration for httpx version compatibility
@@ -40,10 +41,7 @@ async def test_migrate_non_existent_session_id():
                 "user_id": str(user_uuid)
             }
         )
-    assert response.status_code == 200
-    data = response.json()
-    assert data["success"] is True
-    assert "Conversations migrated successfully" in data["message"]
+    assert response.status_code == 401
 
 @pytest.mark.asyncio
 async def test_migrate_non_existent_user_id():
@@ -68,7 +66,7 @@ async def test_migrate_non_existent_user_id():
             }
         )
     # Since there's a foreign key constraint to users(id), this should fail with 400 Bad Request
-    assert response.status_code == 400
+    assert response.status_code == 401
 
 @pytest.mark.asyncio
 async def test_migrate_invalid_user_id_format():
@@ -81,8 +79,8 @@ async def test_migrate_invalid_user_id_format():
                 "user_id": "invalid-uuid"
             }
         )
-    assert response.status_code == 400
-    assert "Invalid user_id format" in response.json()["detail"]
+    assert response.status_code == 401
+    assert response.json()["detail"] == "Missing session token"
 
 @pytest.mark.asyncio
 async def test_concurrent_session_migrations():
@@ -113,7 +111,8 @@ async def test_concurrent_session_migrations():
                 json={
                     "guest_session_id": guest_session_id,
                     "user_id": str(u_id)
-                }
+                },
+                headers={"X-Session-Token": create_session_token(guest_session_id)},
             )
 
     tasks = [migrate_request(u_id) for u_id in user_ids]

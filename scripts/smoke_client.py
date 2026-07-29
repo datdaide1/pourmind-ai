@@ -21,17 +21,21 @@ async def test_backend():
         session_data = res.json()
         print(f"Response: {session_data}")
         session_id = session_data["session_id"]
+        session_headers = {
+            "Accept": "text/event-stream",
+            "X-Session-Token": session_data["access_token"],
+        }
         
         # 3. Chat (B2C)
         print("\n3. Testing /chat/message (B2C - Mixologist)...")
-        res = await client.post(f"{BASE_URL}/chat/message", json={"session_id": session_id, "content": "I want a sweet cocktail for a date"}, headers={"Accept": "text/event-stream"})
+        res = await client.post(f"{BASE_URL}/chat/message", json={"session_id": session_id, "content": "I want a sweet cocktail for a date"}, headers=session_headers)
         print(f"Status: {res.status_code}")
         print("SSE Output Stream (first 500 chars):")
         print(res.text[:500] + "...\n")
         
         # 4. Chat (B2B)
         print("\n4. Testing /chat/message (B2B - Cost Calculator)...")
-        res = await client.post(f"{BASE_URL}/chat/message", json={"session_id": session_id, "content": "Can you calculate the cost for a Margarita?"}, headers={"Accept": "text/event-stream"})
+        res = await client.post(f"{BASE_URL}/chat/message", json={"session_id": session_id, "content": "Can you calculate the cost for a Margarita?"}, headers=session_headers)
         print(f"Status: {res.status_code}")
         print("SSE Output Stream (first 500 chars):")
         print(res.text[:500] + "...\n")
@@ -49,13 +53,13 @@ async def test_backend():
         # 6. User Migration (Guest to User)
         print("\n6. Testing /session/migrate (Guest to User)...")
         user_id = str(uuid.uuid4())
-        res = await client.post(f"{BASE_URL}/session/migrate", json={"guest_session_id": session_id, "user_id": user_id})
+        res = await client.post(f"{BASE_URL}/session/migrate", json={"guest_session_id": session_id, "user_id": user_id}, headers=session_headers)
         # Note: If the user doesn't exist in Supabase auth, it might return 400. Let's see what happens.
         print(f"Status: {res.status_code}, Response: {res.text}")
 
         # 7. Chat History
-        print(f"\n7. Testing /chat/history?user_id={user_id}...")
-        res = await client.get(f"{BASE_URL}/chat/history?user_id={user_id}")
+        print(f"\n7. Testing /chat/history?session_id={session_id}...")
+        res = await client.get(f"{BASE_URL}/chat/history?session_id={session_id}", headers=session_headers)
         print(f"Status: {res.status_code}")
         if res.status_code == 200:
             history = res.json()

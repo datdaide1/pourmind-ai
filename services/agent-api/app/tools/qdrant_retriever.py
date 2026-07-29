@@ -6,6 +6,7 @@ from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
+MAX_SEARCH_LIMIT = 20
 # Initialize Qdrant Client (Async)
 try:
     qdrant_client = AsyncQdrantClient(
@@ -32,6 +33,8 @@ async def search_qdrant(query: str, collection_name: str, limit: int = 3) -> Lis
     """
     Search a specified Qdrant collection using the query string.
     """
+    if not 1 <= limit <= MAX_SEARCH_LIMIT:
+        raise ValueError(f"limit must be between 1 and {MAX_SEARCH_LIMIT}")
     if not qdrant_client or not embeddings_model:
         logger.error("Qdrant client or Embeddings model is not initialized.")
         return []

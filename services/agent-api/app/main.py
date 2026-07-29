@@ -3,7 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from app.api import router as api_router
-from app.core.middleware import BraintrustTracingMiddleware
+from app.core.middleware import ApiProtectionMiddleware, BraintrustTracingMiddleware
+from app.core.config import settings
 
 app = FastAPI(
     title="PourMind AI Agent API",
@@ -29,15 +30,16 @@ async def validation_exception_handler(request, exc: RequestValidationError):
 # CORS configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Update with frontend URL in production
+    allow_origins=settings.cors_allowed_origins_list,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "X-Session-Token"],
 )
 
 app.add_middleware(BraintrustTracingMiddleware)
 
 app.include_router(api_router, prefix="/api/v1")
+app.add_middleware(ApiProtectionMiddleware)
 
 @app.get("/health")
 async def health_check():

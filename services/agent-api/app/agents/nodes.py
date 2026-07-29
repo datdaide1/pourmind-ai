@@ -1,5 +1,7 @@
 import json
 import logging
+import re
+import unicodedata
 from typing import Dict, Any, List, Optional
 from langchain_core.messages import AIMessage, BaseMessage, ToolMessage, SystemMessage, HumanMessage
 from langchain_openai import ChatOpenAI
@@ -42,11 +44,46 @@ class RouterSchema(BaseModel):
     customer_age: int = Field(description="The age of the customer if mentioned, else -1.", default=-1)
     allergies: str = Field(description="A comma-separated string of allergies mentioned by the user, or empty string if none.", default="")
     safety_status: str = Field(description="Must be 'hazchem_blocked' if they ask for poisons/chemicals. Must be 'underage_redirect' if they are under 18 and ask for alcohol. Otherwise 'safe'.", default="safe")
+HAZCHEM_PATTERN = re.compile(r"\b(?:bleach|rubbing alcohol|methanol|poison|toxic chemical|ammonia|chlorine gas|hoa chat doc|chat doc|nuoc tay|amoniac)\b", re.IGNORECASE)
+ALCOHOL_PATTERN = re.compile(r"\b(?:alcohol|cocktail|beer|wine|vodka|gin|rum|whisky|whiskey|tequila|ruou|bia)\b", re.IGNORECASE)
+AGE_PATTERNS = (
+    re.compile(r"\b(?:i am|i'm|im|age(?:d)?|tuoi)\s*(\d{1,2})\b", re.IGNORECASE),
+    re.compile(r"\b(\d{1,2})\s*(?:years? old|yo|tuoi)\b", re.IGNORECASE),
+)
+
+def _fold_text(content: str) -> str:
+    folded = "".join(c for c in unicodedata.normalize("NFKD", content.casefold()) if not unicodedata.combining(c))
+    return folded.replace("đ", "d")
+
+def deterministic_safety_check(content: str) -> tuple[str, int | None]:
+    """Catch high-risk requests before the probabilistic classifier runs."""
+    content = _fold_text(content)
+    if HAZCHEM_PATTERN.search(content):
+        return "hazchem_blocked", None
+    age = None
+    for pattern in AGE_PATTERNS:
+        match = pattern.search(content)
+        if match:
+            age = int(match.group(1))
+            break
+    if age is not None and age < 18 and ALCOHOL_PATTERN.search(content):
+        return "underage_redirect", age
+    return "safe", age
+
 
 async def router_node(state: AgentState) -> dict:
     """Router node to parse input query using LLM structured output."""
     last_message = state["messages"][-1]
     
+    deterministic_status, deterministic_age = deterministic_safety_check(str(last_message.content))
+    if deterministic_status != "safe":
+        return {
+            "intent": "b2c",
+            "customer_age": deterministic_age,
+            "allergies": [],
+            "safety_status": deterministic_status,
+        }
+
     system_prompt = (
         "You are a routing agent for a cocktail recommendation system.\n"
         "Analyze the user's query and extract their intent, age, allergies, and safety status.\n"
@@ -66,8 +103,13 @@ async def router_node(state: AgentState) -> dict:
     try:
         parsed_data = await structured_llm.ainvoke(messages)
     except Exception as e:
-        logger.error(f"Router LLM Error: {e}")
-        parsed_data = {"intent": "b2c", "customer_age": None, "allergies": [], "safety_status": "safe"}
+        logger.exception("Router LLM failed; blocking unclassified request")
+        return {
+            "intent": "b2c",
+            "customer_age": deterministic_age,
+            "allergies": [],
+            "safety_status": "classifier_unavailable",
+        }
         
     if isinstance(parsed_data, dict):
         age = parsed_data.get("customer_age", -1)
@@ -89,7 +131,7 @@ async def router_node(state: AgentState) -> dict:
 
 def router_edge(state: AgentState) -> str:
     """Conditional edge decision maker based on intent and safety."""
-    if state["safety_status"] == "hazchem_blocked":
+    if state["safety_status"] in {"hazchem_blocked", "classifier_unavailable"}:
         return "hazchem_block_node"
     elif state["intent"] == "b2b":
         return "b2b_bartender_node"
@@ -98,7 +140,11 @@ def router_edge(state: AgentState) -> str:
 
 async def hazchem_block_node(state: AgentState) -> dict:
     """Immediate block for hazardous chemicals."""
-    msg = AIMessage(content="I cannot help you with hazardous chemicals. That is unsafe.")
+    if state.get("safety_status") == "classifier_unavailable":
+        content = "I cannot safely classify this request right now. Please try again later."
+    else:
+        content = "I cannot help you with hazardous chemicals. That is unsafe."
+    msg = AIMessage(content=content)
     return {
         "messages": [msg],
         "safety_status": "hazchem_blocked"

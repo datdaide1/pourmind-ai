@@ -9,7 +9,26 @@ REPO_ROOT = Path(__file__).resolve().parents[4]
 ENV_PATH = REPO_ROOT / ".env"
 
 class Settings(BaseSettings):
+    # Session capability authentication. Use at least 32 random bytes in production.
+    SESSION_TOKEN_SECRET: str = ""
+
     # LLM Settings
+    CORS_ALLOWED_ORIGINS: str = "http://localhost:3000,http://127.0.0.1:3000"
+    MAX_CHAT_MESSAGE_CHARS: int = 4000
+    MAX_CHAT_HISTORY_MESSAGES: int = 20
+    CHAT_RATE_LIMIT_REQUESTS: int = 10
+    CHAT_RATE_LIMIT_WINDOW_SECONDS: int = 60
+    CHAT_MAX_CONCURRENCY: int = 2
+    SEARCH_MAX_LIMIT: int = 20
+
+    API_RATE_LIMIT_REQUESTS: int = 60
+    API_RATE_LIMIT_WINDOW_SECONDS: int = 60
+    MAX_REQUEST_BODY_BYTES: int = 16384
+
+    @property
+    def cors_allowed_origins_list(self) -> list[str]:
+        return [origin.strip() for origin in self.CORS_ALLOWED_ORIGINS.split(",") if origin.strip()]
+
     OPENAI_API_BASE: str = "https://openrouter.ai/api/v1"
     OPENAI_API_KEY: str = ""
     OPENROUTER_API_KEY: str = ""
@@ -32,6 +51,7 @@ class Settings(BaseSettings):
     POSTGRES_HOST: str = ""
     POSTGRES_PORT: int = 5432
 
+    POSTGRES_SSL: bool = True
     # Redis (Upstash)
     REDIS_HOST: str = ""
     REDIS_PORT: int = 6379

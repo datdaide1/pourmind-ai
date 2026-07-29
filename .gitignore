@@ -5,6 +5,19 @@
 .private/
 PHASE2_NOTES.md
 
+# Documentation (keep only README and LICENSE files in Git)
+docs/
+*.md
+*.mdx
+*.rst
+*.adoc
+!README.md
+!**/README.md
+!LICENSE
+!LICENSE.*
+!**/LICENSE
+!**/LICENSE.*
+
 # Python
 __pycache__/
 *.py[cod]

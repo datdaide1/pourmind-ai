@@ -1,6 +1,6 @@
 project: regular-guest-intelligence-mvp
-status: scaffolded
-branch: codex/regular-guest-intelligence-scaffold
+status: in_progress
+branch: codex/fnd-01-blocking-decisions
 execution_model:
   human: product-owner-and-acceptance-reviewer
   implementer: one-active-ai-coding-agent
@@ -27,15 +27,30 @@ human_checkpoints:
     decision: mvp-release-acceptance
 summary:
   total_tasks: 47
-  planned: 47
+  planned: 46
   in_progress: 0
   blocked: 0
-  completed: 0
+  completed: 1
 tasks:
   - id: FND-01
     epic: foundation
-    status: planned
+    status: completed
     plan: "tasks/fnd-01-resolve-blocking-product-and-technical-decisions.yaml"
+    completed_at: "2026-07-31"
+    evidence:
+      decision_record: "docs/REGULAR_GUEST_INTELLIGENCE_MVP_SPEC.md#24-approved-implementation-decisions"
+      decisions:
+        - "D1: demo principal is restricted to local/staging and production fails closed"
+        - "D2: rating/feedback requires guest_stated or bartender_observed provenance"
+        - "D3: Data/Mixology owns an eight-dimension taxonomy v1"
+        - "D4: pilot requires affirmative notice opt-in and data minimization"
+      product_sign_off: "Implementation baseline authorized 2026-07-31; final acceptance remains Human Checkpoint A"
+      engineering_sign_off: "Approved 2026-07-31 with fail-closed and data-minimization constraints"
+      regression_coverage: "Not applicable: documentation-only decision task; downstream contract fields were added to the spec"
+      validation:
+        - command: "python .agents/regular-guest-intelligence/validate_fnd_01.py"
+          result: "passed"
+    handoff: "Stop at Human Checkpoint A; do not begin FND-02 until product acceptance."
   - id: FND-02
     epic: foundation
     status: planned

@@ -1,6 +1,6 @@
 project: regular-guest-intelligence-mvp
 status: in_progress
-branch: codex/fnd-01-blocking-decisions
+branch: codex/fnd-02-domain-schemas
 execution_model:
   human: product-owner-and-acceptance-reviewer
   implementer: one-active-ai-coding-agent
@@ -27,10 +27,10 @@ human_checkpoints:
     decision: mvp-release-acceptance
 summary:
   total_tasks: 47
-  planned: 46
+  planned: 45
   in_progress: 0
   blocked: 0
-  completed: 1
+  completed: 2
 tasks:
   - id: FND-01
     epic: foundation
@@ -50,11 +50,38 @@ tasks:
       validation:
         - command: "python .agents/regular-guest-intelligence/validate_fnd_01.py"
           result: "passed"
-    handoff: "Stop at Human Checkpoint A; do not begin FND-02 until product acceptance."
+    human_checkpoint_a: "Accepted by product owner through explicit instruction to implement FND-02 on 2026-07-31."
+    handoff: "Human Checkpoint A accepted; FND-02 authorized."
   - id: FND-02
     epic: foundation
-    status: planned
+    status: completed
     plan: "tasks/fnd-02-define-domain-enums-and-shared-schemas.yaml"
+    completed_at: "2026-07-31"
+    evidence:
+      contracts:
+        - "app/domain/enums.py: stable string enums for recipe, menu, patron, confidence, recommendation, units, provenance and candidate sources"
+        - "app/domain/schemas.py: versioned Pydantic contracts for recipes, snapshots, menus, patrons, experiences, taste profiles and recommendations"
+        - "app/domain/openapi.py: publishes shared contracts without registering unfinished or unauthorized CRUD routes"
+      review_remediation:
+        - "Flavor taxonomy is fixed to the approved eight normalized dimensions with taxonomy version and provenance"
+        - "Patron notice acknowledgement records the responsible principal"
+        - "match-v1 requires all six score components and normalized weights"
+        - "Live application OpenAPI includes FND-02 contracts and constraint failures retain stable HTTP 422 semantics"
+      regression_coverage:
+        - "tests/test_recipe_domain.py"
+        - "tests/test_menu_domain.py"
+        - "tests/test_patron_domain.py"
+        - "tests/test_patron_intelligence.py"
+      validation:
+        - command: "E:/anaconda3/envs/cocktail-ai/python.exe -m pytest tests/test_recipe_domain.py tests/test_menu_domain.py tests/test_patron_domain.py tests/test_patron_intelligence.py -q"
+          result: "superseded by post-review run: 30 tests passed"
+        - command: "E:/anaconda3/envs/cocktail-ai/python.exe -m pytest -q"
+          result: "post-review run passed: 50 tests; 40 infrastructure-dependent tests skipped by the existing offline policy"
+        - command: "E:/anaconda3/envs/cocktail-ai/python.exe -m compileall -q app tests"
+          result: "passed"
+        - command: "OpenAPI regression test asserts RecipeCreate, RecipeSnapshot, PatronCreate and RecommendationResponse in app.openapi()"
+          result: "passed as part of the 30-test FND-02 suite"
+    handoff: "Stop at FND-02 boundary; FND-03 and other dependent tasks remain planned."
   - id: FND-03
     epic: foundation
     status: planned

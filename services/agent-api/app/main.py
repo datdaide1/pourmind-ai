@@ -5,6 +5,7 @@ from fastapi.responses import JSONResponse
 from app.api import router as api_router
 from app.core.middleware import ApiProtectionMiddleware, BraintrustTracingMiddleware
 from app.core.config import settings
+from app.domain.openapi import install_domain_openapi
 
 app = FastAPI(
     title="PourMind AI Agent API",
@@ -14,18 +15,7 @@ app = FastAPI(
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request, exc: RequestValidationError):
-    errors = exc.errors()
-    is_missing = all(err.get("type") == "missing" or "missing" in err.get("type", "") for err in errors)
-    if is_missing:
-        return JSONResponse(
-            status_code=422,
-            content={"detail": errors}
-        )
-    else:
-        return JSONResponse(
-            status_code=400,
-            content={"detail": errors}
-        )
+    return JSONResponse(status_code=422, content={"detail": exc.errors()})
 
 # CORS configuration
 app.add_middleware(
@@ -40,6 +30,7 @@ app.add_middleware(BraintrustTracingMiddleware)
 
 app.include_router(api_router, prefix="/api/v1")
 app.add_middleware(ApiProtectionMiddleware)
+install_domain_openapi(app)
 
 @app.get("/health")
 async def health_check():

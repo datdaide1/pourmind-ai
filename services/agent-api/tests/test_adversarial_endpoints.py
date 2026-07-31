@@ -72,11 +72,11 @@ async def test_session_init_missing_session_id():
 async def test_session_init_empty_session_id():
     async with get_client() as client:
         response = await client.post("/api/v1/session/init", json={"guest_session_id": "", "mode": "guest"})
-    assert response.status_code == 400
+    assert response.status_code == 422
 
 @pytest.mark.asyncio
 async def test_session_init_extreme_session_id():
-    """Verify that an extremely long guest_session_id (longer than VARCHAR(255)) returns HTTP 400."""
+    """Verify that an extremely long guest_session_id returns HTTP 422."""
     long_session_id = "a" * 300
     async with get_client() as client:
         response = await client.post(
@@ -86,7 +86,7 @@ async def test_session_init_extreme_session_id():
                 "mode": "guest"
             }
         )
-    assert response.status_code == 400
+    assert response.status_code == 422
 
 @pytest.mark.asyncio
 async def test_session_init_invalid_method():
@@ -116,7 +116,7 @@ async def test_chat_message_missing_session_id():
 async def test_chat_message_empty_content():
     async with get_client() as client:
         response = await client.post("/api/v1/chat/message", json={"session_id": "s", "content": ""})
-    assert response.status_code == 400
+    assert response.status_code == 422
 
 @pytest.mark.asyncio
 async def test_chat_message_extreme_content():
@@ -124,7 +124,7 @@ async def test_chat_message_extreme_content():
         response = await client.post("/api/v1/chat/message", json={
             "session_id": "s", "content": "x" * 10000,
         })
-    assert response.status_code == 400
+    assert response.status_code == 422
 
 @pytest.mark.asyncio
 async def test_chat_message_invalid_method():
@@ -156,7 +156,7 @@ async def test_calculate_cost_empty_recipe():
 
 @pytest.mark.asyncio
 async def test_calculate_cost_negative_amount():
-    """Verify that negative amounts in recipe return HTTP 400."""
+    """Verify that negative amounts in recipe return HTTP 422."""
     async with get_client() as client:
         response = await client.post(
             "/api/v1/tools/calculate_cost",
@@ -166,7 +166,7 @@ async def test_calculate_cost_negative_amount():
                 ]
             }
         )
-    assert response.status_code == 400
+    assert response.status_code == 422
 
 @pytest.mark.asyncio
 async def test_calculate_cost_non_existent_ingredient():

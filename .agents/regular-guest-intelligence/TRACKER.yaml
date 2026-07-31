@@ -1,0 +1,228 @@
+project: regular-guest-intelligence-mvp
+status: scaffolded
+branch: codex/regular-guest-intelligence-scaffold
+execution_model:
+  human: product-owner-and-acceptance-reviewer
+  implementer: one-active-ai-coding-agent
+  concurrency: sequential-single-worktree-owner
+  agent_handoff: task-boundary-only
+source_documents:
+  spec: "docs/REGULAR_GUEST_INTELLIGENCE_MVP_SPEC.md"
+  backlog: "docs/REGULAR_GUEST_INTELLIGENCE_IMPLEMENTATION_PLAN.md"
+human_checkpoints:
+  - id: A
+    after: FND-01
+    decision: product-privacy-and-flavor-taxonomy
+  - id: B
+    after: WEB-04
+    decision: foundation-recipe-and-menu-acceptance
+  - id: C
+    after: WEB-07
+    decision: patron-and-service-workflow-acceptance
+  - id: D
+    after: WEB-08
+    decision: intelligence-behavior-acceptance
+  - id: E
+    after: QLT-06
+    decision: mvp-release-acceptance
+summary:
+  total_tasks: 47
+  planned: 47
+  in_progress: 0
+  blocked: 0
+  completed: 0
+tasks:
+  - id: FND-01
+    epic: foundation
+    status: planned
+    plan: "tasks/fnd-01-resolve-blocking-product-and-technical-decisions.yaml"
+  - id: FND-02
+    epic: foundation
+    status: planned
+    plan: "tasks/fnd-02-define-domain-enums-and-shared-schemas.yaml"
+  - id: FND-03
+    epic: foundation
+    status: planned
+    plan: "tasks/fnd-03-implement-bar-principal-abstraction-and-demo-principal.yaml"
+  - id: FND-04
+    epic: foundation
+    status: planned
+    plan: "tasks/fnd-04-add-postgresql-schema-migration.yaml"
+  - id: FND-05
+    epic: foundation
+    status: planned
+    plan: "tasks/fnd-05-create-bar-scoped-repository-and-query-helpers.yaml"
+  - id: FND-06
+    epic: foundation
+    status: planned
+    plan: "tasks/fnd-06-establish-feature-flags-and-route-registration.yaml"
+  - id: RCP-01
+    epic: recipes
+    status: planned
+    plan: "tasks/rcp-01-implement-recipe-normalizer.yaml"
+  - id: RCP-02
+    epic: recipes
+    status: planned
+    plan: "tasks/rcp-02-adapt-cost-and-abv-calculator-to-normalized-recipes.yaml"
+  - id: RCP-03
+    epic: recipes
+    status: planned
+    plan: "tasks/rcp-03-implement-recipe-creation-and-listing-api.yaml"
+  - id: RCP-04
+    epic: recipes
+    status: planned
+    plan: "tasks/rcp-04-implement-immutable-recipe-version-updates.yaml"
+  - id: RCP-05
+    epic: recipes
+    status: planned
+    plan: "tasks/rcp-05-implement-global-recipe-adapter-and-fork-api.yaml"
+  - id: RCP-06
+    epic: recipes
+    status: planned
+    plan: "tasks/rcp-06-implement-bespoke-create-and-promote-lifecycle.yaml"
+  - id: RCP-07
+    epic: recipes
+    status: planned
+    plan: "tasks/rcp-07-add-recipe-api-contract-and-security-regression-suite.yaml"
+  - id: MNU-01
+    epic: menus
+    status: planned
+    plan: "tasks/mnu-01-implement-menu-and-active-menu-service.yaml"
+  - id: MNU-02
+    epic: menus
+    status: planned
+    plan: "tasks/mnu-02-implement-menu-item-crud.yaml"
+  - id: MNU-03
+    epic: menus
+    status: planned
+    plan: "tasks/mnu-03-add-service-time-recipe-resolution.yaml"
+  - id: MNU-04
+    epic: menus
+    status: planned
+    plan: "tasks/mnu-04-add-menu-api-regression-suite.yaml"
+  - id: PTR-01
+    epic: patrons
+    status: planned
+    plan: "tasks/ptr-01-implement-patron-crud-and-search.yaml"
+  - id: PTR-02
+    epic: patrons
+    status: planned
+    plan: "tasks/ptr-02-implement-privacy-safe-patron-field-handling.yaml"
+  - id: PTR-03
+    epic: patrons
+    status: planned
+    plan: "tasks/ptr-03-implement-server-side-recipe-snapshot-builder.yaml"
+  - id: PTR-04
+    epic: patrons
+    status: planned
+    plan: "tasks/ptr-04-implement-drink-experience-create-and-list-api.yaml"
+  - id: PTR-05
+    epic: patrons
+    status: planned
+    plan: "tasks/ptr-05-add-idempotency-and-retry-safety.yaml"
+  - id: PTR-06
+    epic: patrons
+    status: planned
+    plan: "tasks/ptr-06-implement-experience-edit-and-delete-policy.yaml"
+  - id: PTR-07
+    epic: patrons
+    status: planned
+    plan: "tasks/ptr-07-prove-snapshot-integrity-across-lifecycle.yaml"
+  - id: INT-01
+    epic: intelligence
+    status: planned
+    plan: "tasks/int-01-freeze-flavor-taxonomy-v1-and-mapping-contract.yaml"
+  - id: INT-02
+    epic: intelligence
+    status: planned
+    plan: "tasks/int-02-implement-flavor-profile-engine.yaml"
+  - id: INT-03
+    epic: intelligence
+    status: planned
+    plan: "tasks/int-03-implement-taste-profile-aggregation.yaml"
+  - id: INT-04
+    epic: intelligence
+    status: planned
+    plan: "tasks/int-04-implement-confidence-and-recompute-lifecycle.yaml"
+  - id: INT-05
+    epic: intelligence
+    status: planned
+    plan: "tasks/int-05-implement-candidate-aggregation-service.yaml"
+  - id: INT-06
+    epic: intelligence
+    status: planned
+    plan: "tasks/int-06-implement-hard-exclusions-and-match-scorer-v1.yaml"
+  - id: INT-07
+    epic: intelligence
+    status: planned
+    plan: "tasks/int-07-implement-recommendation-api-and-persistence.yaml"
+  - id: INT-08
+    epic: intelligence
+    status: planned
+    plan: "tasks/int-08-integrate-agent-explanations-with-numeric-guardrails.yaml"
+  - id: WEB-01
+    epic: frontend
+    status: planned
+    plan: "tasks/web-01-define-typed-api-client-and-frontend-domain-models.yaml"
+  - id: WEB-02
+    epic: frontend
+    status: planned
+    plan: "tasks/web-02-build-bar-copilot-navigation-and-gated-shell.yaml"
+  - id: WEB-03
+    epic: frontend
+    status: planned
+    plan: "tasks/web-03-replace-menu-builder-mock-with-recipe-editor.yaml"
+  - id: WEB-04
+    epic: frontend
+    status: planned
+    plan: "tasks/web-04-build-recipe-library-and-active-menu-screens.yaml"
+  - id: WEB-05
+    epic: frontend
+    status: planned
+    plan: "tasks/web-05-build-patron-list-create-and-edit-experience.yaml"
+  - id: WEB-06
+    epic: frontend
+    status: planned
+    plan: "tasks/web-06-build-record-a-drink-flow.yaml"
+  - id: WEB-07
+    epic: frontend
+    status: planned
+    plan: "tasks/web-07-build-bespoke-quick-entry-flow.yaml"
+  - id: WEB-08
+    epic: frontend
+    status: planned
+    plan: "tasks/web-08-build-patron-intelligence-and-recommendation-ui.yaml"
+  - id: WEB-09
+    epic: frontend
+    status: planned
+    plan: "tasks/web-09-repair-utf-8-copy-and-complete-critical-states.yaml"
+  - id: QLT-01
+    epic: quality
+    status: planned
+    plan: "tasks/qlt-01-expand-ci-for-offline-and-postgresql-suites.yaml"
+  - id: QLT-02
+    epic: quality
+    status: planned
+    plan: "tasks/qlt-02-build-cross-bar-adversarial-authorization-matrix.yaml"
+  - id: QLT-03
+    epic: quality
+    status: planned
+    plan: "tasks/qlt-03-build-full-vertical-slice-playwright-suite.yaml"
+  - id: QLT-04
+    epic: quality
+    status: planned
+    plan: "tasks/qlt-04-add-observability-and-privacy-safe-audit-events.yaml"
+  - id: QLT-05
+    epic: quality
+    status: planned
+    plan: "tasks/qlt-05-run-performance-and-failure-mode-validation.yaml"
+  - id: QLT-06
+    epic: quality
+    status: planned
+    plan: "tasks/qlt-06-complete-release-gate-review-and-evidence-report.yaml"
+tracker_update_rules:
+  - only_one_task_may_be_in_progress
+  - record_validation_commands_and_results_before_completed
+  - record_blockers_without_claiming_unrun_tests
+  - do_not_start_dependency_until_prerequisites_are_completed
+  - require_human_review_only_at_named_checkpoints_or_material_scope_changes

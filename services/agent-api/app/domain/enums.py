@@ -62,6 +62,13 @@ class FeedbackProvenance(DomainEnum):
     BARTENDER_OBSERVED = "bartender_observed"
 
 
+class FlavorProvenance(DomainEnum):
+    CURATED = "curated"
+    DATASET_DERIVED = "dataset_derived"
+    BARTENDER_CONFIRMED = "bartender_confirmed"
+    INFERRED = "inferred"
+
+
 class CandidateSource(DomainEnum):
     ACTIVE_MENU = "menu"
     HOUSE_LIBRARY = "house"

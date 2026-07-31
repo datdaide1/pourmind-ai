@@ -1,4 +1,5 @@
 from datetime import UTC, datetime
+from uuid import uuid4
 
 import pytest
 from pydantic import ValidationError
@@ -14,6 +15,7 @@ def test_patron_requires_privacy_notice_acknowledgement():
         display_name="Sam",
         notice_version="pilot-v1",
         notice_acknowledged_at=NOW,
+        notice_acknowledged_by_principal="demo-bartender",
     )
     assert patron.display_name == "Sam"
 
@@ -26,6 +28,7 @@ def test_experience_rejects_out_of_range_or_non_integer_rating(rating):
     with pytest.raises(ValidationError):
         DrinkExperienceCreate(
             rating=rating,
+            recipe_id=uuid4(),
             feedback_provenance="guest_stated",
             served_at=NOW,
             idempotency_key="request-1",
@@ -36,6 +39,7 @@ def test_rating_or_feedback_requires_explicit_provenance():
     with pytest.raises(ValidationError, match="feedback_provenance"):
         DrinkExperienceCreate(
             rating=5,
+            recipe_id=uuid4(),
             served_at=NOW,
             idempotency_key="request-1",
         )
@@ -45,6 +49,15 @@ def test_provenance_is_rejected_without_feedback_signal():
     with pytest.raises(ValidationError, match="requires a rating or feedback"):
         DrinkExperienceCreate(
             feedback_provenance="bartender_observed",
+            recipe_id=uuid4(),
+            served_at=NOW,
+            idempotency_key="request-1",
+        )
+
+
+def test_experience_requires_a_recipe_locator():
+    with pytest.raises(ValidationError, match="recipe_id or recipe_version_id"):
+        DrinkExperienceCreate(
             served_at=NOW,
             idempotency_key="request-1",
         )

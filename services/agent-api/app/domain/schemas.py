@@ -4,12 +4,13 @@ from datetime import datetime
 from typing import Annotated
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, model_validator
 
 from app.domain.enums import (
     CandidateSource,
     ConfidenceLabel,
     FeedbackProvenance,
+    FlavorProvenance,
     IngredientUnit,
     MenuStatus,
     PatronStatus,
@@ -25,6 +26,7 @@ SCORING_VERSION = "match-v1"
 Name = Annotated[str, Field(min_length=1, max_length=255)]
 ShortText = Annotated[str, Field(min_length=1, max_length=500)]
 Score = Annotated[float, Field(ge=0, le=100)]
+NormalizedScore = Annotated[float, Field(ge=0, le=1)]
 NonNegativeMoney = Annotated[float, Field(ge=0)]
 PositiveQuantity = Annotated[float, Field(gt=0, le=10_000)]
 
@@ -46,10 +48,23 @@ class IngredientLine(DomainModel):
     unit: IngredientUnit
 
 
+class FlavorVector(DomainModel):
+    sweet: NormalizedScore
+    sour: NormalizedScore
+    bitter: NormalizedScore
+    spirituous: NormalizedScore
+    fruity: NormalizedScore
+    herbal: NormalizedScore
+    spicy: NormalizedScore
+    smoky: NormalizedScore
+
+
 class FlavorProfile(DomainModel):
-    dimensions: dict[Annotated[str, Field(min_length=1, max_length=64)], Score] = Field(
-        default_factory=dict, max_length=32
-    )
+    taxonomy_version: Annotated[
+        str, Field(default="flavor-v1", pattern=r"^flavor-v\d+$")
+    ]
+    dimensions: FlavorVector
+    provenance: list[FlavorProvenance] = Field(min_length=1, max_length=4)
     tags: list[Annotated[str, Field(min_length=1, max_length=64)]] = Field(
         default_factory=list, max_length=32
     )
@@ -65,7 +80,7 @@ class RecipeVersionInput(DomainModel):
     garnish: Annotated[str | None, Field(default=None, max_length=500)]
     description: Annotated[str | None, Field(default=None, max_length=2_000)]
     internal_notes: Annotated[str | None, Field(default=None, max_length=2_000)]
-    flavor_profile: FlavorProfile = Field(default_factory=FlavorProfile)
+    flavor_profile: FlavorProfile | None = None
 
 
 class RecipeCreate(RecipeVersionInput):
@@ -120,7 +135,7 @@ class RecipeSnapshot(DomainModel):
     total_volume_ml: Annotated[float | None, Field(default=None, gt=0, le=100_000)]
     estimated_abv: Annotated[float | None, Field(default=None, ge=0, le=100)]
     estimated_cost_vnd: NonNegativeMoney | None = None
-    flavor_profile: FlavorProfile
+    flavor_profile: FlavorProfile | None = None
     missing_data: list[Annotated[str, Field(min_length=1, max_length=255)]] = Field(
         default_factory=list, max_length=50
     )
@@ -155,7 +170,10 @@ class PatronCreate(DomainModel):
     allergies: list[ShortText] = Field(default_factory=list, max_length=100)
     avoidances: list[ShortText] = Field(default_factory=list, max_length=100)
     notice_version: Annotated[str, Field(min_length=1, max_length=32)]
-    notice_acknowledged_at: datetime
+    notice_acknowledged_at: AwareDatetime
+    notice_acknowledged_by_principal: Annotated[
+        str, Field(min_length=1, max_length=255)
+    ]
 
 
 class Patron(DomainModel):
@@ -168,7 +186,10 @@ class Patron(DomainModel):
     allergies: list[ShortText] = Field(default_factory=list, max_length=100)
     avoidances: list[ShortText] = Field(default_factory=list, max_length=100)
     notice_version: Annotated[str, Field(min_length=1, max_length=32)]
-    notice_acknowledged_at: datetime
+    notice_acknowledged_at: AwareDatetime
+    notice_acknowledged_by_principal: Annotated[
+        str, Field(min_length=1, max_length=255)
+    ]
 
 
 class DrinkExperienceCreate(DomainModel):
@@ -177,11 +198,13 @@ class DrinkExperienceCreate(DomainModel):
     rating: Annotated[int | None, Field(default=None, ge=1, le=5)]
     feedback: Annotated[str | None, Field(default=None, max_length=2_000)]
     feedback_provenance: FeedbackProvenance | None = None
-    served_at: datetime
+    served_at: AwareDatetime
     idempotency_key: Annotated[str, Field(min_length=1, max_length=255)]
 
     @model_validator(mode="after")
     def require_feedback_provenance(self) -> "DrinkExperienceCreate":
+        if self.recipe_id is None and self.recipe_version_id is None:
+            raise ValueError("recipe_id or recipe_version_id is required")
         if (self.rating is not None or self.feedback is not None) and (
             self.feedback_provenance is None
         ):
@@ -205,7 +228,21 @@ class DrinkExperience(DomainModel):
     rating: Annotated[int | None, Field(default=None, ge=1, le=5)]
     feedback: Annotated[str | None, Field(default=None, max_length=2_000)]
     feedback_provenance: FeedbackProvenance | None = None
-    served_at: datetime
+    served_at: AwareDatetime
+
+    @model_validator(mode="after")
+    def preserve_feedback_provenance(self) -> "DrinkExperience":
+        if (self.rating is not None or self.feedback is not None) and (
+            self.feedback_provenance is None
+        ):
+            raise ValueError(
+                "feedback_provenance is required when rating or feedback is present"
+            )
+        if self.feedback_provenance is not None and (
+            self.rating is None and self.feedback is None
+        ):
+            raise ValueError("feedback_provenance requires a rating or feedback")
+        return self
 
 
 class TasteProfile(DomainModel):
@@ -213,9 +250,7 @@ class TasteProfile(DomainModel):
     profile_version: Annotated[
         str, Field(default=PROFILE_VERSION, pattern=r"^taste-v\d+$")
     ]
-    flavor_dimensions: dict[
-        Annotated[str, Field(min_length=1, max_length=64)], Score
-    ] = Field(default_factory=dict, max_length=32)
+    flavor_profile: FlavorProfile | None = None
     preferred_base_spirits: list[ShortText] = Field(default_factory=list, max_length=50)
     liked_ingredients: list[ShortText] = Field(default_factory=list, max_length=100)
     disliked_ingredients: list[ShortText] = Field(default_factory=list, max_length=100)
@@ -223,15 +258,41 @@ class TasteProfile(DomainModel):
     confidence_score: Score
     confidence_label: ConfidenceLabel
     caveats: list[ShortText] = Field(default_factory=list, max_length=50)
-    computed_at: datetime
+    computed_at: AwareDatetime
     is_stale: bool = False
 
 
 class ScoreComponent(DomainModel):
     score: Score
-    weight: Annotated[float, Field(gt=0, le=1)]
+    weight: Annotated[float, Field(ge=0, le=1)]
     evidence_count: Annotated[int, Field(ge=0)]
     explanation_key: Annotated[str, Field(min_length=1, max_length=100)]
+
+
+class ScoreBreakdown(DomainModel):
+    flavor: ScoreComponent
+    base_spirit: ScoreComponent
+    strength: ScoreComponent
+    ingredients: ScoreComponent
+    feedback: ScoreComponent
+    novelty: ScoreComponent
+
+    @model_validator(mode="after")
+    def require_normalized_weights(self) -> "ScoreBreakdown":
+        total = sum(
+            component.weight
+            for component in (
+                self.flavor,
+                self.base_spirit,
+                self.strength,
+                self.ingredients,
+                self.feedback,
+                self.novelty,
+            )
+        )
+        if abs(total - 1.0) > 1e-9:
+            raise ValueError("component weights must sum to 1")
+        return self
 
 
 class Recommendation(DomainModel):
@@ -246,9 +307,7 @@ class Recommendation(DomainModel):
     scoring_version: Annotated[
         str, Field(default=SCORING_VERSION, pattern=r"^match-v\d+$")
     ]
-    components: dict[
-        Annotated[str, Field(min_length=1, max_length=64)], ScoreComponent
-    ] = Field(min_length=1, max_length=16)
+    components: ScoreBreakdown
     evidence_count: Annotated[int, Field(ge=0)]
     matched_preferences: list[ShortText] = Field(default_factory=list, max_length=50)
     novel_elements: list[ShortText] = Field(default_factory=list, max_length=50)

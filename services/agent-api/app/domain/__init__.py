@@ -4,6 +4,7 @@ from app.domain.enums import (
     CandidateSource,
     ConfidenceLabel,
     FeedbackProvenance,
+    FlavorProvenance,
     IngredientUnit,
     MenuStatus,
     PatronStatus,
@@ -17,6 +18,7 @@ from app.domain.schemas import (
     DrinkExperience,
     DrinkExperienceCreate,
     FlavorProfile,
+    FlavorVector,
     IngredientLine,
     Menu,
     MenuCreate,
@@ -31,6 +33,7 @@ from app.domain.schemas import (
     Recommendation,
     RecommendationResponse,
     ScoreComponent,
+    ScoreBreakdown,
     TasteProfile,
 )
 
@@ -41,6 +44,8 @@ __all__ = [
     "DrinkExperienceCreate",
     "FeedbackProvenance",
     "FlavorProfile",
+    "FlavorProvenance",
+    "FlavorVector",
     "IngredientLine",
     "IngredientUnit",
     "Menu",
@@ -63,5 +68,6 @@ __all__ = [
     "SCHEMA_VERSION",
     "SCORING_VERSION",
     "ScoreComponent",
+    "ScoreBreakdown",
     "TasteProfile",
 ]

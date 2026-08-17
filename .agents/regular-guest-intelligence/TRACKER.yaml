@@ -1,6 +1,6 @@
 project: regular-guest-intelligence-mvp
 status: in_progress
-branch: codex/fnd-02-domain-schemas
+branch: codex/fnd-03-bar-principal
 execution_model:
   human: product-owner-and-acceptance-reviewer
   implementer: one-active-ai-coding-agent
@@ -27,10 +27,10 @@ human_checkpoints:
     decision: mvp-release-acceptance
 summary:
   total_tasks: 47
-  planned: 45
+  planned: 44
   in_progress: 0
   blocked: 0
-  completed: 2
+  completed: 3
 tasks:
   - id: FND-01
     epic: foundation
@@ -84,8 +84,29 @@ tasks:
     handoff: "Stop at FND-02 boundary; FND-03 and other dependent tasks remain planned."
   - id: FND-03
     epic: foundation
-    status: planned
+    status: completed
     plan: "tasks/fnd-03-implement-bar-principal-abstraction-and-demo-principal.yaml"
+    completed_at: "2026-07-31"
+    evidence:
+      implementation:
+        - "app/core/bar_auth.py: immutable BarPrincipal, provider protocol, local/staging demo provider and FastAPI dependency factory"
+        - "app/core/config.py and .env.example: explicit runtime, feature, demo-bar ID and demo credential configuration"
+        - "Session capability and bar credential are independently required; client-supplied bar_id is only a locator"
+        - "Production provider construction fails closed unless a verified provider is explicitly supplied"
+        - "Missing APP_ENV defaults to production; local/staging demo mode requires explicit opt-in"
+        - "Production rejects demo providers and revalidates principal.verified at resolution time"
+        - "Cross-bar authorization returns non-enumerating 404 and security logs contain operational IDs without credentials or patron-sensitive fields"
+      regression_coverage:
+        - "tests/test_bar_principal.py: missing, invalid, mismatched and valid demo principal cases"
+        - "tests/test_bar_principal.py: endpoint 401/403/404 policy, session-token separation, production fail-closed and safe-log assertions"
+      validation:
+        - command: "E:/anaconda3/envs/cocktail-ai/python.exe -m pytest tests/test_bar_principal.py -q"
+          result: "post-review passed: 13 tests; 2 dependency deprecation warnings"
+        - command: "E:/anaconda3/envs/cocktail-ai/python.exe -m pytest -q"
+          result: "post-review passed: 63 tests; 40 infrastructure-dependent tests skipped by the existing offline policy; 2 dependency deprecation warnings"
+        - command: "E:/anaconda3/envs/cocktail-ai/python.exe -m compileall -q app tests"
+          result: "passed"
+    handoff: "Stop at FND-03 boundary; FND-04 and other dependent tasks remain planned."
   - id: FND-04
     epic: foundation
     status: planned

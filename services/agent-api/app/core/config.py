@@ -1,6 +1,7 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import Field
-from typing import Optional
+from typing import Literal, Optional
+from uuid import UUID
 import os
 from pathlib import Path
 
@@ -9,6 +10,15 @@ REPO_ROOT = Path(__file__).resolve().parents[4]
 ENV_PATH = REPO_ROOT / ".env"
 
 class Settings(BaseSettings):
+    # Runtime identity boundary for Regular Guest Intelligence. Demo principals
+    # are intentionally limited to non-production environments.
+    # Fail closed when a deployment forgets to declare its environment. Local
+    # and staging must opt into demo-principal eligibility explicitly.
+    APP_ENV: Literal["local", "staging", "production"] = "production"
+    REGULAR_GUEST_ENABLED: bool = False
+    DEMO_BAR_ID: Optional[UUID] = None
+    DEMO_BAR_TOKEN: str = ""
+
     # Session capability authentication. Use at least 32 random bytes in production.
     SESSION_TOKEN_SECRET: str = ""
 

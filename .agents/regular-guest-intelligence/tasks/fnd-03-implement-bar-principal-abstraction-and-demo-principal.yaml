@@ -2,7 +2,7 @@ id: FND-03
 title: "Implement bar-principal abstraction and demo principal"
 epic: foundation
 priority: P0
-status: planned
+status: completed
 owner: ai-coding-agent
 human_role: product-owner-and-acceptance-reviewer
 estimate_ai_agent_days: "2-3"

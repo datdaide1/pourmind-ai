@@ -12,7 +12,20 @@ source_spec: "docs/REGULAR_GUEST_INTELLIGENCE_MVP_SPEC.md"
 source_backlog: "docs/REGULAR_GUEST_INTELLIGENCE_IMPLEMENTATION_PLAN.md"
 planned_paths:
   - "services/agent-api/app/db/models.py"
+  - "services/agent-api/app/db/ingest_data.py"
   - "services/agent-api/migrations/20260730_regular_guest_intelligence_placeholder.sql"
+  - "services/agent-api/tests/test_migration.py"
+  - "services/agent-api/tests/test_ingest_data.py"
+scope_requirements:
+  - "Separate schema and trigger migration from reference-data ingestion"
+  - "Migration tests must not invoke the full ingestion pipeline"
+  - "Replace unconditional liquor_prices delete-and-reinsert with stable-key upsert semantics"
+  - "Keep intentional full reference-data synchronization as a separate explicit command"
+  - "Fail closed before destructive reference-data synchronization unless the target is an explicitly isolated test database"
+acceptance_requirements:
+  - "Applying or reapplying migrations preserves existing liquor_prices and unrelated reference data"
+  - "Repeated liquor-price ingestion updates matching stable records without deleting unrelated rows"
+  - "Regression coverage proves migration setup and liquor-price ingestion are independently callable"
 execution_checklist:
   - inspect_current_code_and_related_tests
   - implement_only_this_task_scope

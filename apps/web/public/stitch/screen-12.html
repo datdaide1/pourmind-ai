@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PourMind - Record Drink Transaction</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&amp;family=Libre+Caslon+Text:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#303031",
+                        "on-primary-fixed": "#241a00",
+                        "surface-container-lowest": "#0c0f0f",
+                        "on-secondary-fixed-variant": "#474647",
+                        "on-error": "#690005",
+                        "outline-variant": "#4d4635",
+                        "on-tertiary-container": "#454546",
+                        "on-surface-variant": "#d0c5af",
+                        "on-tertiary-fixed-variant": "#474648",
+                        "on-surface": "#e2e2e2",
+                        "primary-fixed": "#ffe088",
+                        "on-primary-fixed-variant": "#574500",
+                        "surface-container-high": "#282a2b",
+                        "surface-dim": "#121414",
+                        "surface-container-low": "#1a1c1c",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary-fixed": "#1b1b1c",
+                        "surface-bright": "#37393a",
+                        "inverse-on-surface": "#2f3131",
+                        "tertiary-container": "#b4b2b3",
+                        "inverse-primary": "#735c00",
+                        "secondary-container": "#49494a",
+                        "on-secondary-container": "#bab8b9",
+                        "secondary": "#c8c6c7",
+                        "error-container": "#93000a",
+                        "surface-container-highest": "#333535",
+                        "error": "#ffb4ab",
+                        "primary-container": "#d4af37",
+                        "secondary-fixed": "#e5e2e3",
+                        "outline": "#99907c",
+                        "tertiary-fixed-dim": "#c8c6c7",
+                        "tertiary": "#d0cdce",
+                        "on-tertiary-fixed": "#1b1b1c",
+                        "primary": "#f2ca50",
+                        "on-primary-container": "#554300",
+                        "surface-variant": "#333535",
+                        "on-background": "#e2e2e2",
+                        "on-primary": "#3c2f00",
+                        "background": "#121414",
+                        "surface": "#121414",
+                        "on-secondary": "#303031",
+                        "surface-tint": "#e9c349",
+                        "primary-fixed-dim": "#e9c349",
+                        "tertiary-fixed": "#e4e2e3",
+                        "secondary-fixed-dim": "#c8c6c7",
+                        "inverse-surface": "#e2e2e2",
+                        "surface-container": "#1e2020"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-desktop": "64px",
+                        "container-max": "1280px",
+                        "margin-mobile": "20px",
+                        "gutter": "24px",
+                        "unit": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Libre Caslon Text"],
+                        "label-md": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "headline-md": ["Libre Caslon Text"],
+                        "display-lg-mobile": ["Libre Caslon Text"],
+                        "label-sm": ["Hanken Grotesk"],
+                        "display-lg": ["Libre Caslon Text"],
+                        "body-lg": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-md": ["32px", { "lineHeight": "40px", "fontWeight": "400" }],
+                        "display-lg-mobile": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background-color: rgba(45, 45, 46, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+        }
+        .input-underline {
+            background-color: #2D2D2E;
+            border: none;
+            border-bottom: 1px solid #ffffff;
+            transition: border-color 0.3s ease;
+        }
+        .input-underline:focus {
+            outline: none;
+            border-bottom: 1px solid #D4AF37;
+            box-shadow: none;
+        }
+        .btn-primary {
+            background-color: #D4AF37;
+            color: #000000;
+        }
+        .btn-secondary {
+            background-color: transparent;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            color: #D4AF37;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex">
+<!-- Suppressed SideNav/TopNav for Transactional Page -->
+<main class="flex-1 w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-8 md:py-12">
+<!-- Header Section -->
+<header class="flex justify-between items-center mb-8">
+<div>
+<h1 class="font-headline-md text-headline-md text-primary mb-2">Record Transaction</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Log drinks, adjustments, and feedback during service.</p>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined">close</span>
+<span class="font-label-md text-label-md">Cancel</span>
+</button>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column: Search & Entry -->
+<div class="lg:col-span-7 space-y-6">
+<!-- Search Panel -->
+<section class="glass-panel rounded-xl p-6">
+<h2 class="font-headline-sm text-headline-sm text-primary mb-4">Find Drink</h2>
+<div class="relative mb-6">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full input-underline pl-12 py-3 font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant rounded-t-DEFAULT" placeholder="Search Active Menu or Recipes..." type="text"/>
+</div>
+<!-- Quick Suggestions (Bento Style) -->
+<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+<button class="bg-surface-container-high hover:bg-surface-bright transition-colors rounded-lg p-4 text-left border border-outline-variant/30 flex flex-col items-start gap-2 h-full">
+<span class="font-label-md text-label-md text-on-surface">Old Fashioned</span>
+<span class="bg-surface-variant px-2 py-1 rounded text-[10px] text-on-surface-variant uppercase tracking-wider">Active Menu</span>
+</button>
+<button class="bg-surface-container-high hover:bg-surface-bright transition-colors rounded-lg p-4 text-left border border-outline-variant/30 flex flex-col items-start gap-2 h-full">
+<span class="font-label-md text-label-md text-on-surface">Negroni</span>
+<span class="bg-surface-variant px-2 py-1 rounded text-[10px] text-on-surface-variant uppercase tracking-wider">Active Menu</span>
+</button>
+<button class="bg-surface-container-high hover:bg-surface-bright transition-colors rounded-lg p-4 text-left border border-primary-container/30 flex flex-col items-start gap-2 h-full relative overflow-hidden">
+<div class="absolute inset-0 bg-primary/5"></div>
+<span class="font-label-md text-label-md text-primary relative z-10 flex items-center gap-1"><span class="material-symbols-outlined text-sm">add</span> Bespoke Entry</span>
+<span class="bg-surface-variant px-2 py-1 rounded text-[10px] text-on-surface-variant uppercase tracking-wider relative z-10">Off-Menu</span>
+</button>
+</div>
+</section>
+<!-- Current Drink Details Panel -->
+<section class="glass-panel rounded-xl p-6">
+<div class="flex justify-between items-start mb-6">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-primary">Old Fashioned</h2>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Table 12 • Server: Sarah</span>
+</div>
+<img class="w-16 h-16 object-cover rounded-lg border border-primary/20" data-alt="A macro shot of a classic Old Fashioned cocktail in a crystal rocks glass. A large, clear, single ice cube sits in the amber liquid. A freshly expressed orange peel rests on the rim, catching the warm, low-key speakeasy lighting. The background is deeply shadowed, emphasizing the vibrant orange and gold hues of the drink. High-end corporate modern aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCx3ASRw591BFh8bgCD_JOVJo-TR3gSP3U0d2cg98yz1CTsrJnh9zqAR6WcFGWQmTV8wu2jj8yKXY-uZu1Uh7MidbgFC_Z0YAkANKpPue9oyi11yLwkJyBIQlR6mh9U4fNfGoN8ALSPVLu0cJ50CYqvOwBo0JbodR1Nw4g8I_scvZrzAHSbuiLmAfHfigui7iTE8bqLKQfWU0ftBFjIs-JTvjnRGfd-2P1RBuXp1NiQBYETeRm-FqewzQ"/>
+</div>
+<!-- Adjustments -->
+<div class="mb-6">
+<label class="font-label-sm text-label-sm text-on-surface-variant block mb-3 uppercase tracking-wider">Adjustments</label>
+<div class="flex flex-wrap gap-2">
+<button class="bg-surface-variant text-on-surface px-4 py-2 rounded-full font-label-md text-label-md hover:bg-primary hover:text-on-primary transition-colors">Less Sweet</button>
+<button class="bg-surface-variant text-on-surface px-4 py-2 rounded-full font-label-md text-label-md hover:bg-primary hover:text-on-primary transition-colors">Extra Ice</button>
+<button class="bg-surface-variant text-on-surface px-4 py-2 rounded-full font-label-md text-label-md hover:bg-primary hover:text-on-primary transition-colors">Rye Base</button>
+<button class="border border-outline-variant text-on-surface-variant px-4 py-2 rounded-full font-label-md text-label-md flex items-center gap-1 hover:border-primary hover:text-primary transition-colors"><span class="material-symbols-outlined text-sm">add</span> Custom</button>
+</div>
+</div>
+<!-- Feedback Layout -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="font-label-sm text-label-sm text-on-surface-variant block mb-2 uppercase tracking-wider">Guest Feedback</label>
+<textarea class="w-full input-underline p-3 font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant rounded-t-DEFAULT resize-none" placeholder="What did they say?" rows="3"></textarea>
+</div>
+<div>
+<label class="font-label-sm text-label-sm text-on-surface-variant block mb-2 uppercase tracking-wider flex items-center gap-1"><span class="material-symbols-outlined text-sm text-primary">visibility</span> Bartender Obs.</label>
+<textarea class="w-full input-underline p-3 font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant rounded-t-DEFAULT resize-none" placeholder="Technical notes (e.g., dilution rate)" rows="3"></textarea>
+</div>
+</div>
+<!-- Rating -->
+<div class="mt-6">
+<label class="font-label-sm text-label-sm text-on-surface-variant block mb-3 uppercase tracking-wider">Guest Rating (Optional)</label>
+<div class="flex gap-4">
+<button class="w-12 h-12 rounded-full border border-outline-variant flex items-center justify-center hover:border-primary hover:text-primary transition-colors"><span class="material-symbols-outlined">thumb_down</span></button>
+<button class="w-12 h-12 rounded-full border border-primary-container bg-primary/10 text-primary flex items-center justify-center"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">thumb_up</span></button>
+<button class="w-12 h-12 rounded-full border border-outline-variant flex items-center justify-center hover:border-primary hover:text-primary transition-colors"><span class="material-symbols-outlined">favorite</span></button>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Summary & Actions -->
+<div class="lg:col-span-5">
+<div class="glass-panel rounded-xl p-6 sticky top-8">
+<h2 class="font-headline-sm text-headline-sm text-primary border-b border-primary-container/20 pb-4 mb-6">Transaction Summary</h2>
+<div class="space-y-4 mb-8">
+<div class="flex justify-between items-center pb-2 border-b border-outline-variant/20">
+<span class="font-body-md text-body-md text-on-surface">Old Fashioned</span>
+<span class="font-label-md text-label-md text-on-surface-variant">x1</span>
+</div>
+<div class="pl-4 border-l-2 border-primary/30">
+<p class="font-label-sm text-label-sm text-primary uppercase tracking-wider mb-1">Mods</p>
+<p class="font-body-md text-body-md text-on-surface-variant">Less Sweet, Rye Base</p>
+</div>
+<div class="pl-4 border-l-2 border-primary/30">
+<p class="font-label-sm text-label-sm text-primary uppercase tracking-wider mb-1">Feedback</p>
+<p class="font-body-md text-body-md text-on-surface-variant italic">"Perfectly balanced"</p>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<button class="w-full btn-primary font-label-md text-label-md py-4 rounded-lg flex items-center justify-center gap-2 hover:bg-primary-container transition-colors">
+<span class="material-symbols-outlined">check_circle</span>
+                            Save &amp; Close
+                        </button>
+<button class="w-full btn-secondary font-label-md text-label-md py-4 rounded-lg flex items-center justify-center gap-2 hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined">add</span>
+                            Save &amp; Add Another
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

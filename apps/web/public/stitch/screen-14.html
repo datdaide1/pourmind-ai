@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PourMind - Flavor Profile</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#303031",
+                        "on-primary-fixed": "#241a00",
+                        "surface-container-lowest": "#0c0f0f",
+                        "on-secondary-fixed-variant": "#474647",
+                        "on-error": "#690005",
+                        "outline-variant": "#4d4635",
+                        "on-tertiary-container": "#454546",
+                        "on-surface-variant": "#d0c5af",
+                        "on-tertiary-fixed-variant": "#474648",
+                        "on-surface": "#e2e2e2",
+                        "primary-fixed": "#ffe088",
+                        "on-primary-fixed-variant": "#574500",
+                        "surface-container-high": "#282a2b",
+                        "surface-dim": "#121414",
+                        "surface-container-low": "#1a1c1c",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary-fixed": "#1b1b1c",
+                        "surface-bright": "#37393a",
+                        "inverse-on-surface": "#2f3131",
+                        "tertiary-container": "#b4b2b3",
+                        "inverse-primary": "#735c00",
+                        "secondary-container": "#49494a",
+                        "on-secondary-container": "#bab8b9",
+                        "secondary": "#c8c6c7",
+                        "error-container": "#93000a",
+                        "surface-container-highest": "#333535",
+                        "error": "#ffb4ab",
+                        "primary-container": "#d4af37",
+                        "secondary-fixed": "#e5e2e3",
+                        "outline": "#99907c",
+                        "tertiary-fixed-dim": "#c8c6c7",
+                        "tertiary": "#d0cdce",
+                        "on-tertiary-fixed": "#1b1b1c",
+                        "primary": "#f2ca50",
+                        "on-primary-container": "#554300",
+                        "surface-variant": "#333535",
+                        "on-background": "#e2e2e2",
+                        "on-primary": "#3c2f00",
+                        "background": "#121414",
+                        "surface": "#121414",
+                        "on-secondary": "#303031",
+                        "surface-tint": "#e9c349",
+                        "primary-fixed-dim": "#e9c349",
+                        "tertiary-fixed": "#e4e2e3",
+                        "secondary-fixed-dim": "#c8c6c7",
+                        "inverse-surface": "#e2e2e2",
+                        "surface-container": "#1e2020"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-desktop": "64px",
+                        "container-max": "1280px",
+                        "margin-mobile": "20px",
+                        "gutter": "24px",
+                        "unit": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Libre Caslon Text"],
+                        "label-md": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "headline-md": ["Libre Caslon Text"],
+                        "display-lg-mobile": ["Libre Caslon Text"],
+                        "label-sm": ["Hanken Grotesk"],
+                        "display-lg": ["Libre Caslon Text"],
+                        "body-lg": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-md": ["32px", { "lineHeight": "40px", "fontWeight": "400" }],
+                        "display-lg-mobile": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-card {
+            background-color: rgba(45, 45, 46, 0.7);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            backdrop-filter: blur(20px);
+        }
+        .btn-primary {
+            background-color: #D4AF37;
+            color: #000000;
+        }
+        .btn-secondary {
+            background-color: transparent;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            color: #D4AF37;
+        }
+        .input-glass {
+            background-color: #2D2D2E;
+            border-bottom: 1px solid #ffffff;
+            transition: border-color 0.3s ease;
+        }
+        .input-glass:focus {
+            border-bottom-color: #D4AF37;
+            outline: none;
+        }
+        .chip {
+            background-color: #2D2D2E;
+            border-radius: 4px;
+        }
+        /* Custom scrollbar for horizontal lists */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased min-h-screen flex flex-col selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-xl border-b border-primary-container/20 shadow-sm transition-all duration-300 hidden md:block">
+<div class="flex justify-between items-center px-margin-desktop py-4 max-w-container-max mx-auto">
+<div class="flex items-center gap-8">
+<a class="font-display-lg text-display-lg text-primary tracking-tight" href="#">PourMind</a>
+<div class="hidden lg:flex items-center gap-6">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:bg-primary/10 transition-all duration-300 px-3 py-2 rounded-md" href="#">Mixologist</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:bg-primary/10 transition-all duration-300 px-3 py-2 rounded-md" href="#">Bar Copilot</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:bg-primary/10 transition-all duration-300 px-3 py-2 rounded-md" href="#">Recipes</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:bg-primary/10 transition-all duration-300 px-3 py-2 rounded-md" href="#">Insights</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" style="font-variation-settings: 'FILL' 0;">search</span>
+<input class="bg-surface-container-low border border-primary-container/20 rounded-full py-2 pl-10 pr-4 text-on-surface font-body-md text-body-md focus:outline-none focus:border-primary-container transition-colors w-64 placeholder-on-surface-variant/50" placeholder="Search..." type="text"/>
+</div>
+<button class="font-label-md text-label-md btn-secondary px-6 py-2 rounded-full hover:bg-primary/10 transition-all duration-300">Sign In</button>
+<button class="font-label-md text-label-md btn-primary px-6 py-2 rounded-full hover:opacity-90 transition-opacity">Join Exclusive</button>
+</div>
+</div>
+</nav>
+<!-- Mobile Header -->
+<header class="md:hidden flex items-center justify-between px-margin-mobile py-4 fixed top-0 w-full z-50 bg-background/80 backdrop-blur-xl border-b border-primary-container/20">
+<a class="font-display-lg-mobile text-display-lg-mobile text-primary tracking-tight" href="#">PourMind</a>
+<button class="text-on-surface p-2">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 0;">menu</span>
+</button>
+</header>
+<main class="flex-grow pt-[88px] md:pt-[104px] pb-24 md:pb-12 max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop w-full">
+<!-- Profile Header & Taste Radar -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-gutter mb-16">
+<!-- User Info -->
+<div class="lg:col-span-4 flex flex-col gap-6">
+<div class="flex items-center gap-6">
+<div class="w-24 h-24 rounded-full overflow-hidden border-2 border-primary-container/30 relative">
+<img class="w-full h-full object-cover" data-alt="A sophisticated, high-contrast portrait of a stylish individual in a dimly lit, upscale speakeasy environment. Soft, warm amber lighting highlights their features against a dark, moody background, conveying a sense of exclusivity and refined taste. Corporate modern aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEPLSvLNUANYDtFziA1i2G75GoDRqxfcgU5R7aIzXM5vujzj0zSYz615TtV_fi5_uxl2ehE6jw5_cHNhbvayu288e4gmDPPtbrNzf3XHpwnzjBEUQnxI8320U9sN6qM0gEAEobL5wU3zVid-_4L3kOCBqR_nrDuqapOqfhn-lbEt_W_KDYQqsRDwn1b5B3BVPD9p8-KYWpMYlPVrMfj2Tn-sBQkazftLMmP_AS-rxwdqzDJD9eDhyvOg"/>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md text-on-surface">Alex Mercer</h1>
+<p class="font-body-md text-body-md text-primary">Curious Connoisseur</p>
+</div>
+</div>
+<!-- Preferences & Allergies -->
+<div class="glass-card rounded-xl p-6">
+<div class="flex items-center justify-between mb-4">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Safety &amp; Preferences</h2>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">edit</span>
+</button>
+</div>
+<div class="space-y-4">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-2">Allergies</p>
+<div class="flex flex-wrap gap-2">
+<span class="chip px-3 py-1 font-label-md text-label-md text-error border border-error/30">Tree Nuts</span>
+<span class="chip px-3 py-1 font-label-md text-label-md text-error border border-error/30">Sulfites</span>
+</div>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-2">Preferred Spirits</p>
+<div class="flex flex-wrap gap-2">
+<span class="chip px-3 py-1 font-label-md text-label-md text-on-surface">Mezcal</span>
+<span class="chip px-3 py-1 font-label-md text-label-md text-on-surface">Japanese Whisky</span>
+<span class="chip px-3 py-1 font-label-md text-label-md text-on-surface">Amaro</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Taste Radar (Conceptual Visualization) -->
+<div class="lg:col-span-8 glass-card rounded-xl p-8 relative overflow-hidden flex flex-col items-center justify-center min-h-[400px]">
+<h2 class="font-headline-sm text-headline-sm text-on-surface absolute top-8 left-8">Flavor Profile Radar</h2>
+<button class="absolute top-8 right-8 text-on-surface-variant hover:text-primary transition-colors" title="Retake Taste Quiz">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">refresh</span>
+</button>
+<!-- Abstract Radar Representation using SVG/CSS -->
+<div class="relative w-64 h-64 mt-12">
+<!-- Concentric Circles -->
+<div class="absolute inset-0 rounded-full border border-primary-container/10"></div>
+<div class="absolute inset-4 rounded-full border border-primary-container/10"></div>
+<div class="absolute inset-8 rounded-full border border-primary-container/20"></div>
+<div class="absolute inset-12 rounded-full border border-primary-container/20"></div>
+<div class="absolute inset-16 rounded-full border border-primary-container/30"></div>
+<!-- Axes -->
+<div class="absolute top-0 bottom-0 left-1/2 w-px bg-primary-container/20 -translate-x-1/2"></div>
+<div class="absolute left-0 right-0 top-1/2 h-px bg-primary-container/20 -translate-y-1/2"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-full h-px bg-primary-container/20 rotate-45"></div>
+</div>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-full h-px bg-primary-container/20 -rotate-45"></div>
+</div>
+<!-- Data Polygon (Mocked with CSS clip-path for visual effect) -->
+<div class="absolute inset-0 bg-primary/20 backdrop-blur-[2px] transition-all duration-1000 ease-in-out" style="clip-path: polygon(50% 15%, 85% 30%, 70% 80%, 40% 90%, 10% 60%, 25% 20%); border: 1px solid #D4AF37;">
+</div>
+<!-- Points -->
+<div class="absolute w-2 h-2 bg-primary rounded-full shadow-[0_0_8px_rgba(212,175,55,0.8)]" style="top: 15%; left: 50%; transform: translate(-50%, -50%);"></div>
+<div class="absolute w-2 h-2 bg-primary rounded-full shadow-[0_0_8px_rgba(212,175,55,0.8)]" style="top: 30%; left: 85%; transform: translate(-50%, -50%);"></div>
+<div class="absolute w-2 h-2 bg-primary rounded-full shadow-[0_0_8px_rgba(212,175,55,0.8)]" style="top: 80%; left: 70%; transform: translate(-50%, -50%);"></div>
+<div class="absolute w-2 h-2 bg-primary rounded-full shadow-[0_0_8px_rgba(212,175,55,0.8)]" style="top: 90%; left: 40%; transform: translate(-50%, -50%);"></div>
+<div class="absolute w-2 h-2 bg-primary rounded-full shadow-[0_0_8px_rgba(212,175,55,0.8)]" style="top: 60%; left: 10%; transform: translate(-50%, -50%);"></div>
+<div class="absolute w-2 h-2 bg-primary rounded-full shadow-[0_0_8px_rgba(212,175,55,0.8)]" style="top: 20%; left: 25%; transform: translate(-50%, -50%);"></div>
+<!-- Labels -->
+<span class="absolute -top-6 left-1/2 -translate-x-1/2 font-label-sm text-label-sm text-on-surface">Smoky</span>
+<span class="absolute top-1/2 -right-12 -translate-y-1/2 font-label-sm text-label-sm text-on-surface">Bitter</span>
+<span class="absolute -bottom-6 left-1/2 -translate-x-1/2 font-label-sm text-label-sm text-on-surface">Sweet</span>
+<span class="absolute top-1/2 -left-12 -translate-y-1/2 font-label-sm text-label-sm text-on-surface">Sour</span>
+<span class="absolute -top-4 -left-8 font-label-sm text-label-sm text-on-surface">Herbal</span>
+<span class="absolute -top-4 -right-8 font-label-sm text-label-sm text-on-surface">Spicy</span>
+</div>
+<p class="mt-12 font-body-md text-body-md text-on-surface-variant text-center max-w-md">
+                    Your palate currently leans heavily towards <strong class="text-primary font-normal">Smoky</strong> and <strong class="text-primary font-normal">Bitter</strong> notes, with a noticeable aversion to overly Sweet profiles.
+                </p>
+</div>
+</section>
+<!-- Recommended & Saved Recipes (Bento Layout) -->
+<section class="mb-16">
+<div class="flex items-center justify-between mb-8">
+<h2 class="font-headline-md text-headline-md text-on-surface">Your Curated Collection</h2>
+<a class="font-label-md text-label-md text-primary hover:text-primary-container transition-colors flex items-center gap-1" href="#">
+                    View All Vault <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 0;">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- Highlight/Recommended Card (Takes 2 columns on large screens) -->
+<div class="glass-card rounded-xl overflow-hidden lg:col-span-2 group relative h-[400px] flex flex-col justify-end p-6">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A close-up, high-fidelity photograph of a complex mezcal cocktail in a heavy crystal rocks glass. A large, perfectly clear ice cube sits in the center. The drink is a deep amber color, garnished with a charred orange peel and a sprig of torched rosemary, emitting a faint wisp of smoke. The background is a dark, out-of-focus speakeasy bar setting. Exclusivity and premium feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxXb_Q8TAzmkJhAz_DCLomjw3OP7HYyYPKkoeSdJqIeGMU9obNMK4bVCxzndHukWaJRlYLfhLyswgjn7eDq25oZ9XiCMd75WgIqSYjAWg5pkbIywF-2CWe7RVUHz36UvdyyQO_l-DazHsPCgQ4XE3i4plqGJo2HoCJQFzsAncU4SNmFEYPNv21NeJL-6ddGQlCKai9fdvPNDRdVUuKpHknlGjKVKdQUyvqdEn0iDFIsGLLdI5qD1G49w"/>
+<div class="absolute inset-0 bg-gradient-to-t from-[#121414] via-[#121414]/60 to-transparent"></div>
+</div>
+<div class="relative z-10 flex flex-col gap-2">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-widest">Perfect Match</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Oaxaca Old Fashioned</h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md">Based on your love for Mezcal and bitter profiles, this smoky variation of a classic is your next logical step.</p>
+<div class="flex items-center gap-4 mt-4">
+<button class="btn-primary font-label-md text-label-md px-6 py-2 rounded-full hover:opacity-90 transition-opacity">View Recipe</button>
+<button class="w-10 h-10 rounded-full glass-card flex items-center justify-center hover:bg-primary/20 transition-colors border border-primary-container/30">
+<span class="material-symbols-outlined text-on-surface" style="font-variation-settings: 'FILL' 0;">bookmark</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Saved Recipe Card 1 -->
+<div class="glass-card rounded-xl overflow-hidden flex flex-col h-[400px] group">
+<div class="h-48 relative overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A tall, elegant highball glass filled with a bright, pale yellow Japanese whisky highball. Condensation beads on the glass. A single, pristine lemon twist rests inside. The lighting is crisp and precise, illuminating the effervescence against a dark, minimal background. Sophisticated and refreshing mood." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIprzKBVwnacyQx8RYqOgsN97Yq50Nzk-7PK72PigauzlDhVwDbrI6EC7-QCEgcN9-U3IojyK_ojVKnzVGuibqEb3GS2jIG0aSbsOD7f0kqvPO7MEQNpJ1j1kVyyvB6PE7zvt9Kd9tZg64VuY4hq9vECUXgK8P9u3m4Vaa3NnKW_eBFssWmoPpKwLY47AxFoWW96Qmj1EGPVNvJaJSJLv96FcVHWGx3iKiDaZolimiT20J5K-lVjoG3A"/>
+<div class="absolute top-4 right-4 w-8 h-8 rounded-full bg-background/80 backdrop-blur-md flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[18px]" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-grow justify-between">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Toki Highball</h3>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="chip px-2 py-1 font-label-sm text-label-sm text-on-surface-variant">Crisp</span>
+<span class="chip px-2 py-1 font-label-sm text-label-sm text-on-surface-variant">Effervescent</span>
+</div>
+</div>
+<p class="font-label-md text-label-md text-primary flex items-center gap-1 cursor-pointer hover:underline">
+                            Mix it <span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 0;">arrow_forward</span>
+</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Mixology Sessions History -->
+<section>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-8">Recent Sessions</h2>
+<div class="glass-card rounded-xl overflow-hidden">
+<div class="flex flex-col">
+<!-- Session Item -->
+<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 border-b border-primary-container/10 hover:bg-surface-variant/30 transition-colors">
+<div class="flex items-center gap-6 mb-4 sm:mb-0">
+<div class="w-16 h-16 rounded-lg bg-surface-container-high flex items-center justify-center border border-primary-container/10">
+<span class="material-symbols-outlined text-primary text-[32px]" style="font-variation-settings: 'FILL' 0;">local_bar</span>
+</div>
+<div>
+<h4 class="font-body-lg text-body-lg text-on-surface">Negroni Exploration</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">3 variations crafted • Last Friday</p>
+</div>
+</div>
+<div class="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
+<span class="font-label-md text-label-md text-primary bg-primary/10 px-3 py-1 rounded-full">Score: 9.2/10</span>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">more_horiz</span>
+</button>
+</div>
+</div>
+<!-- Session Item -->
+<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 border-b border-primary-container/10 hover:bg-surface-variant/30 transition-colors">
+<div class="flex items-center gap-6 mb-4 sm:mb-0">
+<div class="w-16 h-16 rounded-lg bg-surface-container-high flex items-center justify-center border border-primary-container/10">
+<span class="material-symbols-outlined text-on-surface text-[32px]" style="font-variation-settings: 'FILL' 0;">science</span>
+</div>
+<div>
+<h4 class="font-body-lg text-body-lg text-on-surface">Intro to Clarification</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Milk-washed Punch • Oct 12</p>
+</div>
+</div>
+<div class="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
+<span class="font-label-md text-label-md text-on-surface bg-surface-variant px-3 py-1 rounded-full">Score: 7.5/10</span>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">more_horiz</span>
+</button>
+</div>
+</div>
+<!-- Session Item -->
+<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 hover:bg-surface-variant/30 transition-colors">
+<div class="flex items-center gap-6 mb-4 sm:mb-0">
+<div class="w-16 h-16 rounded-lg bg-surface-container-high flex items-center justify-center border border-primary-container/10">
+<span class="material-symbols-outlined text-on-surface text-[32px]" style="font-variation-settings: 'FILL' 0;">liquor</span>
+</div>
+<div>
+<h4 class="font-body-lg text-body-lg text-on-surface">Agave Tasting</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">5 spirits sampled • Sep 28</p>
+</div>
+</div>
+<div class="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
+<span class="font-label-md text-label-md text-on-surface bg-surface-variant px-3 py-1 rounded-full">Score: 8.8/10</span>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">more_horiz</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-6 text-center">
+<button class="btn-secondary font-label-md text-label-md px-6 py-2 rounded-full hover:bg-primary/10 transition-colors">Load More History</button>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 bg-surface-container-lowest border-t border-primary-container/10 mt-auto">
+<div class="max-w-container-max mx-auto px-margin-desktop grid grid-cols-1 md:grid-cols-4 gap-gutter">
+<div class="flex flex-col gap-4">
+<span class="font-display-lg text-headline-md text-primary">PourMind</span>
+<span class="font-body-md text-body-md text-on-surface-variant">© 2024 PourMind. Elevating the Craft of Mixology.</span>
+</div>
+<div class="flex flex-col gap-2">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors opacity-100 hover:opacity-80" href="#">Privacy Policy</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors opacity-100 hover:opacity-80" href="#">Terms of Service</a>
+</div>
+<div class="flex flex-col gap-2">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors opacity-100 hover:opacity-80" href="#">Press Kit</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors opacity-100 hover:opacity-80" href="#">Contact Us</a>
+</div>
+</div>
+</footer>
+</body></html>

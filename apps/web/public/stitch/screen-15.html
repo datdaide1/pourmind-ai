@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PourMind - AI Guest Recommendations</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary": "#303031",
+                      "on-primary-fixed": "#241a00",
+                      "surface-container-lowest": "#0c0f0f",
+                      "on-secondary-fixed-variant": "#474647",
+                      "on-error": "#690005",
+                      "outline-variant": "#4d4635",
+                      "on-tertiary-container": "#454546",
+                      "on-surface-variant": "#d0c5af",
+                      "on-tertiary-fixed-variant": "#474648",
+                      "on-surface": "#e2e2e2",
+                      "primary-fixed": "#ffe088",
+                      "on-primary-fixed-variant": "#574500",
+                      "surface-container-high": "#282a2b",
+                      "surface-dim": "#121414",
+                      "surface-container-low": "#1a1c1c",
+                      "on-error-container": "#ffdad6",
+                      "on-secondary-fixed": "#1b1b1c",
+                      "surface-bright": "#37393a",
+                      "inverse-on-surface": "#2f3131",
+                      "tertiary-container": "#b4b2b3",
+                      "inverse-primary": "#735c00",
+                      "secondary-container": "#49494a",
+                      "on-secondary-container": "#bab8b9",
+                      "secondary": "#c8c6c7",
+                      "error-container": "#93000a",
+                      "surface-container-highest": "#333535",
+                      "error": "#ffb4ab",
+                      "primary-container": "#d4af37",
+                      "secondary-fixed": "#e5e2e3",
+                      "outline": "#99907c",
+                      "tertiary-fixed-dim": "#c8c6c7",
+                      "tertiary": "#d0cdce",
+                      "on-tertiary-fixed": "#1b1b1c",
+                      "primary": "#f2ca50",
+                      "on-primary-container": "#554300",
+                      "surface-variant": "#333535",
+                      "on-background": "#e2e2e2",
+                      "on-primary": "#3c2f00",
+                      "background": "#121414",
+                      "surface": "#121414",
+                      "on-secondary": "#303031",
+                      "surface-tint": "#e9c349",
+                      "primary-fixed-dim": "#e9c349",
+                      "tertiary-fixed": "#e4e2e3",
+                      "secondary-fixed-dim": "#c8c6c7",
+                      "inverse-surface": "#e2e2e2",
+                      "surface-container": "#1e2020"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "margin-desktop": "64px",
+                      "container-max": "1280px",
+                      "margin-mobile": "20px",
+                      "gutter": "24px",
+                      "unit": "8px"
+              },
+              "fontFamily": {
+                      "headline-sm": [
+                              "Libre Caslon Text"
+                      ],
+                      "label-md": [
+                              "Hanken Grotesk"
+                      ],
+                      "body-md": [
+                              "Hanken Grotesk"
+                      ],
+                      "headline-md": [
+                              "Libre Caslon Text"
+                      ],
+                      "display-lg-mobile": [
+                              "Libre Caslon Text"
+                      ],
+                      "label-sm": [
+                              "Hanken Grotesk"
+                      ],
+                      "display-lg": [
+                              "Libre Caslon Text"
+                      ],
+                      "body-lg": [
+                              "Hanken Grotesk"
+                      ]
+              },
+              "fontSize": {
+                      "headline-sm": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "36px",
+                              {
+                                      "lineHeight": "44px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        body {
+            background-color: #1A1A1B; /* Direct dark foundation from guidance */
+        }
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #121414;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333535;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #49494a;
+        }
+        .glass-card {
+            background: rgba(45, 45, 46, 0.7);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .gold-glow:hover {
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
+        }
+    </style>
+</head>
+<body class="text-on-background min-h-screen flex antialiased">
+<!-- Mobile TopNavBar (Visible only on md:hidden) -->
+<nav class="md:hidden fixed top-0 w-full z-50 bg-background/80 backdrop-blur-xl border-b border-primary-container/20 shadow-sm flex justify-between items-center px-margin-mobile py-4 transition-all duration-300">
+<div class="font-display-lg-mobile text-display-lg-mobile text-primary tracking-tight">PourMind</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface hover:text-primary transition-colors">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</nav>
+<!-- Desktop SideNavBar -->
+<aside class="hidden md:flex flex-col h-full w-64 fixed left-0 top-0 bg-surface-container-low/90 backdrop-blur-2xl border-r border-primary-container/15 shadow-2xl py-8 z-40 transition-all duration-300">
+<div class="px-6 mb-8 flex flex-col gap-2">
+<div class="w-12 h-12 rounded-full border border-primary-container/30 overflow-hidden mb-2">
+<img class="w-full h-full object-cover" data-alt="A stylized, minimalist vector logo of a martini glass interlocked with a gear, rendered in a metallic gold gradient against a pure black background. Professional, high-end, modern." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsQrcgsTT8tlZ6uizcErxlOZypvmh0lSSjQXFHLoVQivyzcKeUpOt9ZFt4m3GH0MfqY_uTa8VGnetulAg0CY9Z2stnhVJi4znDgkC2ccaPK52zI9jtyw1Gt2DjHsJG4tuMZY9y4jcXVu9ePC0BpS_HIs2H-yDZ8AUcIn1F9Bv76PohgAWH_20cLLbi4qYyFtTJKEGZRQjcXmKGH9o1eZKkfPwsjgRdhJDeqHafVUjrOWDya18e5CFWkA"/>
+</div>
+<h1 class="font-display-lg text-headline-sm text-primary">The Speakeasy</h1>
+<span class="font-label-md text-label-md text-on-surface-variant">Bar Copilot Pro</span>
+</div>
+<nav class="flex-1 flex flex-col gap-2 px-2 mt-4">
+<!-- Active Navigation Item -->
+<a class="flex items-center gap-3 bg-primary-container/20 text-primary border-l-4 border-primary px-4 py-3 rounded-r-lg transition-all duration-200 opacity-100 hover:opacity-80 scale-[0.98]" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<!-- Inactive Navigation Items -->
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-variant/50 border-l-4 border-transparent hover:border-primary-container/30 rounded-r-lg hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">liquor</span>
+<span class="font-label-md text-label-md">Inventory</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-variant/50 border-l-4 border-transparent hover:border-primary-container/30 rounded-r-lg hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-label-md text-label-md">Menu Builder</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-variant/50 border-l-4 border-transparent hover:border-primary-container/30 rounded-r-lg hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-label-md text-label-md">Staff Training</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-variant/50 border-l-4 border-transparent hover:border-primary-container/30 rounded-r-lg hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">monitoring</span>
+<span class="font-label-md text-label-md">Analytics</span>
+</a>
+</nav>
+<div class="px-6 mt-auto flex flex-col gap-4">
+<button class="w-full bg-primary/10 border border-primary-container/30 text-primary font-label-md text-label-md py-3 rounded-lg hover:bg-primary/20 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">smart_toy</span>
+                Launch AI Assistant
+            </button>
+<div class="border-t border-primary-container/10 pt-4 flex flex-col gap-2">
+<a class="flex items-center gap-3 text-on-surface-variant px-2 py-2 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-sm">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-2 py-2 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-sm">help</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-64 pt-24 md:pt-12 px-margin-mobile md:px-margin-desktop pb-24 max-w-container-max mx-auto w-full flex flex-col gap-8">
+<!-- Header: Guest Context -->
+<header class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-4">
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-3xl">account_circle</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Guest: Julian Barnes</h2>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+                    Returning patron. Analyzed past 4 visits and current inventory to generate personalized recommendations.
+                </p>
+<div class="flex flex-wrap gap-2 mt-2">
+<span class="bg-[#2D2D2E] text-on-surface font-label-sm text-label-sm px-3 py-1 rounded">Smoky</span>
+<span class="bg-[#2D2D2E] text-on-surface font-label-sm text-label-sm px-3 py-1 rounded">Agave</span>
+<span class="bg-[#2D2D2E] text-on-surface font-label-sm text-label-sm px-3 py-1 rounded">Low Sugar</span>
+<span class="border border-primary-container/30 text-primary font-label-sm text-label-sm px-3 py-1 rounded flex items-center gap-1">
+<span class="material-symbols-outlined" style="font-size: 14px;">auto_awesome</span> Adventurous Mode
+                    </span>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="bg-transparent border border-primary-container/20 text-primary font-label-md text-label-md px-6 py-3 rounded hover:bg-primary/5 transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">history</span>
+                    View History
+                </button>
+</div>
+</header>
+<!-- Recommendations Grid -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Card 1: Top Match -->
+<article class="glass-card rounded-xl overflow-hidden flex flex-col group gold-glow transition-all duration-300 hover:-translate-y-1 relative">
+<!-- Match Badge -->
+<div class="absolute top-4 right-4 bg-primary text-on-primary font-label-md text-label-md px-3 py-1.5 rounded-full shadow-lg z-10 flex items-center gap-1 font-bold">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                    95% Match
+                </div>
+<div class="h-64 w-full relative overflow-hidden bg-[#1A1A1B]">
+<div class="absolute inset-0 bg-gradient-to-t from-[#2D2D2E] to-transparent z-10"></div>
+<img class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" data-alt="A cinematic, low-key photograph of an elegant Mezcal cocktail in a crystal rocks glass over a large clear ice cube. The drink has a deep amber hue. A wisp of smoke curls upwards from a charred orange peel garnish. The background is a dark, out-of-focus speakeasy bar with subtle, warm amber lighting reflecting off glass bottles." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGnVxNmVfTJfyPavPQ5NDeehPwgHeQWUu6nFhFQCQrR8oAlqNhzbUGQIWJJAc2FBH7Xy6FVJ92PSDNFQuo8AAal21U1bXTwXOJgifE3MybT-kwGEOFkXakjI1CGnHXa_Eb_VhuwF3fbAu5SArXI5ajgJMFyfRMDXqM9cXSrPyPWRc2IfZh-rF8T27CgyqQtEXFaeWU9cs3VTrzmLzPWwGeheO53lXT5sV18q-jsBI7hAKj4hqHmlnHdQ"/>
+</div>
+<div class="p-6 flex flex-col flex-1 gap-4 z-20 -mt-8">
+<div class="flex flex-col gap-1">
+<h3 class="font-headline-sm text-headline-sm text-primary">The Oaxacan Ember</h3>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest text-xs">Mezcal • Cynar • Bitters</p>
+</div>
+<p class="font-body-md text-body-md text-on-surface">
+                        Guest frequently orders smoky profiles (Islay Scotch last visit). This introduces Mezcal while maintaining the bitter complexity they prefer.
+                    </p>
+<div class="flex flex-col gap-3 mt-auto pt-4 border-t border-primary-container/10">
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-sm mt-0.5">check_circle</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Hits preference for low-sugar, high-proof.</span>
+</div>
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-outline text-sm mt-0.5">info</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Watch out: Cynar's artichoke note might be novel. Probe gently before serving.</span>
+</div>
+</div>
+<div class="flex gap-2 mt-4 pt-4 border-t border-primary-container/10">
+<button class="flex-1 bg-primary text-on-primary font-label-md text-label-md py-2.5 rounded hover:bg-surface-tint transition-colors text-center">
+                            Record Served
+                        </button>
+<button class="px-4 border border-primary-container/20 text-primary rounded hover:bg-primary/5 transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined">favorite_border</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Card 2: Safe Bet -->
+<article class="glass-card rounded-xl overflow-hidden flex flex-col group gold-glow transition-all duration-300 hover:-translate-y-1 relative">
+<div class="absolute top-4 right-4 bg-surface-container-highest text-on-surface border border-primary-container/20 font-label-md text-label-md px-3 py-1.5 rounded-full shadow-lg z-10 flex items-center gap-1">
+                    88% Match
+                </div>
+<div class="h-64 w-full relative overflow-hidden bg-[#1A1A1B]">
+<div class="absolute inset-0 bg-gradient-to-t from-[#2D2D2E] to-transparent z-10"></div>
+<img class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" data-alt="A high-fidelity macro shot of a classic Old Fashioned cocktail in a heavy, cut-crystal tumbler. The liquid is a rich mahogany color. A perfectly manicured lemon twist rests on the rim. The lighting is moody and directional, highlighting the facets of the glass against a stark black background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD16CjDeLa85Ed6NYjKEHQbuwY99CkMGIsM9mH8RKohbkEq3aZdUUsm5yuw93qKBa1SHAzmIZ9GeiSGn3sFFNX27gj3TlQTctkgW7ea1Wobk8Pf8zGWJE8WSCD-5xny7FM4ROd3OMtNJNns1WCUeG9vPSg5EUXMIqDSa5z09MrPE8BE9uSzXdRT6p6GDrJ27kbC3RHtogJJ71roV_3H8XPz_lTkOJq4Dw7Po5NItgUgpg5ZpqrLtEujMg"/>
+</div>
+<div class="p-6 flex flex-col flex-1 gap-4 z-20 -mt-8">
+<div class="flex flex-col gap-1">
+<h3 class="font-headline-sm text-headline-sm text-primary">Highland Old Fashioned</h3>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest text-xs">Añejo Tequila • Agave • Mole</p>
+</div>
+<p class="font-body-md text-body-md text-on-surface">
+                        A familiar format executed with their preferred Agave base. Safe, elevated, and guarantees satisfaction based on past ratings.
+                    </p>
+<div class="flex flex-col gap-3 mt-auto pt-4 border-t border-primary-container/10">
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-sm mt-0.5">check_circle</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Perfectly aligns with "Agave" tag.</span>
+</div>
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-outline text-sm mt-0.5">warning</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Slightly sweeter than usual profile. Use scant agave.</span>
+</div>
+</div>
+<div class="flex gap-2 mt-4 pt-4 border-t border-primary-container/10">
+<button class="flex-1 bg-transparent border border-primary-container/50 text-on-surface font-label-md text-label-md py-2.5 rounded hover:border-primary hover:text-primary transition-colors text-center">
+                            Record Served
+                        </button>
+<button class="px-4 border border-primary-container/20 text-primary rounded hover:bg-primary/5 transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined">favorite_border</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Card 3: The Wildcard -->
+<article class="glass-card rounded-xl overflow-hidden flex flex-col group gold-glow transition-all duration-300 hover:-translate-y-1 relative">
+<div class="absolute top-4 right-4 bg-surface-container-highest text-on-surface border border-primary-container/20 font-label-md text-label-md px-3 py-1.5 rounded-full shadow-lg z-10 flex items-center gap-1">
+                    72% Match
+                </div>
+<div class="h-64 w-full relative overflow-hidden bg-[#1A1A1B]">
+<div class="absolute inset-0 bg-gradient-to-t from-[#2D2D2E] to-transparent z-10"></div>
+<img class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" data-alt="An elegant, tall collins glass filled with a bright, translucent yellow cocktail over crushed ice. A sprig of fresh rosemary and a dehydrated lemon wheel serve as garnish. The background features subtle, vertical metallic gold lines fading into dark shadows, emphasizing the height and sophistication of the drink." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAK2UfCP910NwLkQoXKrNjFpCakt8pCg0fCoAj2MoiEAp29Q6gziymo0X25RN0QkE4IUBG3-S3RAsuembciJhVdBHefdhf4RpH6EL0gdc562j2R5TlAnRfPo86P-vguXt1HIWlfnnDl-aCe1OYVmd0E5moNJ6WouySpVDLRAZ9GzXHXpjwbj4YIo_pnK4GgnYNjJsx4bb2O1XNPeh1pWdpAEaQJvpHso4ZIfPuehIS_UKq9S1sXFke1oQ"/>
+</div>
+<div class="p-6 flex flex-col flex-1 gap-4 z-20 -mt-8">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<h3 class="font-headline-sm text-headline-sm text-primary">Botanical Pivot</h3>
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">explore</span>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest text-xs">Gin • Yellow Chartreuse • Lemon</p>
+</div>
+<p class="font-body-md text-body-md text-on-surface">
+                        Guest is in "Adventurous Mode". This pivots entirely away from dark spirits into complex, herbaceous territory to challenge their palate.
+                    </p>
+<div class="flex flex-col gap-3 mt-auto pt-4 border-t border-primary-container/10">
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-sm mt-0.5">lightbulb</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">High margin drink. Great conversation starter.</span>
+</div>
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-error text-sm mt-0.5">dangerous</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Risk: Gin is usually avoided. Frame as a "savory, botanical journey".</span>
+</div>
+</div>
+<div class="flex gap-2 mt-4 pt-4 border-t border-primary-container/10">
+<button class="flex-1 bg-transparent border border-primary-container/50 text-on-surface font-label-md text-label-md py-2.5 rounded hover:border-primary hover:text-primary transition-colors text-center">
+                            Record Served
+                        </button>
+<button class="px-4 border border-primary-container/20 text-primary rounded hover:bg-primary/5 transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined">favorite_border</span>
+</button>
+</div>
+</div>
+</article>
+</section>
+</main>
+<!-- Footer from JSON -->
+<footer class="w-full py-12 bg-surface-container-lowest border-t border-primary-container/10 z-30 mt-auto md:ml-64 w-[calc(100%-16rem)] relative">
+<div class="max-w-container-max mx-auto px-margin-desktop grid grid-cols-1 md:grid-cols-4 gap-gutter opacity-100 hover:opacity-80 transition-opacity">
+<div class="col-span-1 md:col-span-2 flex flex-col gap-4">
+<span class="font-display-lg text-headline-md text-primary">PourMind</span>
+<p class="font-body-md text-body-md text-on-surface-variant">© 2024 PourMind. Elevating the Craft of Mixology.</p>
+</div>
+<div class="col-span-1 md:col-span-2 flex flex-wrap gap-6 md:justify-end items-center">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Press Kit</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Contact Us</a>
+</div>
+</div>
+</footer>
+</body></html>

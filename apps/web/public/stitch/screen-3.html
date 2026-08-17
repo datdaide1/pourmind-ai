@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PourMind - Personal Mixologist</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts for Brand Identity -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&amp;family=Libre+Caslon+Text:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed": "#1b1b1c",
+                    "outline": "#99907c",
+                    "error-container": "#93000a",
+                    "surface-variant": "#333535",
+                    "on-secondary-fixed-variant": "#474647",
+                    "on-surface-variant": "#d0c5af",
+                    "on-primary-container": "#554300",
+                    "surface-container-low": "#1a1c1c",
+                    "surface-dim": "#121414",
+                    "background": "#121414",
+                    "primary-fixed": "#ffe088",
+                    "on-tertiary-container": "#454546",
+                    "surface-container-highest": "#333535",
+                    "surface": "#121414",
+                    "on-secondary": "#303031",
+                    "error": "#ffb4ab",
+                    "on-secondary-container": "#bab8b9",
+                    "inverse-primary": "#735c00",
+                    "tertiary-fixed-dim": "#c8c6c7",
+                    "surface-container-lowest": "#0c0f0f",
+                    "tertiary-fixed": "#e4e2e3",
+                    "outline-variant": "#4d4635",
+                    "on-secondary-fixed": "#1b1b1c",
+                    "secondary": "#c8c6c7",
+                    "inverse-on-surface": "#2f3131",
+                    "inverse-surface": "#e2e2e2",
+                    "on-primary-fixed": "#241a00",
+                    "on-primary-fixed-variant": "#574500",
+                    "surface-bright": "#37393a",
+                    "primary-container": "#d4af37",
+                    "on-tertiary-fixed-variant": "#474648",
+                    "on-background": "#e2e2e2",
+                    "surface-container-high": "#282a2b",
+                    "secondary-container": "#49494a",
+                    "on-tertiary": "#303031",
+                    "secondary-fixed": "#e5e2e3",
+                    "on-error": "#690005",
+                    "secondary-fixed-dim": "#c8c6c7",
+                    "tertiary": "#d0cdce",
+                    "surface-tint": "#e9c349",
+                    "on-error-container": "#ffdad6",
+                    "on-surface": "#e2e2e2",
+                    "primary": "#f2ca50",
+                    "tertiary-container": "#b4b2b3",
+                    "primary-fixed-dim": "#e9c349",
+                    "surface-container": "#1e2020",
+                    "on-primary": "#3c2f00"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "unit": "8px",
+                    "gutter": "24px",
+                    "margin-mobile": "20px",
+                    "container-max": "1280px",
+                    "margin-desktop": "64px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Libre Caslon Text"],
+                    "body-lg": ["Hanken Grotesk"],
+                    "label-md": ["Hanken Grotesk"],
+                    "label-sm": ["Hanken Grotesk"],
+                    "display-lg-mobile": ["Libre Caslon Text"],
+                    "headline-sm": ["Libre Caslon Text"],
+                    "body-md": ["Hanken Grotesk"],
+                    "headline-md": ["Libre Caslon Text"]
+            },
+            "fontSize": {
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-sm": ["24px", {"lineHeight": "32px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["32px", {"lineHeight": "40px", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        /* Custom scrollbar for chat */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: theme('colors.surface-variant');
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased min-h-screen flex flex-col relative overflow-hidden">
+<!-- Atmospheric Background -->
+<div class="fixed inset-0 z-[-1] pointer-events-none">
+<div class="absolute inset-0 bg-cover bg-center opacity-40 blur-3xl scale-110" data-alt="A moody, deeply cinematic out-of-focus background of a high-end speakeasy bar. The scene features deep blacks, subtle dark greys, and warm golden bokeh lights reflecting off unseen glassware and premium liquor bottles. The lighting is low and intimate, creating a luxurious and immersive atmosphere suitable for a premium mixology app." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCUI7pVtVbYM-n4ooqN_gNqA8IAxxbx2Q8MymL3Nj6gQZfNCdYt8YOwu8EYr6AhS1Wy6kpH_7_xpgmm3HLZD8tzLmVvo-fAwYfwJGd_hEuwurochBK7VmipHrAOUL1ZWmBmgSO3UnV7Vht4ZkH65T9ev6I_4aymTBn9Sq6D4Yrx3uOJTO2-PpbbBklFZnW_ZvVwUSlDbcSBfFTYzV8W0B8hP4qqczTuRYrnfEV828ZAkH3OOipRPFvDTA')"></div>
+<div class="absolute inset-0 bg-gradient-to-b from-background/40 via-background/80 to-background"></div>
+</div>
+<!-- TopNavBar (Shared Component) -->
+<header class="bg-background/80 backdrop-blur-xl fixed top-0 w-full z-50 border-b border-primary-container/20 shadow-sm font-body-md text-body-md">
+<div class="flex justify-between items-center px-margin-mobile md:px-margin-desktop py-4 max-w-container-max mx-auto">
+<!-- Brand -->
+<div class="flex items-center gap-4">
+<span class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-primary tracking-tight">PourMind</span>
+</div>
+<!-- Navigation Links (Desktop) -->
+<nav class="hidden md:flex items-center gap-8">
+<!-- Active Item -->
+<a class="text-primary border-b-2 border-primary pb-1 font-label-md text-label-md" href="#">Mixologist</a>
+<!-- Inactive Items -->
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-label-md text-label-md hover:bg-primary/10 hover:text-primary duration-300 px-2 py-1 rounded" href="#">Bar Copilot</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-label-md text-label-md hover:bg-primary/10 hover:text-primary duration-300 px-2 py-1 rounded" href="#">Recipes</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-label-md text-label-md hover:bg-primary/10 hover:text-primary duration-300 px-2 py-1 rounded" href="#">Insights</a>
+</nav>
+<!-- Trailing Actions -->
+<div class="flex items-center gap-4">
+<button class="hidden md:block text-primary font-label-md text-label-md hover:text-primary-fixed transition-colors">Sign In</button>
+<button class="bg-primary-container text-on-primary-container font-label-md text-label-md px-4 py-2 rounded scale-95 hover:scale-100 duration-200 ease-in-out shadow-[0_0_15px_rgba(212,175,55,0.2)]">Join Exclusive</button>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow flex flex-col md:flex-row max-w-container-max mx-auto w-full pt-[100px] pb-8 px-margin-mobile md:px-margin-desktop gap-gutter h-screen">
+<!-- Sidebar: Chat History (Glassmorphic) -->
+<aside class="hidden md:flex flex-col w-72 bg-surface-container-low/70 backdrop-blur-2xl border border-primary-container/15 rounded-xl overflow-hidden shrink-0 shadow-2xl relative">
+<!-- Inner subtle highlight -->
+<div class="absolute inset-0 border border-white/5 rounded-xl pointer-events-none"></div>
+<div class="p-6 border-b border-surface-variant">
+<h2 class="font-headline-sm text-headline-sm text-primary mb-1">Sessions</h2>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Your mixology journey</p>
+</div>
+<div class="flex-grow overflow-y-auto custom-scrollbar p-4 space-y-2">
+<!-- Active History Item -->
+<button class="w-full text-left bg-surface-variant/50 border border-primary-container/30 rounded-lg p-3 transition-colors group">
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-sm text-label-sm text-primary">Today</span>
+<span class="material-symbols-outlined text-primary text-[16px]">chat_bubble</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface truncate">Low ABV Herbal Discovery</p>
+</button>
+<!-- Inactive History Items -->
+<button class="w-full text-left hover:bg-surface-variant/30 rounded-lg p-3 transition-colors group border border-transparent hover:border-surface-variant">
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Yesterday</span>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors text-[16px]">history</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant truncate">Smoky Whiskey Classics</p>
+</button>
+<button class="w-full text-left hover:bg-surface-variant/30 rounded-lg p-3 transition-colors group border border-transparent hover:border-surface-variant">
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Oct 12</span>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors text-[16px]">history</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant truncate">Party Prep: Tropical</p>
+</button>
+</div>
+<div class="p-4 border-t border-surface-variant">
+<button class="w-full flex items-center justify-center gap-2 border border-primary-container/30 text-primary hover:bg-primary-container/10 font-label-md text-label-md py-2 rounded transition-colors">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                    New Session
+                </button>
+</div>
+</aside>
+<!-- Main Chat Canvas (Glassmorphic) -->
+<section class="flex-grow flex flex-col bg-surface-container-low/80 backdrop-blur-3xl border border-primary-container/20 rounded-xl overflow-hidden relative shadow-2xl">
+<!-- Inner highlight -->
+<div class="absolute inset-0 border border-white/5 rounded-xl pointer-events-none"></div>
+<!-- Chat Header / Constraints -->
+<header class="p-4 md:p-6 border-b border-surface-variant flex items-center justify-between bg-surface-container-low/50">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center border border-primary-container/30">
+<span class="material-symbols-outlined text-primary">local_bar</span>
+</div>
+<div>
+<h1 class="font-label-md text-label-md text-on-surface">The Alchemist</h1>
+<p class="font-label-sm text-label-sm text-primary flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                            Online
+                        </p>
+</div>
+</div>
+<!-- Constraints Indicators -->
+<div class="hidden md:flex items-center gap-2">
+<div class="flex items-center gap-1.5 bg-surface-variant px-3 py-1.5 rounded-full border border-surface-bright">
+<span class="material-symbols-outlined text-[14px] text-error">no_drinks</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Low ABV</span>
+</div>
+<div class="flex items-center gap-1.5 bg-surface-variant px-3 py-1.5 rounded-full border border-surface-bright">
+<span class="material-symbols-outlined text-[14px] text-error">warning</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">No Nuts</span>
+</div>
+<button class="p-1.5 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">tune</span>
+</button>
+</div>
+</header>
+<!-- Chat Messages Area -->
+<div class="flex-grow overflow-y-auto custom-scrollbar p-4 md:p-8 space-y-6">
+<!-- Mixologist Message -->
+<div class="flex gap-4 max-w-[85%]">
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center shrink-0 border border-primary-container/20 mt-1">
+<span class="material-symbols-outlined text-[16px] text-primary">psychiatry</span>
+</div>
+<div class="bg-surface-container-high text-on-surface font-body-md text-body-md p-4 rounded-2xl rounded-tl-sm border border-white/5 shadow-sm">
+<p>Chào bạn! Hôm nay bạn muốn một hương vị như thế nào? Một chút nồng nàn cho dịp đặc biệt hay một ly cocktail thanh mát để thư giãn?</p>
+</div>
+</div>
+<!-- User Message -->
+<div class="flex gap-4 max-w-[85%] ml-auto flex-row-reverse">
+<div class="w-8 h-8 rounded-full bg-primary-container/20 flex items-center justify-center shrink-0 border border-primary-container/50 mt-1">
+<span class="material-symbols-outlined text-[16px] text-primary">person</span>
+</div>
+<div class="bg-surface-variant/80 text-on-surface font-body-md text-body-md p-4 rounded-2xl rounded-tr-sm border border-primary-container/20 shadow-[0_4px_20px_rgba(212,175,55,0.05)] text-right">
+<p>Tôi thích cái gì đó chua nhẹ, có hương thảo mộc và nồng độ cồn thấp.</p>
+</div>
+</div>
+<!-- Mixologist Message with Recipe Card -->
+<div class="flex gap-4 max-w-[90%]">
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center shrink-0 border border-primary-container/20 mt-1">
+<span class="material-symbols-outlined text-[16px] text-primary">psychiatry</span>
+</div>
+<div class="space-y-4 w-full">
+<div class="bg-surface-container-high text-on-surface font-body-md text-body-md p-4 rounded-2xl rounded-tl-sm border border-white/5 shadow-sm inline-block">
+<p>Một lựa chọn tuyệt vời! Sự kết hợp giữa thảo mộc và vị chua thanh sẽ rất sảng khoái. Tôi đề xuất ly 'Herbal Mist' cho bạn.</p>
+</div>
+<!-- Floating Recipe Preview Card (Bento/Glass style) -->
+<div class="w-full max-w-sm bg-surface-container/60 backdrop-blur-md rounded-xl border border-primary-container/20 overflow-hidden shadow-lg group hover:border-primary-container/50 transition-all duration-300 cursor-pointer">
+<div class="relative h-48 w-full overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="A highly detailed, professional macro photograph of a sophisticated light-green cocktail named 'Herbal Mist' served in an elegant highball glass. The drink is garnished with a fresh sprig of rosemary and a dehydrated lemon wheel. The background is a dark, moody bar setting with out-of-focus golden lighting, emphasizing the vibrant, frosty texture of the glass and the clarity of the ice. Shot in 8k, cinematic lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZdP1CFYHSeeDGKwG21maDMaZPIHyy6PwHaMj8nG_dPbER_ZuA2IOIExbAHBhRDA8IhIcAvXhAc2jeOKixj2oOdvE6ERJ92VqdHb518SKwCQ7bU9tKaAAxTUMMDi_7lObJ0divhbNZf6dW83RifSFHrSeDSNSZqQuBKpIMmtbFGEfjoFqcaJ01axvObs1etIbGnFIInpna-dAqcU7OAtldNbXhTI3hThKbRZom6moSa9SeEGe5AR5dbQ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
+<div class="absolute top-3 right-3 bg-background/80 backdrop-blur-sm px-2 py-1 rounded text-label-sm font-label-sm text-primary flex items-center gap-1 border border-primary-container/20">
+<span class="material-symbols-outlined text-[14px]">science</span>
+                                    Low ABV
+                                </div>
+</div>
+<div class="p-5">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2 group-hover:text-primary transition-colors">Herbal Mist</h3>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="px-2 py-1 bg-surface-variant rounded text-label-sm font-label-sm text-on-surface-variant">Citrus</span>
+<span class="px-2 py-1 bg-surface-variant rounded text-label-sm font-label-sm text-on-surface-variant">Botanical</span>
+<span class="px-2 py-1 bg-surface-variant rounded text-label-sm font-label-sm text-on-surface-variant">Refreshing</span>
+</div>
+<div class="flex items-center justify-between border-t border-surface-variant pt-3">
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">schedule</span> 5 mins
+                                    </span>
+<span class="font-label-md text-label-md text-primary group-hover:underline">View Recipe</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Input Area -->
+<div class="p-4 md:p-6 bg-surface-container-low border-t border-surface-variant relative z-10">
+<!-- Suggestions Chips -->
+<div class="flex overflow-x-auto custom-scrollbar gap-2 mb-4 pb-1">
+<button class="whitespace-nowrap px-3 py-1.5 bg-surface-variant hover:bg-surface-bright rounded text-label-sm font-label-sm text-on-surface transition-colors border border-transparent hover:border-outline-variant">
+                        Gợi ý cocktail smoky &amp; sweet
+                    </button>
+<button class="whitespace-nowrap px-3 py-1.5 bg-surface-variant hover:bg-surface-bright rounded text-label-sm font-label-sm text-on-surface transition-colors border border-transparent hover:border-outline-variant">
+                        Pha gì với Gin?
+                    </button>
+<button class="whitespace-nowrap px-3 py-1.5 bg-surface-variant hover:bg-surface-bright rounded text-label-sm font-label-sm text-on-surface transition-colors border border-transparent hover:border-outline-variant">
+                        Cocktail không cồn cho tối nay
+                    </button>
+</div>
+<!-- Text Input -->
+<div class="relative flex items-end gap-2 group">
+<div class="flex-grow relative">
+<textarea class="w-full bg-surface-container-highest border-0 border-b-2 border-on-surface-variant text-on-surface font-body-md text-body-md py-3 pl-4 pr-12 focus:ring-0 focus:border-primary transition-colors resize-none overflow-hidden placeholder:text-on-surface-variant/50" placeholder="Mô tả hương vị bạn muốn..." rows="1"></textarea>
+<div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+<button class="p-1.5 text-on-surface-variant hover:text-primary transition-colors" title="Mood">
+<span class="material-symbols-outlined text-[20px]">mood</span>
+</button>
+<button class="p-1.5 text-on-surface-variant hover:text-primary transition-colors" title="Ingredients">
+<span class="material-symbols-outlined text-[20px]">grocery</span>
+</button>
+</div>
+</div>
+<button class="w-12 h-12 shrink-0 bg-primary-container text-on-primary-container rounded flex items-center justify-center hover:bg-primary transition-colors shadow-[0_0_10px_rgba(212,175,55,0.15)] hover:shadow-[0_0_20px_rgba(212,175,55,0.4)]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+</body></html>

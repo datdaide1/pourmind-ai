@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PourMind - Saved Sessions</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&amp;family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-container": "#554300",
+                        "on-primary-fixed-variant": "#574500",
+                        "surface-dim": "#121414",
+                        "on-secondary-container": "#bab8b9",
+                        "primary-fixed": "#ffe088",
+                        "secondary": "#c8c6c7",
+                        "outline-variant": "#4d4635",
+                        "secondary-container": "#49494a",
+                        "surface-bright": "#37393a",
+                        "on-primary-fixed": "#241a00",
+                        "on-surface": "#e2e2e2",
+                        "surface-container-lowest": "#0c0f0f",
+                        "on-tertiary": "#303031",
+                        "surface-container-highest": "#333535",
+                        "inverse-primary": "#735c00",
+                        "tertiary-fixed-dim": "#c8c6c7",
+                        "on-error": "#690005",
+                        "on-error-container": "#ffdad6",
+                        "surface-container": "#1e2020",
+                        "error": "#ffb4ab",
+                        "on-secondary-fixed": "#1b1b1c",
+                        "error-container": "#93000a",
+                        "inverse-on-surface": "#2f3131",
+                        "tertiary-fixed": "#e4e2e3",
+                        "primary-fixed-dim": "#e9c349",
+                        "surface-tint": "#e9c349",
+                        "on-secondary": "#303031",
+                        "on-primary": "#3c2f00",
+                        "on-background": "#e2e2e2",
+                        "secondary-fixed": "#e5e2e3",
+                        "background": "#121414",
+                        "secondary-fixed-dim": "#c8c6c7",
+                        "tertiary-container": "#b4b2b3",
+                        "on-tertiary-container": "#454546",
+                        "surface-variant": "#333535",
+                        "surface": "#121414",
+                        "on-tertiary-fixed-variant": "#474648",
+                        "primary-container": "#d4af37",
+                        "primary": "#f2ca50",
+                        "on-tertiary-fixed": "#1b1b1c",
+                        "surface-container-low": "#1a1c1c",
+                        "outline": "#99907c",
+                        "on-secondary-fixed-variant": "#474647",
+                        "surface-container-high": "#282a2b",
+                        "on-surface-variant": "#d0c5af",
+                        "inverse-surface": "#e2e2e2",
+                        "tertiary": "#d0cdce"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-mobile": "20px",
+                        "margin-desktop": "64px",
+                        "container-max": "1280px",
+                        "gutter": "24px",
+                        "unit": "8px"
+                    },
+                    "fontFamily": {
+                        "display-lg-mobile": ["Libre Caslon Text"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "label-md": ["Hanken Grotesk"],
+                        "headline-sm": ["Libre Caslon Text"],
+                        "display-lg": ["Libre Caslon Text"],
+                        "label-sm": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "headline-md": ["Libre Caslon Text"]
+                    },
+                    "fontSize": {
+                        "display-lg-mobile": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-md": ["32px", { "lineHeight": "40px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Hide scrollbar for clean horizontal scrolling lists if needed */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col selection:bg-primary/30 selection:text-primary">
+<!-- TopAppBar Component -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-primary/20 shadow-none transition-all duration-300 ease-in-out">
+<div class="flex items-center justify-between px-margin-mobile md:px-margin-desktop h-20 w-full max-w-container-max mx-auto">
+<!-- Brand -->
+<div class="font-display-lg text-display-lg-mobile text-primary tracking-tight">
+                PourMind
+            </div>
+<!-- Navigation Links (Hidden on Mobile) -->
+<nav class="hidden md:flex gap-8">
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors hover:bg-primary/10 px-3 py-2 rounded-md" href="#">Discover</a>
+<a class="font-label-md text-label-md text-primary border-b-2 border-primary pb-1 transition-all duration-300 ease-in-out" href="#">Library</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors hover:bg-primary/10 px-3 py-2 rounded-md" href="#">Masterclass</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors hover:bg-primary/10 px-3 py-2 rounded-md" href="#">B2B Mode</a>
+</nav>
+<!-- Actions & Search -->
+<div class="flex items-center gap-4">
+<div class="hidden md:flex items-center bg-surface-container-highest border-b border-on-surface-variant focus-within:border-primary transition-colors px-3 py-1 rounded-t-sm">
+<span class="material-symbols-outlined text-on-surface-variant mr-2" style="font-variation-settings: 'FILL' 0;">search</span>
+<input class="bg-transparent border-none text-on-surface focus:ring-0 p-0 font-body-md text-sm placeholder:text-on-surface-variant/50 w-48" placeholder="Search sessions..." type="text"/>
+</div>
+<button aria-label="shopping_bag" class="text-on-surface-variant hover:text-primary transition-colors hover:bg-primary/10 p-2 rounded-full">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">shopping_bag</span>
+</button>
+<button aria-label="account_circle" class="text-on-surface-variant hover:text-primary transition-colors hover:bg-primary/10 p-2 rounded-full">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow pt-28 pb-16 px-margin-mobile md:px-margin-desktop w-full max-w-container-max mx-auto flex flex-col h-screen">
+<header class="mb-8">
+<h1 class="font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface">Session Library</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-2">Revisit your past mixology explorations and saved recipes.</p>
+</header>
+<!-- Bento Grid Layout for History -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter flex-grow min-h-0">
+<!-- Left Column: Session List -->
+<aside class="md:col-span-4 lg:col-span-3 flex flex-col gap-4 overflow-y-auto no-scrollbar pb-8">
+<!-- Active Session Card -->
+<div class="bg-surface-container/70 backdrop-blur-md border border-primary/40 rounded-xl p-4 cursor-pointer relative overflow-hidden group">
+<div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="flex justify-between items-start mb-2 relative z-10">
+<h3 class="font-headline-sm text-headline-sm text-primary leading-tight w-4/5">Friday Night Tropical Mix</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Oct 24</span>
+</div>
+<p class="font-body-md text-sm text-on-surface-variant line-clamp-2 mb-3 relative z-10">Exploration of tiki culture focusing on fresh pineapple, aged rum, and finding the perfect balance of spice.</p>
+<div class="flex flex-wrap gap-2 relative z-10">
+<span class="bg-surface-container-highest px-2 py-1 rounded-[4px] font-label-sm text-label-sm text-on-surface">Jungle Bird</span>
+<span class="bg-surface-container-highest px-2 py-1 rounded-[4px] font-label-sm text-label-sm text-on-surface">Mai Tai</span>
+</div>
+</div>
+<!-- Inactive Session Card 1 -->
+<div class="bg-surface-container/40 backdrop-blur-sm border border-primary/10 hover:border-primary/30 rounded-xl p-4 cursor-pointer transition-all group">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors leading-tight w-4/5">Low ABV Exploration</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Oct 18</span>
+</div>
+<p class="font-body-md text-sm text-on-surface-variant line-clamp-2 mb-3">Looking for complex flavors without the heavy hit. Focused on vermouths, sherries, and amari.</p>
+<div class="flex flex-wrap gap-2">
+<span class="bg-surface-container-highest px-2 py-1 rounded-[4px] font-label-sm text-label-sm text-on-surface">Americano</span>
+<span class="bg-surface-container-highest px-2 py-1 rounded-[4px] font-label-sm text-label-sm text-on-surface">Sherry Cobbler</span>
+</div>
+</div>
+<!-- Inactive Session Card 2 -->
+<div class="bg-surface-container/40 backdrop-blur-sm border border-primary/10 hover:border-primary/30 rounded-xl p-4 cursor-pointer transition-all group">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors leading-tight w-4/5">Classic Gin Variations</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Oct 12</span>
+</div>
+<p class="font-body-md text-sm text-on-surface-variant line-clamp-2 mb-3">Deep dive into London Dry vs. Botanicals. Perfecting the stir technique and dilution ratios.</p>
+<div class="flex flex-wrap gap-2">
+<span class="bg-surface-container-highest px-2 py-1 rounded-[4px] font-label-sm text-label-sm text-on-surface">Martini</span>
+<span class="bg-surface-container-highest px-2 py-1 rounded-[4px] font-label-sm text-label-sm text-on-surface">Gimlet</span>
+</div>
+</div>
+<!-- Inactive Session Card 3 -->
+<div class="bg-surface-container/40 backdrop-blur-sm border border-primary/10 hover:border-primary/30 rounded-xl p-4 cursor-pointer transition-all group">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors leading-tight w-4/5">Mezcal &amp; Smoke</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Sep 30</span>
+</div>
+<p class="font-body-md text-sm text-on-surface-variant line-clamp-2 mb-3">Pairing smoky agave spirits with bright citrus and subtle chili heat. A highly requested guest menu.</p>
+<div class="flex flex-wrap gap-2">
+<span class="bg-surface-container-highest px-2 py-1 rounded-[4px] font-label-sm text-label-sm text-on-surface">Oaxaca Old Fashioned</span>
+</div>
+</div>
+<button class="mt-4 w-full py-3 border border-primary/20 text-primary font-label-md text-label-md rounded-lg hover:bg-primary/10 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">history</span> Load Older Sessions
+                </button>
+</aside>
+<!-- Right Column: Detail View (Chat & Recipes) -->
+<section class="md:col-span-8 lg:col-span-9 bg-surface-container-high/60 backdrop-blur-2xl border border-primary/20 rounded-2xl flex flex-col overflow-hidden shadow-2xl relative">
+<!-- Atmospheric Top Header -->
+<div class="relative h-48 w-full border-b border-primary/10 flex-shrink-0">
+<div class="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-luminosity" data-alt="A moody, atmospheric macro photograph of a crystal rocks glass filled with a golden amber liquid and a single large clear ice cube. The scene is illuminated by dramatic, warm, low-key lighting typical of a high-end speakeasy, casting sharp elegant reflections on a dark polished wood surface. The style is hyper-realistic, luxurious, and focuses on the interplay of light and liquid." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDjItqW6cww4ez1Y9aPUVRmARv3ZSF9UjpwzVxOXRi8m2eGstCiFVUz34pU3yplzmBy4AzFV1DsrTvrsNvrL6FW2AdMk9urmQD3cD9Plj7rfCfzUjSkwrJ9Ql9DgTxx3wuhHTmm1kz21dhxKGYaDnEVqzvKQVWFD8FArMqqbpjBowa2sLjVSPdoSVHD0WA3PySBljRlIjrHh8g5kXL8Zfa6A206VMZEC2tn6XXoag0COXvHpfLDQ_0-yw')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-high to-transparent"></div>
+<div class="absolute bottom-6 left-8 right-8 flex justify-between items-end">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="bg-primary/20 text-primary px-2 py-0.5 rounded font-label-sm text-[10px] tracking-wider uppercase border border-primary/30">Session Restored</span>
+<span class="font-label-sm text-on-surface-variant">October 24, 2023 • 8:30 PM</span>
+</div>
+<h2 class="font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface leading-none tracking-tight">Friday Night Tropical Mix</h2>
+</div>
+<div class="flex gap-3">
+<button class="bg-surface-container border border-primary/20 text-primary p-2 rounded-full hover:bg-primary/10 transition-colors" title="Share Session">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">share</span>
+</button>
+<button class="bg-primary text-on-primary font-label-md px-6 py-2 rounded-full hover:bg-primary-fixed-dim transition-colors shadow-[0_0_15px_rgba(212,175,55,0.3)]">
+                                Resume Session
+                            </button>
+</div>
+</div>
+</div>
+<!-- Chat History Scroll Area -->
+<div class="flex-grow overflow-y-auto p-8 space-y-8 no-scrollbar">
+<!-- Date Divider -->
+<div class="flex items-center justify-center space-x-4">
+<div class="h-[1px] bg-primary/10 flex-grow"></div>
+<span class="font-label-sm text-on-surface-variant uppercase tracking-widest text-[10px]">Session Start</span>
+<div class="h-[1px] bg-primary/10 flex-grow"></div>
+</div>
+<!-- User Message -->
+<div class="flex justify-end">
+<div class="bg-primary/10 border border-primary/30 rounded-2xl rounded-tr-sm p-5 max-w-2xl shadow-lg relative">
+<p class="font-body-md text-on-surface">I'm hosting a small gathering tonight. We want something tropical, but not overly sweet. I have a decent aged Jamaican rum, Campari, and some fresh pineapples I can juice. What can we make?</p>
+</div>
+</div>
+<!-- AI Message (PourMind) -->
+<div class="flex justify-start">
+<div class="flex gap-4 max-w-3xl">
+<div class="w-8 h-8 rounded-full bg-surface border border-primary/50 flex items-center justify-center flex-shrink-0 mt-1">
+<span class="material-symbols-outlined text-primary text-sm">local_bar</span>
+</div>
+<div class="bg-surface-container border border-primary/10 rounded-2xl rounded-tl-sm p-6 shadow-lg">
+<p class="font-body-md text-on-surface mb-4">That’s an excellent combination. With aged Jamaican rum, Campari, and fresh pineapple juice, you have the exact foundation for a modern classic: <strong class="text-primary font-body-lg">The Jungle Bird</strong>.</p>
+<p class="font-body-md text-on-surface mb-6">It perfectly balances the rich funk of the rum with the tropical sweetness of the pineapple, anchored by the distinct bitter bite of Campari. It's sophisticated but undeniably fun.</p>
+<!-- Embedded Recipe Card -->
+<div class="bg-surface-dim border border-primary/20 rounded-xl overflow-hidden flex flex-col md:flex-row gap-0 group">
+<div class="w-full md:w-2/5 h-48 md:h-auto relative">
+<img class="absolute inset-0 w-full h-full object-cover" data-alt="A stunning, high-contrast studio photograph of a vibrant, tropical-inspired cocktail served in an elegant rocks glass over crushed ice. The drink has a rich gradient of deep crimson fading to bright sunset orange. It is garnished elaborately with three pineapple fronds and a perfectly dehydrated citrus wheel. The background is a stark, textured charcoal black, allowing the vivid colors of the drink to pop brilliantly. Professional food photography lighting emphasizing the condensation on the glass." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgPzqcWm4uIBqEjhLRC1rjWpV-jAiSe-SYGubm8t422RdCB6HuILGC3HtHKfKkCHmQq54ad73WtrJPWUzAWoKEvczUPn8k4138jYKQ_jfCZ-TJ9Tn9j4gO1Bnpg4_vNUXpMgxbI9VGRoKOnXMv0BjzmYCmOmTHJZsHH9jXs-3UuQBbguySuQLqImrF6WMEHVkjkYlElQpApR-UdYH0ZfD4P1cn4g6xLjds9P6F8HZSbCUVBkIuj9sgFw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim to-transparent opacity-60"></div>
+</div>
+<div class="p-6 w-full md:w-3/5 flex flex-col justify-center">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-primary text-xs">star</span>
+<span class="font-label-sm text-primary tracking-widest uppercase text-[10px]">Featured Recipe</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface mb-4">Jungle Bird</h4>
+<ul class="space-y-2 font-body-md text-sm text-on-surface-variant mb-6">
+<li class="flex justify-between border-b border-primary/10 pb-1"><span>Aged Jamaican Rum</span> <span>1.5 oz</span></li>
+<li class="flex justify-between border-b border-primary/10 pb-1"><span>Campari</span> <span>0.75 oz</span></li>
+<li class="flex justify-between border-b border-primary/10 pb-1"><span>Fresh Pineapple Juice</span> <span>1.5 oz</span></li>
+<li class="flex justify-between border-b border-primary/10 pb-1"><span>Fresh Lime Juice</span> <span>0.5 oz</span></li>
+<li class="flex justify-between border-b border-primary/10 pb-1"><span>Demerara Syrup</span> <span>0.5 oz</span></li>
+</ul>
+<button class="w-full py-2 bg-transparent border border-primary/40 text-primary font-label-md rounded hover:bg-primary hover:text-on-primary transition-colors text-center">
+                                            View Full Specs
+                                        </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- User Message -->
+<div class="flex justify-end">
+<div class="bg-primary/10 border border-primary/30 rounded-2xl rounded-tr-sm p-5 max-w-2xl shadow-lg relative">
+<p class="font-body-md text-on-surface">That sounds perfect. One guest prefers something a bit lighter and less bitter than Campari. What's a good alternative using similar ingredients?</p>
+</div>
+</div>
+<!-- AI Message (PourMind) -->
+<div class="flex justify-start pb-8">
+<div class="flex gap-4 max-w-3xl">
+<div class="w-8 h-8 rounded-full bg-surface border border-primary/50 flex items-center justify-center flex-shrink-0 mt-1">
+<span class="material-symbols-outlined text-primary text-sm">local_bar</span>
+</div>
+<div class="bg-surface-container border border-primary/10 rounded-2xl rounded-tl-sm p-6 shadow-lg">
+<p class="font-body-md text-on-surface mb-4">If we want to pull back on the bitterness but keep the tropical rum profile, we can pivot towards a classic <strong>Mai Tai</strong> variation, or simply modify the Jungle Bird.</p>
+<p class="font-body-md text-on-surface">To modify the Jungle Bird for a softer palate: swap the Campari for Aperol. It maintains the beautiful color and citrus notes, but halves the perceived bitterness while adding a touch more sweetness.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer Component -->
+<footer class="bg-surface-container-lowest w-full py-12 border-t border-primary/10 mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin-desktop w-full max-w-container-max mx-auto opacity-80 hover:opacity-100 transition-opacity">
+<div class="font-display-lg text-headline-md text-primary mb-4 md:mb-0">
+                PourMind
+            </div>
+<div class="font-label-sm text-label-sm text-on-surface-variant mb-6 md:mb-0 text-center md:text-left">
+                © 2024 PourMind. Crafted for the Modern Alchemist.
+            </div>
+<nav class="flex gap-6">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:underline hover:underline-offset-4" href="#">Privacy Policy</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:underline hover:underline-offset-4" href="#">Terms of Service</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:underline hover:underline-offset-4" href="#">Press Kit</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:underline hover:underline-offset-4" href="#">Contact</a>
+</nav>
+</div>
+</footer>
+</body></html>

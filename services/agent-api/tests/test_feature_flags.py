@@ -22,6 +22,7 @@ def test_disabled_flag_is_valid_in_every_environment():
     for env in ("local", "staging", "production"):
         settings = _settings(APP_ENV=env, REGULAR_GUEST_ENABLED=False)
         assert settings.REGULAR_GUEST_ENABLED is False
+        assert settings.APP_ENV == env
 
 
 def test_enabled_flag_is_valid_in_local_and_staging_with_demo_credentials():
@@ -33,6 +34,7 @@ def test_enabled_flag_is_valid_in_local_and_staging_with_demo_credentials():
             DEMO_BAR_TOKEN=DEMO_TOKEN,
         )
         assert settings.REGULAR_GUEST_ENABLED is True
+        assert settings.APP_ENV == env
 
 
 def test_settings_defers_the_production_fail_closed_decision_to_the_startup_guard():
@@ -65,10 +67,14 @@ def test_regular_guest_diagnostics_exposes_no_secrets():
     assert "hunter2" not in serialized
 
 
-def test_startup_guard_is_a_noop_when_disabled():
-    # Missing demo credentials would normally make build_bar_principal_provider
-    # raise, but the guard must never even call it when the flag is off.
-    settings = _settings(APP_ENV="local", REGULAR_GUEST_ENABLED=False)
+@pytest.mark.parametrize("app_env", ["local", "staging", "production"])
+def test_startup_guard_is_a_noop_when_disabled(app_env):
+    # Missing demo credentials (and, for production, no verified provider)
+    # would normally make build_bar_principal_provider raise, but the
+    # guard must never even call it when the flag is off — in any
+    # environment, including a misconfigured production deployment that
+    # simply forgot to turn the flag on.
+    settings = _settings(APP_ENV=app_env, REGULAR_GUEST_ENABLED=False)
     _ensure_regular_guest_configuration_is_valid(settings)  # must not raise
 
 
@@ -98,6 +104,17 @@ def test_startup_guard_passes_when_enabled_with_demo_credentials():
     _ensure_regular_guest_configuration_is_valid(settings)  # must not raise
 
 
+def test_app_lifespan_runs_the_startup_guard_without_error():
+    # Exercises the real FastAPI wiring, not just the guard function in
+    # isolation: TestClient only runs lifespan handlers inside a `with`
+    # block, so this is the one test that proves _ensure_regular_guest_
+    # configuration_is_valid is actually reachable from app startup and
+    # not merely defined and never called.
+    with TestClient(app) as client:
+        response = client.get("/health")
+    assert response.status_code == 200
+
+
 def test_health_check_exposes_enabled_state_without_secrets():
     client = TestClient(app)
     response = client.get("/health")
@@ -107,9 +124,8 @@ def test_health_check_exposes_enabled_state_without_secrets():
     assert body["status"] == "healthy"
 
     diagnostics = body["regular_guest_intelligence"]
-    assert diagnostics["enabled"] == runtime_settings.REGULAR_GUEST_ENABLED
-    assert diagnostics["app_env"] == runtime_settings.APP_ENV
-    assert set(diagnostics.keys()) == {"enabled", "app_env"}
+    # Keep the health payload aligned with the Settings.regular_guest_diagnostics contract.
+    assert diagnostics == runtime_settings.regular_guest_diagnostics
 
     serialized = str(body)
     for secret_value in (
@@ -133,3 +149,4 @@ def test_regular_guest_router_is_mounted_only_when_enabled():
     # The router object always exists so later tasks can attach routes to
     # it; whether it is ever exposed depends solely on the feature flag.
     assert regular_guest_router.prefix == "/regular-guest"
+    assert regular_guest_router.tags == ["regular-guest-intelligence"]

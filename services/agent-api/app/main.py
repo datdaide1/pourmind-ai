@@ -1,3 +1,5 @@
+from contextlib import asynccontextmanager
+
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
@@ -8,10 +10,33 @@ from app.core.middleware import ApiProtectionMiddleware, BraintrustTracingMiddle
 from app.core.config import Settings, settings
 from app.domain.openapi import install_domain_openapi
 
+
+def _ensure_regular_guest_configuration_is_valid(runtime_settings: Settings) -> None:
+    """FND-06: fail fast when the app actually starts serving traffic, not
+    merely on import. Tooling, migrations and the test suite all import
+    this module without wanting deployment-level bar-auth validation to
+    run, so this is invoked from the lifespan handler below rather than at
+    module scope. build_bar_principal_provider() already fails closed in
+    production (no verified provider is wired up here) and in
+    local/staging without demo bar credentials configured — both surface
+    as BarAuthConfigurationError instead of a working-until-first-request
+    deployment (FND-01 decision D1)."""
+    if not runtime_settings.REGULAR_GUEST_ENABLED:
+        return
+    build_bar_principal_provider(runtime_settings)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    _ensure_regular_guest_configuration_is_valid(settings)
+    yield
+
+
 app = FastAPI(
     title="PourMind AI Agent API",
     description="Agentic AI API for B2C mixology and B2B bar intelligence",
     version="1.0.0",
+    lifespan=lifespan,
 )
 
 @app.exception_handler(RequestValidationError)
@@ -32,22 +57,6 @@ app.add_middleware(BraintrustTracingMiddleware)
 app.include_router(api_router, prefix="/api/v1")
 app.add_middleware(ApiProtectionMiddleware)
 install_domain_openapi(app)
-
-
-def _ensure_regular_guest_configuration_is_valid(runtime_settings: Settings) -> None:
-    """FND-06: fail fast at process startup, not at first request, when
-    Regular Guest Intelligence is enabled with a configuration that would
-    break at runtime. build_bar_principal_provider() already fails closed
-    in production (no verified provider is wired up here) and in
-    local/staging without demo bar credentials configured — both surface
-    as BarAuthConfigurationError instead of a working-until-first-request
-    deployment (FND-01 decision D1)."""
-    if not runtime_settings.REGULAR_GUEST_ENABLED:
-        return
-    build_bar_principal_provider(runtime_settings)
-
-
-_ensure_regular_guest_configuration_is_valid(settings)
 
 # Regular Guest Intelligence routes attach themselves to this router in
 # later tasks (RCP-03, MNU-02, PTR-01/04, INT-07). It is only mounted when

@@ -179,6 +179,34 @@ async def test_create_requires_bar_id_and_update_is_scoped():
 
 
 @pytest.mark.asyncio
+async def test_update_refuses_to_mutate_bar_id_or_id():
+    async with AsyncSessionLocal() as session:
+        async with session.begin():
+            bar_a = await _make_bar(session, f"Bar A {uuid.uuid4()}")
+            bar_b = await _make_bar(session, f"Bar B {uuid.uuid4()}")
+            recipe = await _make_recipe(session, bar_id=bar_a.id, name="Sazerac")
+
+        async with session.begin():
+            # A values dict that tried to re-scope the row to another bar
+            # (or forge its id) must be rejected before any lookup succeeds.
+            with pytest.raises(ValueError):
+                await recipes.update(
+                    session, bar_id=bar_a.id, resource_id=recipe.id, values={"bar_id": bar_b.id}
+                )
+            with pytest.raises(ValueError):
+                await recipes.update(
+                    session, bar_id=bar_a.id, resource_id=recipe.id, values={"id": uuid.uuid4()}
+                )
+
+        async with session.begin():
+            # The row must be untouched: still owned by bar_a under its
+            # original id.
+            unchanged = await recipes.get(session, bar_id=bar_a.id, resource_id=recipe.id)
+            assert unchanged is not None
+            assert unchanged.bar_id == bar_a.id
+
+
+@pytest.mark.asyncio
 async def test_relation_scoped_menu_items_require_parent_bar_ownership():
     async with AsyncSessionLocal() as session:
         async with session.begin():
@@ -214,3 +242,37 @@ async def test_relation_scoped_menu_items_require_parent_bar_ownership():
                     parent_id=menu_a.id,
                     instance=MenuItem(menu_id=menu_a.id, recipe_id=recipe_a.id, display_name="Stolen"),
                 )
+
+
+@pytest.mark.asyncio
+async def test_create_for_parent_rejects_an_instance_wired_to_a_different_parent():
+    async with AsyncSessionLocal() as session:
+        async with session.begin():
+            bar_a = await _make_bar(session, f"Bar A {uuid.uuid4()}")
+            recipe_a = await _make_recipe(session, bar_id=bar_a.id, name="Whiskey Sour")
+            menu_owned = Menu(bar_id=bar_a.id, name="Owned Menu", status=MenuStatus.ACTIVE.value)
+            menu_other = Menu(bar_id=bar_a.id, name="Other Menu", status=MenuStatus.ACTIVE.value)
+            session.add_all([menu_owned, menu_other])
+            await session.flush()
+
+        async with session.begin():
+            # parent_id passes bar ownership, but the instance itself is
+            # wired to a different parent (menu_other) via menu_id: this
+            # must be refused, not silently persisted under menu_other.
+            with pytest.raises(ValueError):
+                await menu_items.create_for_parent(
+                    session,
+                    bar_id=bar_a.id,
+                    parent_id=menu_owned.id,
+                    instance=MenuItem(menu_id=menu_other.id, recipe_id=recipe_a.id, display_name="Mismatched"),
+                )
+
+        async with session.begin():
+            # An instance with no FK set is adopted by the validated parent.
+            adopted = await menu_items.create_for_parent(
+                session,
+                bar_id=bar_a.id,
+                parent_id=menu_owned.id,
+                instance=MenuItem(recipe_id=recipe_a.id, display_name="Adopted"),
+            )
+            assert adopted.menu_id == menu_owned.id

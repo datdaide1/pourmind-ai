@@ -153,7 +153,13 @@ class BarScopedRepository(Generic[ModelT]):
         self, session: AsyncSession, *, bar_id: UUID, resource_id: UUID, values: dict[str, Any]
     ) -> Optional[ModelT]:
         """Scoped update: composes get(), so a caller can never update a
-        row it could not have looked up."""
+        row it could not have looked up. Refuses to touch bar_id or id: a
+        `values` dict that tried to re-scope or re-identify the row would
+        silently defeat the whole point of a bar-scoped repository."""
+        immutable_keys = {self.bar_id_column.key, self.id_column.key} & values.keys()
+        if immutable_keys:
+            raise ValueError(f"update() cannot modify immutable fields: {sorted(immutable_keys)}")
+
         instance = await self.get(session, bar_id=bar_id, resource_id=resource_id)
         if instance is None:
             return None
@@ -253,14 +259,27 @@ class RelationBarScopedRepository(Generic[ModelT]):
     async def create_for_parent(
         self, session: AsyncSession, *, bar_id: UUID, parent_id: UUID, instance: ModelT
     ) -> ModelT:
-        """Defensive create: verifies the parent belongs to this bar before
-        persisting the child row."""
+        """Defensive create: verifies the parent belongs to this bar, and
+        that `instance` is actually wired to that same parent, before
+        persisting the child row. Without the second check, a caller could
+        pass a bar-owned `parent_id` to satisfy the ownership guard while
+        `instance` still points at a different (possibly foreign) parent."""
         parent_stmt = select(self.parent_id_column).where(
             self.parent_id_column == parent_id, self.parent_bar_id_column == bar_id
         )
         parent_row = (await session.execute(parent_stmt)).first()
         if parent_row is None:
             raise ValueError(f"{self.parent_model.__name__} {parent_id} not found for bar {bar_id}")
+
+        parent_fk_attr = self.parent_fk_column.key
+        instance_parent_id = getattr(instance, parent_fk_attr, None)
+        if instance_parent_id is not None and instance_parent_id != parent_id:
+            raise ValueError(
+                f"{type(instance).__name__}.{parent_fk_attr} ({instance_parent_id}) does not match "
+                f"parent_id ({parent_id})"
+            )
+        setattr(instance, parent_fk_attr, parent_id)
+
         session.add(instance)
         await session.flush()
         return instance

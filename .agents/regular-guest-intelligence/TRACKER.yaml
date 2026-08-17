@@ -27,10 +27,10 @@ human_checkpoints:
     decision: mvp-release-acceptance
 summary:
   total_tasks: 47
-  planned: 42
+  planned: 41
   in_progress: 0
   blocked: 0
-  completed: 5
+  completed: 6
 tasks:
   - id: FND-01
     epic: foundation
@@ -164,8 +164,25 @@ tasks:
     handoff: "Stop at FND-05 boundary; FND-06 and other dependent tasks remain planned."
   - id: FND-06
     epic: foundation
-    status: planned
+    status: completed
     plan: "tasks/fnd-06-establish-feature-flags-and-route-registration.yaml"
+    completed_at: "2026-08-17"
+    evidence:
+      implementation:
+        - "app/main.py: adds an always-present, feature-flag-gated `regular_guest_router` (prefix /regular-guest, tag regular-guest-intelligence) that later tasks (RCP-03, MNU-02, PTR-01/04, INT-07) attach routes to; it is only included on the live app (app.include_router(..., prefix=\"/api/v1\")) when REGULAR_GUEST_ENABLED is true, so a disabled deployment has no trace of these routes in its live OpenAPI schema at all"
+        - "app/main.py: _ensure_regular_guest_configuration_is_valid() calls build_bar_principal_provider() eagerly at process startup whenever the flag is enabled, so a broken deployment (production with no verified provider, or local/staging missing demo credentials) fails at startup instead of at first request"
+        - "app/core/config.py: adds Settings.regular_guest_diagnostics, a secret-free {enabled, app_env} snapshot; deliberately does not add a Settings-level validator rejecting enabled+production, since only build_bar_principal_provider() (deployment-time, not config-time) can know whether a verified provider exists"
+        - "/health now returns {status, regular_guest_intelligence: {enabled, app_env}}; no credential fields are ever included"
+      review_remediation:
+        - "First pass added a Settings model_validator rejecting REGULAR_GUEST_ENABLED=true with APP_ENV=production, which broke 4 pre-existing FND-03 tests in tests/test_bar_principal.py that legitimately construct that combination to exercise build_bar_principal_provider()'s own fail-closed check; removed the validator and moved the production fail-closed guarantee entirely to the app/main.py startup guard, which is the layer that actually knows whether a verified provider is available"
+      regression_coverage:
+        - "tests/test_feature_flags.py (new, not DB-gated, runs locally): disabled flag valid in every environment; enabled flag valid in local/staging with demo credentials; Settings permits enabled+production construction (defers the decision); regular_guest_diagnostics leaks no secret values; startup guard is a no-op when disabled, raises BarAuthConfigurationError when enabled without demo credentials, raises in production without a verified provider, and passes when enabled with demo credentials in staging; /health exposes exactly {enabled, app_env} with no secret values present in the response body; the regular_guest_router is mounted at /api/v1/regular-guest only when the flag matches the running app's actual state"
+      validation:
+        - command: "E:/anaconda3/envs/cocktail-ai/python.exe -m compileall -q app tests"
+          result: "passed"
+        - command: "E:/anaconda3/envs/cocktail-ai/python.exe -m pytest -q"
+          result: "73 passed, 57 skipped (all 10 new FND-06 tests run and pass locally — no DB dependency; the pre-existing 57 Postgres-dependent tests remain skipped by the existing offline policy)"
+    handoff: "Stop at FND-06 boundary; the foundation epic is now complete. RCP-01 and other dependent tasks remain planned."
   - id: RCP-01
     epic: recipes
     status: planned

@@ -1,0 +1,23 @@
+id: WEB-08
+title: "Build patron intelligence and recommendation UI"
+epic: frontend
+priority: P0
+status: planned
+owner: ai-coding-agent
+human_role: product-owner-and-acceptance-reviewer
+estimate_ai_agent_days: "3-4"
+dependencies: ["WEB-05", "WEB-06", "INT-07", "INT-08"]
+objective: "Show immutable history, evidence, confidence, stale state, score breakdown, and actions."
+source_spec: "docs/REGULAR_GUEST_INTELLIGENCE_MVP_SPEC.md"
+source_backlog: "docs/REGULAR_GUEST_INTELLIGENCE_IMPLEMENTATION_PLAN.md"
+planned_paths:
+  - "apps/web/src/features/bar-copilot/intelligence.ts"
+execution_checklist:
+  - inspect_current_code_and_related_tests
+  - implement_only_this_task_scope
+  - add_or_update_regression_coverage
+  - run_task_specific_validation
+  - self_review_diff_and_security_boundary
+  - update_master_tracker_with_evidence
+acceptance_gate: "All acceptance criteria in the source backlog section for WEB-08 are satisfied with evidence."
+handoff: "Stop at the task boundary; do not begin dependent work until tracker status and evidence are updated."

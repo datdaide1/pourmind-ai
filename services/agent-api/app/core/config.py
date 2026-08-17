@@ -1,6 +1,6 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import Field
-from typing import Literal, Optional
+from typing import Any, Literal, Optional
 from uuid import UUID
 import os
 from pathlib import Path
@@ -18,6 +18,21 @@ class Settings(BaseSettings):
     REGULAR_GUEST_ENABLED: bool = False
     DEMO_BAR_ID: Optional[UUID] = None
     DEMO_BAR_TOKEN: str = ""
+
+    # Whether REGULAR_GUEST_ENABLED=true is actually safe in production
+    # depends on whether a verified bar-principal provider has been wired
+    # up (app/core/bar_auth.py:build_bar_principal_provider) — something
+    # Settings alone cannot know, since that provider is constructed by the
+    # deployment, not declared as config. So Settings does not reject the
+    # combination itself; app/main.py fails startup closed instead by
+    # calling build_bar_principal_provider() eagerly whenever the flag is
+    # enabled, which always raises in production until a real provider is
+    # wired in (FND-06).
+    @property
+    def regular_guest_diagnostics(self) -> dict[str, Any]:
+        """Safe, secret-free snapshot for health/config diagnostics
+        endpoints: never include DEMO_BAR_TOKEN or any other credential."""
+        return {"enabled": self.REGULAR_GUEST_ENABLED, "app_env": self.APP_ENV}
 
     # Session capability authentication. Use at least 32 random bytes in production.
     SESSION_TOKEN_SECRET: str = ""

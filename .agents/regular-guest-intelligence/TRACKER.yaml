@@ -27,10 +27,10 @@ human_checkpoints:
     decision: mvp-release-acceptance
 summary:
   total_tasks: 47
-  planned: 44
+  planned: 43
   in_progress: 0
   blocked: 0
-  completed: 3
+  completed: 4
 tasks:
   - id: FND-01
     epic: foundation
@@ -109,8 +109,33 @@ tasks:
     handoff: "Stop at FND-03 boundary; FND-04 and other dependent tasks remain planned."
   - id: FND-04
     epic: foundation
-    status: planned
+    status: completed
     plan: "tasks/fnd-04-add-postgresql-schema-migration.yaml"
+    completed_at: "2026-08-17"
+    evidence:
+      implementation:
+        - "app/db/models.py: bars, bar_memberships, recipes, recipe_versions, menus, menu_items, patrons, drink_experiences, taste_profiles, recommendations, with FKs, indexes and CHECK constraints"
+        - "CHECK constraints render directly from the FND-02 domain enums (app/domain/enums.py) so the database cannot accept a value the API layer would reject"
+        - "drink_experiences enforces the FND-01 D2 decision in-database: rating/feedback requires feedback_provenance"
+        - "liquor_prices gains a stable (name, size_raw) unique key"
+        - "migrations/20260730_regular_guest_intelligence_placeholder.sql: idempotent DDL record of the same schema for manual/ops application"
+        - "app/db/ingest_data.py split into run_schema_migrations() (tables/columns/triggers only, never touches rows) and ingest_reference_data() (idempotent upsert of ingredients, liquor prices, mixology rules)"
+        - "liquor_prices ingestion changed from unconditional delete-and-reinsert to ON CONFLICT (name, size_raw) DO UPDATE"
+        - "sync_reference_data_full() isolates the one remaining destructive path; it fails closed (DestructiveSyncNotAllowedError) unless confirm_isolated_test_db=True and settings identify a non-production, test-named database"
+      review_remediation:
+        - "tests/test_migration.py fixture now calls run_schema_migrations() instead of the full ingest_data() pipeline, so migration tests no longer require the shipped JSON dataset"
+      regression_coverage:
+        - "tests/test_migration.py: reapplying schema migrations preserves an existing liquor_prices row; destructive resync refused with no confirmation, against a non-test database, and in production"
+        - "tests/test_ingest_data.py: reference-data ingestion is idempotent (row counts stable across repeated calls), liquor-price upsert preserves a hand-added row and updates a matching key without duplicating, mixology-rule upsert does not duplicate, destructive resync fails closed by default"
+      validation:
+        - command: "E:/anaconda3/envs/cocktail-ai/python.exe -m compileall -q app tests"
+          result: "passed"
+        - command: "python -c \"from app.db import models, ingest_data\" (import + Base.metadata.tables inspection)"
+          result: "passed: 16 tables registered, including all 10 new regular-guest-intelligence tables"
+        - command: "E:/anaconda3/envs/cocktail-ai/python.exe -m pytest -q"
+          result: "63 passed, 48 skipped (Postgres-dependent tests, including the 8 new FND-04 tests, skipped by the existing offline policy; RUN_DB_TESTS=1 requires an isolated Postgres instance not available in this session)"
+      known_gap: "New schema and upsert logic were not exercised against a live PostgreSQL instance in this session (no local/isolated Postgres or Docker available; the only reachable instance is the shared Supabase database in .env, which is intentionally out of scope for schema changes and destructive-sync testing). CI (.github/workflows/ci.yml) runs an isolated postgres:16 service with RUN_DB_TESTS=1 and will exercise this on the next push."
+    handoff: "Stop at FND-04 boundary; FND-05 and other dependent tasks remain planned."
   - id: FND-05
     epic: foundation
     status: planned

@@ -27,10 +27,10 @@ human_checkpoints:
     decision: mvp-release-acceptance
 summary:
   total_tasks: 47
-  planned: 43
+  planned: 42
   in_progress: 0
   blocked: 0
-  completed: 4
+  completed: 5
 tasks:
   - id: FND-01
     epic: foundation
@@ -138,8 +138,30 @@ tasks:
     handoff: "Stop at FND-04 boundary; FND-05 and other dependent tasks remain planned."
   - id: FND-05
     epic: foundation
-    status: planned
+    status: completed
     plan: "tasks/fnd-05-create-bar-scoped-repository-and-query-helpers.yaml"
+    completed_at: "2026-08-17"
+    evidence:
+      implementation:
+        - "app/repositories/bar_scoped.py: BarScopedRepository for tables with a direct bar_id column (bar_memberships, recipes, menus, patrons, drink_experiences, recommendations) and RelationBarScopedRepository for child tables scoped via a parent join (recipe_versions via recipes, menu_items via menus)"
+        - "get() requires (bar_id, resource_id); a resource that belongs to another bar resolves to None exactly like a resource that does not exist, matching the FND-03 non-enumerating posture"
+        - "list_paginated()/list_for_parent() use keyset pagination (order_column, id tie-breaker) with a bounded limit (default 20, max 100) and stable ordering across pages"
+        - "Archived resources (recipes, menus, patrons) are excluded by default; include_archived=True opts in explicitly"
+        - "Pagination cursors are opaque resource IDs whose ordering values are read back from the database scoped by bar_id, so a cursor from another bar is rejected as invalid rather than leaking cross-bar ordering data"
+        - "create()/create_for_parent() are defensive: refuse to persist a row with no bar_id, or a child row whose parent is not owned by the calling bar"
+        - "update()/archive() compose get(), so a write can never touch a row the caller could not have looked up"
+        - "TasteProfile intentionally excluded: it is a one-per-patron singleton keyed by patron_id, not a listable bar-scoped collection; left for the INT tasks that read/write it directly"
+      regression_coverage:
+        - "tests/test_bar_scoped_repository.py: two bars with identically named recipes prove get()/list_paginated() never cross bar boundaries; pagination boundary walk across 5 rows with limit=2 visits every row exactly once; empty-bar page returns no items and no cursor; archived filtering default-excludes and include_archived includes; a cursor belonging to another bar is rejected; create() rejects a missing bar_id and update() is scoped; relation-scoped menu_items rejects cross-bar get() and cross-bar create_for_parent()"
+      validation:
+        - command: "E:/anaconda3/envs/cocktail-ai/python.exe -m compileall -q app tests"
+          result: "passed"
+        - command: "python -c \"from app.repositories import bar_scoped\" (import + repository construction)"
+          result: "passed"
+        - command: "E:/anaconda3/envs/cocktail-ai/python.exe -m pytest -q"
+          result: "63 passed, 55 skipped (Postgres-dependent tests, including the 7 new FND-05 tests, skipped by the existing offline policy)"
+      known_gap: "Same as FND-04: no isolated PostgreSQL instance was available in this session, so the 7 new repository integration tests have not been run against a live database yet. CI's postgres:16 service with RUN_DB_TESTS=1 will exercise them on the next push."
+    handoff: "Stop at FND-05 boundary; FND-06 and other dependent tasks remain planned."
   - id: FND-06
     epic: foundation
     status: planned

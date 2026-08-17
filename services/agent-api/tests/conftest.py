@@ -68,6 +68,7 @@ def event_loop():
 DB_TEST_MODULES = {
     "test_adversarial_endpoints.py", "test_endpoints.py", "test_migration.py",
     "test_migration_stress.py", "test_telemetry.py", "test_ingest_data.py",
+    "test_bar_scoped_repository.py",
 }
 
 def pytest_collection_modifyitems(config, items):

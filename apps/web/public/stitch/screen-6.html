@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Recipe Detail - PourMind</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&amp;family=Hanken+Grotesk:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container": "#1e2020",
+                      "surface-container-high": "#282a2b",
+                      "on-tertiary-container": "#454546",
+                      "primary-fixed-dim": "#e9c349",
+                      "on-primary": "#3c2f00",
+                      "background": "#121414",
+                      "on-secondary-fixed-variant": "#474647",
+                      "surface-bright": "#37393a",
+                      "on-primary-container": "#554300",
+                      "secondary": "#c8c6c7",
+                      "surface-dim": "#121414",
+                      "tertiary": "#d0cdce",
+                      "on-surface-variant": "#d0c5af",
+                      "on-background": "#e2e2e2",
+                      "outline-variant": "#4d4635",
+                      "on-error-container": "#ffdad6",
+                      "on-secondary-fixed": "#1b1b1c",
+                      "inverse-on-surface": "#2f3131",
+                      "on-tertiary-fixed": "#1b1b1c",
+                      "primary-container": "#d4af37",
+                      "secondary-fixed-dim": "#c8c6c7",
+                      "surface-container-highest": "#333535",
+                      "on-primary-fixed": "#241a00",
+                      "on-tertiary": "#303031",
+                      "surface-container-low": "#1a1c1c",
+                      "tertiary-container": "#b4b2b3",
+                      "inverse-primary": "#735c00",
+                      "error": "#ffb4ab",
+                      "surface-container-lowest": "#0c0f0f",
+                      "error-container": "#93000a",
+                      "on-error": "#690005",
+                      "tertiary-fixed": "#e4e2e3",
+                      "surface-variant": "#333535",
+                      "outline": "#99907c",
+                      "primary": "#f2ca50",
+                      "tertiary-fixed-dim": "#c8c6c7",
+                      "secondary-fixed": "#e5e2e3",
+                      "primary-fixed": "#ffe088",
+                      "surface": "#121414",
+                      "secondary-container": "#49494a",
+                      "on-secondary-container": "#bab8b9",
+                      "on-secondary": "#303031",
+                      "surface-tint": "#e9c349",
+                      "on-primary-fixed-variant": "#574500",
+                      "on-surface": "#e2e2e2",
+                      "inverse-surface": "#e2e2e2",
+                      "on-tertiary-fixed-variant": "#474648"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "gutter": "24px",
+                      "margin-desktop": "64px",
+                      "container-max": "1280px",
+                      "unit": "8px",
+                      "margin-mobile": "20px"
+              },
+              "fontFamily": {
+                      "headline-sm": ["Libre Caslon Text"],
+                      "display-lg-mobile": ["Libre Caslon Text"],
+                      "body-lg": ["Hanken Grotesk"],
+                      "label-md": ["Hanken Grotesk"],
+                      "headline-md": ["Libre Caslon Text"],
+                      "body-md": ["Hanken Grotesk"],
+                      "display-lg": ["Libre Caslon Text"],
+                      "label-sm": ["Hanken Grotesk"]
+              },
+              "fontSize": {
+                      "headline-sm": ["24px", {"lineHeight": "32px", "fontWeight": "400"}],
+                      "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "headline-md": ["32px", {"lineHeight": "40px", "fontWeight": "400"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        body {
+            background-color: #1a1a1b;
+            color: #e2e2e2;
+        }
+        .glass-card {
+            background-color: rgba(45, 45, 46, 0.7);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            backdrop-filter: blur(20px);
+        }
+        .gold-glow:hover {
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+        }
+        .parallax-bg {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen relative overflow-x-hidden font-body-md">
+<!-- Shader Background -->
+<div class="fixed inset-0 z-[-1] opacity-30 mix-blend-screen pointer-events-none">
+<!-- STITCH_SHADER_START:ANIMATION_7 class="absolute inset-0 w-full h-full" -->
+<div class="absolute inset-0 w-full h-full" style="display:block;">
+<canvas id="shader-canvas-ANIMATION_7" style="display:block;width:100%;height:100%"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_7');
+
+  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+  // This fires on initial layout and whenever the element is resized.
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+uniform float u_time;
+uniform vec2 u_resolution;
+uniform vec2 u_mouse;
+varying vec2 v_texCoord;
+
+void main() {
+    vec2 uv = v_texCoord;
+    vec2 mouse = u_mouse / u_resolution;
+    
+    // Create liquid motion
+    float wave = sin(uv.x * 10.0 + u_time * 0.5) * 0.05;
+    wave += sin(uv.y * 8.0 - u_time * 0.3) * 0.03;
+    
+    // Distort UVs for the "liquid" look
+    vec2 distortedUv = uv + wave;
+    
+    // Base colors from the design system (Liquid Gold)
+    vec3 colorLow = vec3(0.07, 0.08, 0.08); // surface
+    vec3 colorMid = vec3(0.83, 0.69, 0.22); // amber gold
+    vec3 colorHigh = vec3(1.0, 0.9, 0.5);   // highlight gold
+    
+    // Noise/Pattern
+    float n = sin(distortedUv.x * 20.0 + distortedUv.y * 20.0 + u_time);
+    n *= cos(distortedUv.y * 15.0 - u_time * 0.5);
+    
+    // Interaction
+    float dist = distance(uv, mouse);
+    float glow = smoothstep(0.3, 0.0, dist) * 0.2;
+    
+    vec3 finalColor = mix(colorLow, colorMid, n * 0.1 + 0.1);
+    finalColor = mix(finalColor, colorHigh, glow);
+    
+    // Subtle gradient overlay
+    finalColor *= (1.0 - length(uv - 0.5) * 0.5);
+    
+    gl_FragColor = vec4(finalColor, 1.0);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+  // Shaders that need normalized coords should use: u_mouse / u_resolution.
+  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+  window.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const nx = (event.clientX - rect.left) / rect.width;
+      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      mouse.x = nx * canvas.width;
+      mouse.y = ny * canvas.height;
+    }
+  });
+
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- STITCH_SHADER_END:ANIMATION_7 -->
+</div>
+<!-- Navigation Shells (Suppressed for transactional/detail page, but keeping TopNavBar as minimal context if needed, opting to hide based on rules to prioritize canvas, but TopNavBar was requested to be built in general context, we will hide it to focus on canvas as per instruction: "Task-Focused: Any sub-page featuring a 'Close' or 'Back' action... suppress navigation") -->
+<!-- Main Content -->
+<main class="w-full">
+<!-- Hero Section -->
+<section class="relative h-[60vh] md:h-[70vh] w-full parallax-bg" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAUM4JzPo9DM00JohX9-m8qIMt-90GSGo-9OqFUc3jSlCohe9IooTUAcuwkdNPnE765-RuixLEBe024vxYjkSmMwwe-iLpmfwM5eaZBOnESIuYqk17GVmFAFwehnGYkmegdwHKFVgokS19V_SyDC4xxADIMO0NqmWk3rFF8l_CHVZpHzh5KuA9xccGkJxOI4ib71E77acMmn0O3pHyr0fvCzSYDzg7tS4PbZuJew_8ea9hUKlcC1Dz2gAZHKzOJq_ghn64');">
+<!-- Overlay gradient -->
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent"></div>
+<button class="absolute top-margin-mobile md:top-margin-desktop left-margin-mobile md:left-margin-desktop z-10 p-2 rounded-full glass-card text-primary hover:bg-surface-bright/20 transition-all group" onclick="history.back()">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<div class="absolute bottom-0 left-0 w-full p-margin-mobile md:p-margin-desktop pb-8 md:pb-12 z-10 flex flex-col items-start fade-in">
+<h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-primary mb-4">The Smoked Old Fashioned</h1>
+<div class="flex flex-wrap gap-3 mb-6">
+<span class="glass-card px-3 py-1 rounded text-label-sm font-label-sm text-on-surface">Strong • 32% ABV</span>
+<span class="glass-card px-3 py-1 rounded text-label-sm font-label-sm text-on-surface">5 Mins Prep</span>
+<span class="glass-card px-3 py-1 rounded text-label-sm font-label-sm text-on-surface">Smoky</span>
+<span class="glass-card px-3 py-1 rounded text-label-sm font-label-sm text-on-surface">Complex</span>
+</div>
+<div class="flex gap-4">
+<button class="bg-[#D4AF37] text-on-primary px-6 py-3 rounded font-label-md text-label-md hover:bg-primary-fixed transition-colors gold-glow flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">bookmark</span>
+                        Save to My Collection
+                    </button>
+<button class="border border-[#D4AF37]/20 text-[#D4AF37] px-6 py-3 rounded font-label-md text-label-md hover:bg-[#D4AF37]/10 transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">share</span>
+                        Share Recipe
+                    </button>
+</div>
+</div>
+</section>
+<!-- Content Grid -->
+<section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-12 md:py-16 grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column: Ingredients & Notes -->
+<div class="lg:col-span-4 flex flex-col gap-8">
+<!-- Ingredients Card -->
+<div class="glass-card rounded-xl p-6 fade-in">
+<div class="flex justify-between items-center mb-6 border-b border-primary/20 pb-4">
+<h2 class="font-headline-sm text-headline-sm text-primary">Ingredients</h2>
+<div class="flex items-center gap-2 bg-surface-container rounded-full p-1 border border-outline-variant/30">
+<button class="px-3 py-1 rounded-full text-label-sm font-label-sm bg-primary/20 text-primary">oz</button>
+<button class="px-3 py-1 rounded-full text-label-sm font-label-sm text-on-surface-variant hover:text-on-surface">ml</button>
+</div>
+</div>
+<ul class="flex flex-col gap-4">
+<li class="flex justify-between items-center">
+<span class="text-body-md text-on-surface">Kentucky Bourbon</span>
+<span class="text-label-md font-label-md text-primary">2 oz</span>
+</li>
+<li class="flex justify-between items-center">
+<span class="text-body-md text-on-surface">Simple Syrup</span>
+<span class="text-label-md font-label-md text-primary">0.25 oz</span>
+</li>
+<li class="flex justify-between items-center">
+<span class="text-body-md text-on-surface">Angostura Bitters</span>
+<span class="text-label-md font-label-md text-primary">2 dashes</span>
+</li>
+<li class="flex justify-between items-center">
+<span class="text-body-md text-on-surface">Orange Peel</span>
+<span class="text-label-md font-label-md text-primary">Garnish</span>
+</li>
+<li class="flex justify-between items-center">
+<span class="text-body-md text-on-surface">Cherry Wood Chips</span>
+<span class="text-label-md font-label-md text-primary">For smoke</span>
+</li>
+</ul>
+</div>
+<!-- Safety Check Card -->
+<div class="glass-card rounded-xl p-6 border-error/30 fade-in relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-error"></div>
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-error">warning</span>
+<h3 class="font-label-md text-label-md text-error">Safety Check</h3>
+</div>
+<p class="text-body-sm text-on-surface-variant">Contains high ABV. Ensure proper ventilation when using the smoking gun. No common allergens.</p>
+</div>
+</div>
+<!-- Right Column: Instructions -->
+<div class="lg:col-span-8 flex flex-col gap-8">
+<!-- Steps Card -->
+<div class="glass-card rounded-xl p-6 md:p-10 fade-in">
+<h2 class="font-headline-sm text-headline-sm text-primary mb-8 border-b border-primary/20 pb-4">Preparation</h2>
+<div class="flex flex-col gap-8">
+<div class="flex gap-6 items-start group">
+<div class="w-10 h-10 rounded-full border border-primary/30 flex items-center justify-center font-headline-sm text-primary shrink-0 group-hover:bg-primary/10 transition-colors">1</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface mb-2">Prepare the Glass</h4>
+<p class="text-body-md text-on-surface-variant leading-relaxed">Place a large, clear ice cube into a heavy-bottomed rocks glass. Let it sit for a minute to chill the glass slightly while you mix.</p>
+</div>
+</div>
+<div class="flex gap-6 items-start group">
+<div class="w-10 h-10 rounded-full border border-primary/30 flex items-center justify-center font-headline-sm text-primary shrink-0 group-hover:bg-primary/10 transition-colors">2</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface mb-2">Mix Ingredients</h4>
+<p class="text-body-md text-on-surface-variant leading-relaxed">In a mixing glass, combine the bourbon, simple syrup, and bitters. Add ice and stir gently for about 20-30 seconds until well chilled and properly diluted.</p>
+</div>
+</div>
+<div class="flex gap-6 items-start group">
+<div class="w-10 h-10 rounded-full border border-primary/30 flex items-center justify-center font-headline-sm text-primary shrink-0 group-hover:bg-primary/10 transition-colors">3</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface mb-2">Strain &amp; Smoke</h4>
+<p class="text-body-md text-on-surface-variant leading-relaxed">Strain the mixture into your prepared rocks glass over the large ice cube. Use a smoking gun with cherry wood chips to infuse the drink with smoke. Cover with a glass cloche for 30 seconds.</p>
+</div>
+</div>
+<div class="flex gap-6 items-start group">
+<div class="w-10 h-10 rounded-full border border-primary/30 flex items-center justify-center font-headline-sm text-primary shrink-0 group-hover:bg-primary/10 transition-colors">4</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface mb-2">Garnish</h4>
+<p class="text-body-md text-on-surface-variant leading-relaxed">Express the oils from a fresh orange peel over the surface of the drink. Wipe the rim of the glass with the peel, then drop it in alongside a premium cocktail cherry.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Mixologist Notes -->
+<div class="glass-card rounded-xl p-6 md:p-8 border-t-2 border-t-primary fade-in">
+<div class="flex items-center gap-4 mb-4">
+<img class="w-12 h-12 rounded-full object-cover border border-primary/20" data-alt="A detailed headshot portrait of a professional mixologist in a dimly lit speakeasy setting, sharp focus, cinematic lighting, gold and dark ambient tones, sophisticated mood." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDT8_mbPJlWTzUS1hZiCbaljRhle_ZvCI6J1_4WKBr_xZO_6hWqn3OWyI65bVSCTfKKyCfa_NLGOMeT2P11m7CboMaV0HfhGcybIewI3jESqHXTi8Ah2HD4e8m1E6gqUYg0-PaA9fFnIeu8js7qyhdV_0BLEqKjYcUlkTY2XvWQFOwf5cfFeYW2AQlABD-1RNb6UW_gGACumXHWe-ryMQGQwd-6_zptPHahcDbl1NroDILNswMonvGBNQ"/>
+<div>
+<h3 class="font-label-md text-label-md text-primary">Mixologist Notes</h3>
+<p class="text-label-sm text-on-surface-variant">Chef Julian, Lead Bartender</p>
+</div>
+</div>
+<p class="text-body-md text-on-surface-variant italic border-l-2 border-primary/30 pl-4">"The key to a perfect smoked old fashioned is balance. Don't overdo the smoke; a gentle infusion of cherry wood elevates the caramel notes of the bourbon without overpowering it. Always stir, never shake."</p>
+</div>
+<button class="w-full border border-[#D4AF37]/20 text-[#D4AF37] px-6 py-4 rounded font-label-md text-label-md hover:bg-[#D4AF37]/10 transition-colors flex items-center justify-center gap-2 mt-4 fade-in">
+<span class="material-symbols-outlined text-[20px]">location_on</span>
+                    Find Bars Serving This
+                </button>
+</div>
+</section>
+</main>
+<script>
+        // Simple Intersection Observer for fade-in animations
+        document.addEventListener("DOMContentLoaded", function() {
+            const elements = document.querySelectorAll('.fade-in');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            elements.forEach(el => observer.observe(el));
+        });
+    </script>
+</body></html>

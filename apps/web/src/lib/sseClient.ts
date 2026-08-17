@@ -3,7 +3,12 @@
  * Fetch-based Server-Sent Events client supporting POST requests and JSON streaming.
  */
 
-import { Block } from '@/components/sdui/types';
+/**
+ * Transport-level representation of a server-driven response. The current
+ * Stitch UI owns its presentation, so this client deliberately has no import
+ * from a UI component package.
+ */
+export type Block = Record<string, unknown>;
 
 export interface LocationContext {
   lat: number;
@@ -239,4 +244,3 @@ export async function connectSSEChat(
     }
   }
 }
-

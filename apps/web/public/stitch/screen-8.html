@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Guest Profile &amp; Analytics - PourMind B2B</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&amp;family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container": "#1e2020",
+                    "surface-container-high": "#282a2b",
+                    "on-tertiary-container": "#454546",
+                    "primary-fixed-dim": "#e9c349",
+                    "on-primary": "#3c2f00",
+                    "background": "#121414",
+                    "on-secondary-fixed-variant": "#474647",
+                    "surface-bright": "#37393a",
+                    "on-primary-container": "#554300",
+                    "secondary": "#c8c6c7",
+                    "surface-dim": "#121414",
+                    "tertiary": "#d0cdce",
+                    "on-surface-variant": "#d0c5af",
+                    "on-background": "#e2e2e2",
+                    "outline-variant": "#4d4635",
+                    "on-error-container": "#ffdad6",
+                    "on-secondary-fixed": "#1b1b1c",
+                    "inverse-on-surface": "#2f3131",
+                    "on-tertiary-fixed": "#1b1b1c",
+                    "primary-container": "#d4af37",
+                    "secondary-fixed-dim": "#c8c6c7",
+                    "surface-container-highest": "#333535",
+                    "on-primary-fixed": "#241a00",
+                    "on-tertiary": "#303031",
+                    "surface-container-low": "#1a1c1c",
+                    "tertiary-container": "#b4b2b3",
+                    "inverse-primary": "#735c00",
+                    "error": "#ffb4ab",
+                    "surface-container-lowest": "#0c0f0f",
+                    "error-container": "#93000a",
+                    "on-error": "#690005",
+                    "tertiary-fixed": "#e4e2e3",
+                    "surface-variant": "#333535",
+                    "outline": "#99907c",
+                    "primary": "#f2ca50",
+                    "tertiary-fixed-dim": "#c8c6c7",
+                    "secondary-fixed": "#e5e2e3",
+                    "primary-fixed": "#ffe088",
+                    "surface": "#121414",
+                    "secondary-container": "#49494a",
+                    "on-secondary-container": "#bab8b9",
+                    "on-secondary": "#303031",
+                    "surface-tint": "#e9c349",
+                    "on-primary-fixed-variant": "#574500",
+                    "on-surface": "#e2e2e2",
+                    "inverse-surface": "#e2e2e2",
+                    "on-tertiary-fixed-variant": "#474648"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "margin-desktop": "64px",
+                    "container-max": "1280px",
+                    "unit": "8px",
+                    "margin-mobile": "20px"
+            },
+            "fontFamily": {
+                    "headline-sm": ["Libre Caslon Text"],
+                    "display-lg-mobile": ["Libre Caslon Text"],
+                    "body-lg": ["Hanken Grotesk"],
+                    "label-md": ["Hanken Grotesk"],
+                    "headline-md": ["Libre Caslon Text"],
+                    "body-md": ["Hanken Grotesk"],
+                    "display-lg": ["Libre Caslon Text"],
+                    "label-sm": ["Hanken Grotesk"]
+            },
+            "fontSize": {
+                    "headline-sm": ["24px", {"lineHeight": "32px", "fontWeight": "400"}],
+                    "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-md": ["32px", {"lineHeight": "40px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        /* Glassmorphism Utilities */
+        .glass-panel {
+            background-color: rgba(45, 45, 46, 0.7);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+        }
+        
+        .gold-hairline {
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        /* Animations */
+        @keyframes radarGrow {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-radar {
+            transform-origin: center;
+            animation: radarGrow 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes aiGlow {
+            0% { box-shadow: 0 0 5px rgba(212, 175, 55, 0.1); }
+            50% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
+            100% { box-shadow: 0 0 5px rgba(212, 175, 55, 0.1); }
+        }
+        .ai-sparkle {
+            animation: aiGlow 3s infinite ease-in-out;
+        }
+        
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Staggered animation delays */
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased overflow-hidden flex">
+<!-- SideNavBar (Desktop) -->
+<nav class="hidden lg:flex flex-col h-screen fixed left-0 py-gutter bg-surface-container-low dark:bg-surface-container-low w-64 border-r border-primary/10 z-40">
+<!-- Header -->
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3 mb-6">
+<img class="w-10 h-10 rounded-full object-cover border border-primary/30" data-alt="A small, professional headshot of a mixologist in a dimly lit bar environment, deep shadows, crisp focus, wearing a dark apron." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAs47EzLHYp634pd-XmD5b3igRkfZm4TKe5kNOoJWnS8d2R3oXq5YaTLGJBGn9RwrtWG-WjXF5qZ2n7ykawwvKm6Z4KN7ETR_EsASYRAevr5oSy17QN4kogs5rdK6jG0dP9Wn9oun5X002_LYaFvkmdqEhNiNe_Fa-oJqDp14xlIXMz-DjE-AzDW7GLrDgDHIPWSkgVjMuggIm2p7q8SGGc9dtnZnY66hHocidIzSJDs7F5SQ2c2ZOVUA"/>
+<div>
+<h2 class="font-label-md text-label-md text-on-surface">The Speakeasy</h2>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Bar Manager</p>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary font-label-md text-label-md py-2 px-4 rounded hover:bg-primary-fixed transition-colors">
+                New Recipe
+            </button>
+</div>
+<!-- Navigation Links -->
+<div class="flex-1 flex flex-col gap-1 overflow-y-auto px-2">
+<a class="text-on-surface-variant px-4 py-3 flex items-center gap-3 hover:bg-surface-variant/10 rounded-lg transition-all hover:bg-surface-bright/30" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="text-on-surface-variant px-4 py-3 flex items-center gap-3 hover:bg-surface-variant/10 rounded-lg transition-all hover:bg-surface-bright/30" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="font-label-md text-label-md">Recipes</span>
+</a>
+<a class="text-on-surface-variant px-4 py-3 flex items-center gap-3 hover:bg-surface-variant/10 rounded-lg transition-all hover:bg-surface-bright/30" href="#">
+<span class="material-symbols-outlined" data-icon="liquor">liquor</span>
+<span class="font-label-md text-label-md">Menu</span>
+</a>
+<!-- Active State: Guests -->
+<a class="bg-primary-container/20 text-primary border-r-4 border-primary px-4 py-3 flex items-center gap-3 rounded-l-lg translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="group" data-weight="fill" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="font-label-md text-label-md">Guests</span>
+</a>
+<a class="text-on-surface-variant px-4 py-3 flex items-center gap-3 hover:bg-surface-variant/10 rounded-lg transition-all hover:bg-surface-bright/30" href="#">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+<span class="font-label-md text-label-md">Record</span>
+</a>
+<a class="text-on-surface-variant px-4 py-3 flex items-center gap-3 hover:bg-surface-variant/10 rounded-lg transition-all hover:bg-surface-bright/30" href="#">
+<span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+<span class="font-label-md text-label-md">Copilot</span>
+</a>
+</div>
+<!-- Footer Links -->
+<div class="px-2 mt-auto pt-4 border-t border-primary/10">
+<a class="text-on-surface-variant px-4 py-3 flex items-center gap-3 hover:bg-surface-variant/10 rounded-lg transition-all hover:bg-surface-bright/30" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+<a class="text-on-surface-variant px-4 py-3 flex items-center gap-3 hover:bg-surface-variant/10 rounded-lg transition-all hover:bg-surface-bright/30" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-label-md text-label-md">Log Out</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-0 lg:ml-64 h-screen overflow-y-auto overflow-x-hidden relative">
+<!-- Background Ambient Element -->
+<div class="absolute top-0 right-0 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
+<div class="px-margin-mobile md:px-margin-desktop py-8 max-w-container-max mx-auto space-y-gutter">
+<!-- Breadcrumb / Header Actions -->
+<div class="flex items-center justify-between fade-in-up">
+<div class="flex items-center gap-2 text-on-surface-variant font-label-md text-label-md">
+<a class="hover:text-primary transition-colors" href="#">Guests</a>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="text-primary">E. Sterling</span>
+</div>
+<div class="flex gap-3">
+<button class="p-2 rounded-full glass-panel hover:bg-surface-bright/50 transition-colors flex items-center justify-center text-on-surface-variant hover:text-primary">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="p-2 rounded-full glass-panel hover:bg-surface-bright/50 transition-colors flex items-center justify-center text-on-surface-variant hover:text-primary">
+<span class="material-symbols-outlined" data-icon="share">share</span>
+</button>
+</div>
+</div>
+<!-- Dossier Header -->
+<section class="glass-panel rounded-2xl p-6 md:p-10 flex flex-col md:flex-row items-center md:items-start gap-8 relative fade-in-up delay-100">
+<div class="relative shrink-0">
+<img class="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover gold-hairline p-1" data-alt="A highly detailed, cinematic portrait of an elegant woman with striking features, dark sophisticated clothing, set against an out-of-focus speakeasy background with warm amber backlighting. Professional dossier style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8ZvkVZ3RgPCAIivpPcqaC79zB_AT-AOxxnQH5pOHoO-ieo2ZXTvdSZsnbKD0qH5JdYsC1peYFylXuMev4WyTkQpi5GnfKh6I9CjF_83hDW-TXDFhx-ckE2umFCNdhuaU8kezyVhGREwUjRbgr_tk-zTyCK-ToirH6o9lb1Ix2T3C9o029dbeCCIdsA-xqSqIBdJZ0oL5LsCiMb-_Z5NClM3ACcileEt8ziYEjaD4y_obExqrp6SRZpw"/>
+<div class="absolute bottom-0 right-0 bg-primary text-on-primary font-label-sm text-label-sm px-3 py-1 rounded-full flex items-center gap-1 shadow-lg border border-background">
+<span class="material-symbols-outlined text-[14px]" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+                        Regular
+                    </div>
+</div>
+<div class="flex-1 text-center md:text-left space-y-4">
+<div>
+<h1 class="font-display-lg-mobile md:font-display-lg text-primary tracking-tighter mb-1">Eleanor Sterling</h1>
+<p class="font-body-lg text-on-surface-variant">Patron since Oct 2022 • Last visit: 3 days ago</p>
+</div>
+<div class="flex flex-wrap items-center justify-center md:justify-start gap-3 mt-4">
+<div class="bg-surface-container/50 border border-primary/10 rounded-lg px-4 py-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary/70">local_bar</span>
+<div>
+<p class="font-label-sm text-on-surface-variant">Total Visits</p>
+<p class="font-label-md text-on-surface">42</p>
+</div>
+</div>
+<div class="bg-surface-container/50 border border-primary/10 rounded-lg px-4 py-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary/70">attach_money</span>
+<div>
+<p class="font-label-sm text-on-surface-variant">Avg. Spend</p>
+<p class="font-label-md text-on-surface">Premium</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Confidence Score -->
+<div class="flex flex-col items-center justify-center bg-surface-container border border-surface-variant rounded-xl p-4 min-w-[120px]">
+<div class="relative w-16 h-16 flex items-center justify-center mb-2">
+<svg class="w-full h-full transform -rotate-90" viewbox="0 0 36 36">
+<path class="text-surface-bright" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="100, 100" stroke-width="2"></path>
+<path class="text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="92, 100" stroke-width="2"></path>
+</svg>
+<span class="absolute font-label-md text-primary">92%</span>
+</div>
+<span class="font-label-sm text-on-surface-variant text-center">Profile<br/>Confidence</span>
+</div>
+</section>
+<!-- Bento Grid Main Content -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column: Taste & Safety -->
+<div class="lg:col-span-4 space-y-gutter flex flex-col">
+<!-- Safety Constraints -->
+<section class="glass-panel rounded-2xl p-6 fade-in-up delay-200 border-error/20">
+<div class="flex items-center gap-2 mb-4 text-error">
+<span class="material-symbols-outlined">warning</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Dietary &amp; Safety</h3>
+</div>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="bg-error-container/20 text-error border border-error/30 font-label-sm px-3 py-1.5 rounded-full flex items-center gap-1">
+                                Tree Nuts
+                            </span>
+<span class="bg-error-container/20 text-error border border-error/30 font-label-sm px-3 py-1.5 rounded-full flex items-center gap-1">
+                                Egg White (Raw)
+                            </span>
+</div>
+<p class="font-body-md text-on-surface-variant text-sm border-t border-surface-variant pt-3">
+<strong class="text-on-surface">Note:</strong> Extremely sensitive to walnut bitters. Prefers aquafaba as foam substitute.
+                        </p>
+</section>
+<!-- Taste Map -->
+<section class="glass-panel rounded-2xl p-6 flex-1 flex flex-col fade-in-up delay-200">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Taste Map</h3>
+<span class="material-symbols-outlined text-primary/50">radar</span>
+</div>
+<div class="relative w-full aspect-square max-w-[240px] mx-auto flex items-center justify-center">
+<!-- SVG Radar Chart Simulation -->
+<svg class="w-full h-full overflow-visible" viewbox="0 0 100 100">
+<!-- Background Grid -->
+<polygon fill="none" points="50,5 95,25 95,75 50,95 5,75 5,25" stroke="rgba(255,255,255,0.05)" stroke-width="1"></polygon>
+<polygon fill="none" points="50,20 80,35 80,65 50,80 20,65 20,35" stroke="rgba(255,255,255,0.05)" stroke-width="1"></polygon>
+<polygon fill="none" points="50,35 65,45 65,55 50,65 35,55 35,45" stroke="rgba(255,255,255,0.1)" stroke-width="1"></polygon>
+<!-- Axes -->
+<line stroke="rgba(255,255,255,0.1)" stroke-width="1" x1="50" x2="50" y1="50" y2="5"></line>
+<line stroke="rgba(255,255,255,0.1)" stroke-width="1" x1="50" x2="95" y1="50" y2="25"></line>
+<line stroke="rgba(255,255,255,0.1)" stroke-width="1" x1="50" x2="95" y1="50" y2="75"></line>
+<line stroke="rgba(255,255,255,0.1)" stroke-width="1" x1="50" x2="50" y1="50" y2="95"></line>
+<line stroke="rgba(255,255,255,0.1)" stroke-width="1" x1="50" x2="5" y1="50" y2="75"></line>
+<line stroke="rgba(255,255,255,0.1)" stroke-width="1" x1="50" x2="5" y1="50" y2="25"></line>
+<!-- Labels -->
+<text class="font-label-sm" fill="#d0c5af" font-size="6" text-anchor="middle" x="50" y="0">Bitter</text>
+<text class="font-label-sm" fill="#d0c5af" font-size="6" text-anchor="start" x="100" y="25">Strong</text>
+<text class="font-label-sm" fill="#d0c5af" font-size="6" text-anchor="start" x="100" y="75">Smoky</text>
+<text class="font-label-sm" fill="#d0c5af" font-size="6" text-anchor="middle" x="50" y="102">Sweet</text>
+<text class="font-label-sm" fill="#d0c5af" font-size="6" text-anchor="end" x="0" y="75">Fruity</text>
+<text class="font-label-sm" fill="#d0c5af" font-size="6" text-anchor="end" x="0" y="25">Sour</text>
+<!-- Data Polygon (Animated) -->
+<polygon class="animate-radar" fill="rgba(212, 175, 55, 0.2)" points="50,15 85,30 65,70 50,85 25,60 15,35" stroke="#d4af37" stroke-width="2"></polygon>
+</svg>
+</div>
+<div class="mt-6 flex flex-wrap gap-2 justify-center">
+<span class="bg-surface text-on-surface font-label-sm text-label-sm px-2 py-1 rounded border border-surface-variant">Loves Mezcal</span>
+<span class="bg-surface text-on-surface font-label-sm text-label-sm px-2 py-1 rounded border border-surface-variant">Low Sugar</span>
+</div>
+</section>
+</div>
+<!-- Right Column: AI & History -->
+<div class="lg:col-span-8 space-y-gutter flex flex-col">
+<!-- AI Recommendations -->
+<section class="glass-panel rounded-2xl p-6 md:p-8 ai-sparkle fade-in-up delay-300 relative overflow-hidden">
+<!-- Background glow effect specifically for AI section -->
+<div class="absolute -top-20 -right-20 w-64 h-64 bg-primary/10 rounded-full blur-[60px] pointer-events-none"></div>
+<div class="flex items-center justify-between mb-6 relative z-10">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">auto_awesome</span>
+<h3 class="font-headline-sm text-headline-sm text-primary">PourMind Copilot Recommendations</h3>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
+<!-- Rec 1 -->
+<div class="bg-surface-container/50 border border-primary/20 rounded-xl p-4 flex gap-4 hover:bg-surface-bright/20 transition-colors cursor-pointer group">
+<img class="w-20 h-24 object-cover rounded-lg group-hover:scale-105 transition-transform duration-500" data-alt="A striking, moody photo of a craft cocktail in a smoked glass coupe. Deep amber liquid, minimal garnish, set against a dark background with a single dramatic beam of light. High-end mixology style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxcSTBURRzuhFppnEw7UfNrypEJxZgTscvgcvuEVciPjMj1d4YJ6JGklDwc38346JZ3dVI5gPTnWAS2bbfxNGWdhBMsVYC94COfrCYu6HuEyQCksURG4kW3TitGpOg-vYS572LiIpOKv0BtC473l5ATr6prp_lggKiOKtrku0S-0tLigi9zkGLivlClU--eL5awG8P4VXSeDZonzMTgx6Z4g2hY-A-EKp_ILW_mY_tnddDn9uFUBAQ1Q"/>
+<div class="flex flex-col justify-center">
+<div class="flex items-center gap-2 mb-1">
+<span class="font-label-sm text-primary bg-primary/10 px-2 py-0.5 rounded text-xs border border-primary/20">98% Match</span>
+</div>
+<h4 class="font-label-md text-on-surface text-lg">Oaxaca Old Fashioned</h4>
+<p class="font-body-md text-on-surface-variant text-sm mt-2 italic leading-tight">
+                                        "Aligns with high preference for smoky/bitter profiles and previous mezcal orders."
+                                    </p>
+</div>
+</div>
+<!-- Rec 2 -->
+<div class="bg-surface-container/50 border border-surface-variant rounded-xl p-4 flex gap-4 hover:bg-surface-bright/20 transition-colors cursor-pointer group">
+<img class="w-20 h-24 object-cover rounded-lg group-hover:scale-105 transition-transform duration-500 opacity-90" data-alt="A pristine, elegant cocktail in a tall Nick and Nora glass. Clear liquid with a subtle golden hue, garnished with a single expressed lemon peel. Dark, moody speakeasy aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDs3SFm3Yig-YuI9KRFbPj93UdcheuNaZurL6iAcO_vleS1_NkbGPLs9SHwdDdRESrYoJfzwSNbCK_h0JT1uZEk_I8aIeK_sgt7UVag_2a-TquPJ8s1ginLYe92Pf2-zVPZ6X30hhbDDxgj0ouqt_Q6uGSVqV0Md1YSF236qJmMELO87AWLlH5Nc3_8zhOTNEABcsJ2WwtrUrWFdEqZcNe22TGKZwDqpgtRn_rl6CRpoVsxJTSgjbRJxA"/>
+<div class="flex flex-col justify-center">
+<div class="flex items-center gap-2 mb-1">
+<span class="font-label-sm text-on-surface-variant bg-surface-variant/30 px-2 py-0.5 rounded text-xs">85% Match</span>
+</div>
+<h4 class="font-label-md text-on-surface text-lg">White Negroni (No Walnut)</h4>
+<p class="font-body-md text-on-surface-variant text-sm mt-2 italic leading-tight">
+                                        "Safe bitter alternative respecting nut allergy constraint."
+                                    </p>
+</div>
+</div>
+</div>
+</section>
+<!-- Drink History -->
+<section class="glass-panel rounded-2xl p-6 flex-1 fade-in-up delay-300">
+<div class="flex items-center justify-between mb-6 border-b border-surface-variant pb-4">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Service History</h3>
+<button class="text-primary font-label-sm hover:underline flex items-center gap-1">
+                                View Full Log <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+<div class="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-primary/20 before:to-transparent">
+<!-- History Item 1 -->
+<div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+<!-- Icon -->
+<div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-primary bg-surface-container-high shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-[0_0_10px_rgba(212,175,55,0.2)] z-10">
+<span class="material-symbols-outlined text-primary text-[18px]">local_bar</span>
+</div>
+<!-- Content -->
+<div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border border-primary/10 bg-surface-container-low hover:bg-surface-container-high transition-colors">
+<div class="flex items-center justify-between mb-1">
+<time class="font-label-sm text-primary">Oct 12, 2023 • 9:45 PM</time>
+</div>
+<h4 class="font-label-md text-on-surface text-base mb-1">Smoked Manhattan</h4>
+<p class="font-body-md text-on-surface-variant text-sm">
+<span class="text-on-surface font-semibold">Adjustment:</span> Substituted standard rye with High West Double Rye for spicier finish. Light smoke.
+                                    </p>
+<div class="mt-2 flex items-center gap-1 text-on-surface-variant text-xs">
+<span class="material-symbols-outlined text-[14px]">person</span> Served by: Julian
+                                    </div>
+</div>
+</div>
+<!-- History Item 2 -->
+<div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+<div class="flex items-center justify-center w-10 h-10 rounded-full border border-surface-variant bg-surface-container shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">wine_bar</span>
+</div>
+<div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border border-transparent hover:border-surface-variant/50 transition-colors">
+<div class="flex items-center justify-between mb-1">
+<time class="font-label-sm text-on-surface-variant">Sep 28, 2023 • 8:15 PM</time>
+</div>
+<h4 class="font-label-md text-on-surface text-base mb-1">Naked &amp; Famous</h4>
+<p class="font-body-md text-on-surface-variant text-sm">
+                                        Served exactly to spec. Guest noted excellent balance.
+                                    </p>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+<!-- Spacer for bottom safe area on mobile if needed -->
+<div class="h-16 lg:h-0"></div>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Active Menu Builder | PourMind</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;family=Hanken+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary": "#303031",
+                      "on-primary-fixed": "#241a00",
+                      "surface-container-lowest": "#0c0f0f",
+                      "on-secondary-fixed-variant": "#474647",
+                      "on-error": "#690005",
+                      "outline-variant": "#4d4635",
+                      "on-tertiary-container": "#454546",
+                      "on-surface-variant": "#d0c5af",
+                      "on-tertiary-fixed-variant": "#474648",
+                      "on-surface": "#e2e2e2",
+                      "primary-fixed": "#ffe088",
+                      "on-primary-fixed-variant": "#574500",
+                      "surface-container-high": "#282a2b",
+                      "surface-dim": "#121414",
+                      "surface-container-low": "#1a1c1c",
+                      "on-error-container": "#ffdad6",
+                      "on-secondary-fixed": "#1b1b1c",
+                      "surface-bright": "#37393a",
+                      "inverse-on-surface": "#2f3131",
+                      "tertiary-container": "#b4b2b3",
+                      "inverse-primary": "#735c00",
+                      "secondary-container": "#49494a",
+                      "on-secondary-container": "#bab8b9",
+                      "secondary": "#c8c6c7",
+                      "error-container": "#93000a",
+                      "surface-container-highest": "#333535",
+                      "error": "#ffb4ab",
+                      "primary-container": "#d4af37",
+                      "secondary-fixed": "#e5e2e3",
+                      "outline": "#99907c",
+                      "tertiary-fixed-dim": "#c8c6c7",
+                      "tertiary": "#d0cdce",
+                      "on-tertiary-fixed": "#1b1b1c",
+                      "primary": "#f2ca50",
+                      "on-primary-container": "#554300",
+                      "surface-variant": "#333535",
+                      "on-background": "#e2e2e2",
+                      "on-primary": "#3c2f00",
+                      "background": "#121414",
+                      "surface": "#121414",
+                      "on-secondary": "#303031",
+                      "surface-tint": "#e9c349",
+                      "primary-fixed-dim": "#e9c349",
+                      "tertiary-fixed": "#e4e2e3",
+                      "secondary-fixed-dim": "#c8c6c7",
+                      "inverse-surface": "#e2e2e2",
+                      "surface-container": "#1e2020"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "margin-desktop": "64px",
+                      "container-max": "1280px",
+                      "margin-mobile": "20px",
+                      "gutter": "24px",
+                      "unit": "8px"
+              },
+              "fontFamily": {
+                      "headline-sm": [
+                              "Libre Caslon Text"
+                      ],
+                      "label-md": [
+                              "Hanken Grotesk"
+                      ],
+                      "body-md": [
+                              "Hanken Grotesk"
+                      ],
+                      "headline-md": [
+                              "Libre Caslon Text"
+                      ],
+                      "display-lg-mobile": [
+                              "Libre Caslon Text"
+                      ],
+                      "label-sm": [
+                              "Hanken Grotesk"
+                      ],
+                      "display-lg": [
+                              "Libre Caslon Text"
+                      ],
+                      "body-lg": [
+                              "Hanken Grotesk"
+                      ]
+              },
+              "fontSize": {
+                      "headline-sm": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "36px",
+                              {
+                                      "lineHeight": "44px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        .glass-card {
+            background-color: rgba(45, 45, 46, 0.7);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            backdrop-filter: blur(20px);
+        }
+        .glass-panel {
+            background-color: rgba(26, 28, 28, 0.9);
+            backdrop-filter: blur(30px);
+        }
+        .gold-glow:hover {
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+        }
+        
+        /* Drag and drop styling */
+        .sortable-ghost {
+            opacity: 0.4;
+        }
+        .sortable-drag {
+            cursor: grabbing !important;
+        }
+        
+        /* Custom Toggle Switch */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #f2ca50;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #f2ca50;
+        }
+    </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col md:flex-row overflow-x-hidden">
+<!-- TopNavBar (Mobile Only) -->
+<nav class="md:hidden flex justify-between items-center px-margin-mobile py-4 bg-background/80 backdrop-blur-xl fixed top-0 w-full z-50 border-b border-primary-container/20 shadow-sm">
+<div class="font-display-lg-mobile text-display-lg-mobile text-primary tracking-tight">PourMind</div>
+<button class="text-primary p-2">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+</nav>
+<!-- SideNavBar (Desktop Only) -->
+<aside class="hidden md:flex flex-col h-full py-8 w-64 fixed left-0 top-0 bg-surface-container-low/90 backdrop-blur-2xl border-r border-primary-container/15 shadow-2xl z-40">
+<div class="px-6 mb-10">
+<img alt="Premium Bar Logo" class="w-12 h-12 rounded-full mb-4 object-cover" data-alt="A premium, minimalist gold and black logo for a high-end speakeasy cocktail bar, featuring a stylized martini glass and art deco typography. The aesthetic is corporate modern and luxurious." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdwTf3GlqY3jQOTxs9TaxC9Al1sYDYteJ8rUyn29Kw-zg8hqOdVV3JJq3-xO7CXj1rB4KzFGZE3BvOxrdGn6TA4HyUhlZfWCL9Ww7BgFASc5w0c0xcI0HpeTbm3VKwb0hTL2N2asXEO823Z_O9rtvTVGSoaQaUpA8sx11lK0VOkOGxVUDDyhY_xoWVjbacLOsd41xJbR_0pv_l4iG7XqtkmQbkbhcWbg5WXUtkbTtnPG6ClLDaqdyZAA"/>
+<h2 class="font-headline-sm text-headline-sm text-primary">The Speakeasy</h2>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Bar Copilot Pro</p>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-variant/50 hover:translate-x-1 transition-transform duration-200 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-variant/50 hover:translate-x-1 transition-transform duration-200 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="liquor">liquor</span>
+                Inventory
+            </a>
+<a class="flex items-center gap-3 bg-primary-container/20 text-primary border-l-4 border-primary px-4 py-3 opacity-80 scale-[0.98] font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+                Menu Builder
+            </a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-variant/50 hover:translate-x-1 transition-transform duration-200 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+                Staff Training
+            </a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-variant/50 hover:translate-x-1 transition-transform duration-200 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="monitoring">monitoring</span>
+                Analytics
+            </a>
+</nav>
+<div class="px-4 mt-auto mb-6">
+<button class="w-full py-3 bg-transparent border border-primary-container/20 text-primary font-label-md text-label-md rounded hover:bg-primary/10 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" data-icon="smart_toy">smart_toy</span>
+                Launch AI Assistant
+            </button>
+</div>
+<div class="space-y-2">
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-variant/50 hover:translate-x-1 transition-transform duration-200 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                Settings
+            </a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-variant/50 hover:translate-x-1 transition-transform duration-200 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+                Support
+            </a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 md:ml-64 pt-24 md:pt-0 min-h-screen flex flex-col">
+<!-- Header & Toolbar -->
+<header class="px-margin-mobile md:px-margin-desktop py-8 md:py-12 glass-panel border-b border-primary-container/10 sticky top-0 z-30">
+<div class="max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+<div>
+<h1 class="font-headline-md text-headline-md text-primary mb-2">Active Menu</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Manage your current offerings, adjust pricing, and toggle availability.</p>
+</div>
+<div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+<!-- Search Bar -->
+<div class="relative w-full sm:w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">search</span>
+<input class="w-full bg-[#2D2D2E] border-0 border-b border-white/30 text-on-surface font-body-md px-10 py-2 focus:ring-0 focus:border-primary transition-colors placeholder:text-on-surface-variant" placeholder="Search menu items..." type="text"/>
+</div>
+<button class="bg-primary text-[#0c0f0f] px-6 py-2 rounded-sm font-label-md text-label-md flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors gold-glow shadow-[0_0_15px_rgba(212,175,55,0.1)]">
+<span class="material-symbols-outlined" data-icon="library_add">library_add</span>
+                        Add from Library
+                    </button>
+</div>
+</div>
+</header>
+<!-- Menu Content -->
+<div class="flex-1 px-margin-mobile md:px-margin-desktop py-8 md:py-12 max-w-container-max mx-auto w-full">
+<!-- Category: Classics -->
+<section class="mb-12">
+<div class="flex items-center gap-4 mb-6">
+<h2 class="font-headline-sm text-headline-sm text-primary">Signatures &amp; Classics</h2>
+<div class="h-[1px] flex-1 bg-gradient-to-r from-primary-container/30 to-transparent"></div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter menu-list" id="classics-list">
+<!-- Menu Item Card 1 -->
+<div class="glass-card rounded-lg p-4 flex gap-6 items-center group cursor-grab transition-transform duration-300 hover:scale-[1.01] hover:border-primary-container/40">
+<div class="text-on-surface-variant/50 group-hover:text-primary transition-colors cursor-grab drag-handle">
+<span class="material-symbols-outlined" data-icon="drag_indicator">drag_indicator</span>
+</div>
+<div class="w-20 h-24 sm:w-24 sm:h-32 rounded bg-surface overflow-hidden shrink-0 relative">
+<img alt="Old Fashioned" class="w-full h-full object-cover" data-alt="A macro shot of a classic Old Fashioned cocktail in a crystal rocks glass, featuring a large clear ice cube and an orange peel twist. The lighting is moody and cinematic, highlighting the amber liquid against a dark speakeasy background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTjjrsMw5h4Uld45e1ZZE6k9SM92ccMldSR2Av_8SrsQps68Ksr3gmFUx6xR4v9lLMVFHJU2aDnyhP_XdjQdxIxokVsAorOX9_t1Gb5h5qoZ6Sw2lPosnRMksrkFpqY5NiisvbTRs7vMV4T0KMPpwj9hzqmbxOKzIjpF2G1OACw2Zv_c_8mVvQpnsYBbajgby1nMHBDF5UprNFT0REH8SF-ohscmVFWFdX9tqUo0rmLUtMQMNmHRSc-g"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-label-md text-label-md text-on-surface truncate">Smoked Old Fashioned</h3>
+<div class="flex items-center gap-2 ml-4">
+<span class="bg-primary/10 text-primary px-2 py-0.5 rounded text-[10px] font-label-md border border-primary/20 flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]" data-icon="local_fire_department">local_fire_department</span>
+                                        Top Seller
+                                    </span>
+</div>
+</div>
+<p class="font-body-md text-label-sm text-on-surface-variant line-clamp-2 mb-3">Woodford Reserve, Demerara, Angostura, Hickory Smoke, Orange Peel.</p>
+<div class="flex items-center justify-between mt-auto">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-primary">$</span>
+<input class="w-16 bg-transparent border-0 border-b border-white/20 text-on-surface font-body-md p-0 focus:ring-0 focus:border-primary text-center" type="number" value="18"/>
+</div>
+<!-- Toggle Switch -->
+<div class="flex items-center justify-center w-full max-w-[120px]">
+<label class="flex items-center cursor-pointer" for="toggle-1">
+<div class="relative">
+<input checked="" class="sr-only toggle-checkbox" id="toggle-1" type="checkbox"/>
+<div class="block bg-surface-container-highest w-10 h-6 rounded-full border border-outline-variant toggle-label transition-colors"></div>
+<div class="dot absolute left-1 top-1 bg-on-surface w-4 h-4 rounded-full transition transform toggle-checkbox:translate-x-full"></div>
+</div>
+<div class="ml-3 font-label-sm text-on-surface-variant">In Stock</div>
+</label>
+</div>
+</div>
+</div>
+</div>
+<!-- Menu Item Card 2 -->
+<div class="glass-card rounded-lg p-4 flex gap-6 items-center group cursor-grab transition-transform duration-300 hover:scale-[1.01] hover:border-primary-container/40">
+<div class="text-on-surface-variant/50 group-hover:text-primary transition-colors cursor-grab drag-handle">
+<span class="material-symbols-outlined" data-icon="drag_indicator">drag_indicator</span>
+</div>
+<div class="w-20 h-24 sm:w-24 sm:h-32 rounded bg-surface overflow-hidden shrink-0 relative">
+<img alt="Basil Smash" class="w-full h-full object-cover" data-alt="A high-resolution image of a vibrant green Basil Smash cocktail in a coupe glass. Condensation on the glass, fresh basil leaf garnish, dramatically lit against a dark, textured background to emphasize the bright color." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4FkYRzEipsajETNX64110uk44uFSovDv7lCo-XSYG4Yb7TGzq-1R2MHlM1LPdeZSxKmajIDMd3MHWOJWGUM_zCfF7XFkS-cQN5qgsHEh7BW3qbVirnGGp9vVJU225Bkka5vpC6nvEysRbpmi3gXaTzo_xzQT64PJfxiLdhLFFfYYUaQrnOH9bPEk7nwxh1u_9o088FfLp5bzaxqH7GYbwAKa2otepXzhS0V5DLA8T7q9NZgdK3hSLeQ"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-label-md text-label-md text-on-surface truncate">Gin Basil Smash</h3>
+</div>
+<p class="font-body-md text-label-sm text-on-surface-variant line-clamp-2 mb-3">Hendrick's Gin, Fresh Lemon, Simple Syrup, Muddled Sweet Basil.</p>
+<div class="flex items-center justify-between mt-auto">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-primary">$</span>
+<input class="w-16 bg-transparent border-0 border-b border-white/20 text-on-surface font-body-md p-0 focus:ring-0 focus:border-primary text-center" type="number" value="16"/>
+</div>
+<!-- Toggle Switch -->
+<div class="flex items-center justify-center w-full max-w-[120px]">
+<label class="flex items-center cursor-pointer" for="toggle-2">
+<div class="relative">
+<input checked="" class="sr-only toggle-checkbox" id="toggle-2" type="checkbox"/>
+<div class="block bg-surface-container-highest w-10 h-6 rounded-full border border-outline-variant toggle-label transition-colors"></div>
+<div class="dot absolute left-1 top-1 bg-on-surface w-4 h-4 rounded-full transition transform toggle-checkbox:translate-x-full"></div>
+</div>
+<div class="ml-3 font-label-sm text-on-surface-variant">In Stock</div>
+</label>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Category: Seasonal -->
+<section class="mb-12">
+<div class="flex items-center gap-4 mb-6">
+<h2 class="font-headline-sm text-headline-sm text-primary">Autumn Collection</h2>
+<div class="h-[1px] flex-1 bg-gradient-to-r from-primary-container/30 to-transparent"></div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter menu-list" id="seasonal-list">
+<!-- Menu Item Card 3 -->
+<div class="glass-card rounded-lg p-4 flex gap-6 items-center group cursor-grab transition-transform duration-300 hover:scale-[1.01] hover:border-primary-container/40">
+<div class="text-on-surface-variant/50 group-hover:text-primary transition-colors cursor-grab drag-handle">
+<span class="material-symbols-outlined" data-icon="drag_indicator">drag_indicator</span>
+</div>
+<div class="w-20 h-24 sm:w-24 sm:h-32 rounded bg-surface overflow-hidden shrink-0 relative opacity-50 grayscale">
+<img alt="Autumn Negroni" class="w-full h-full object-cover" data-alt="A moody photograph of a dark crimson cocktail in a Nick and Nora glass, garnished with a dried blood orange wheel. The background is a very dark, warm gray, emphasizing the deep red tones of the drink." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgH1_RTRSgK-CNo_NrqwNUeveC7uUu3uDzWvY1Wrxb8GTqumVRD8pj_lU90q6fflb309d6EQwyLCyP97uPqA4c-yKvIL9RhIL_emspPEdfVaQQ60lxP6ZMqpJAr1sUUm3i4qYzzfX7aMmBTd62AhIx73SQDUxKE2TvfQf3UWVbiOINP699Ph0ajbFrbdibpnlPRXVUlNlxsDgEmdMcHF9G28A2iORu66PerddO4FtIBOYieJx29gr3Nw"/>
+<div class="absolute inset-0 flex items-center justify-center bg-black/40">
+<span class="font-label-sm text-white bg-error px-2 py-1 rounded">86'd</span>
+</div>
+</div>
+<div class="flex-1 min-w-0 opacity-70">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-label-md text-label-md text-on-surface truncate">Orchard Negroni</h3>
+</div>
+<p class="font-body-md text-label-sm text-on-surface-variant line-clamp-2 mb-3">Applejack, Campari, Sweet Vermouth, Cinnamon Smoke.</p>
+<div class="flex items-center justify-between mt-auto">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-primary">$</span>
+<input class="w-16 bg-transparent border-0 border-b border-white/20 text-on-surface font-body-md p-0 focus:ring-0 focus:border-primary text-center" type="number" value="17"/>
+</div>
+<!-- Toggle Switch -->
+<div class="flex items-center justify-center w-full max-w-[120px]">
+<label class="flex items-center cursor-pointer" for="toggle-3">
+<div class="relative">
+<input class="sr-only toggle-checkbox" id="toggle-3" type="checkbox"/>
+<div class="block bg-surface-container-highest w-10 h-6 rounded-full border border-outline-variant toggle-label transition-colors"></div>
+<div class="dot absolute left-1 top-1 bg-on-surface w-4 h-4 rounded-full transition transform toggle-checkbox:translate-x-full"></div>
+</div>
+<div class="ml-3 font-label-sm text-on-surface-variant">Out of Stock</div>
+</label>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest py-12 mt-auto border-t border-primary-container/10">
+<div class="max-w-container-max mx-auto px-margin-desktop grid grid-cols-1 md:grid-cols-4 gap-gutter">
+<div class="col-span-1 md:col-span-2">
+<p class="font-display-lg text-headline-md text-primary mb-4">PourMind</p>
+<p class="font-body-md text-body-md text-on-surface-variant">© 2024 PourMind. Elevating the Craft of Mixology.</p>
+</div>
+<div class="col-span-1 md:col-span-2 flex flex-col md:flex-row gap-6 md:justify-end items-start md:items-center">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Press Kit</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Contact Us</a>
+</div>
+</div>
+</footer>
+</main>
+<script>
+        // Custom toggle switch logic for CSS visual state
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggles = document.querySelectorAll('.toggle-checkbox');
+            
+            toggles.forEach(toggle => {
+                toggle.addEventListener('change', function() {
+                    const dot = this.nextElementSibling.nextElementSibling;
+                    const label = this.parentElement.nextElementSibling;
+                    
+                    if(this.checked) {
+                        dot.style.transform = 'translateX(100%)';
+                        label.textContent = 'In Stock';
+                        // Add logic here to visually enable the card if it was disabled
+                        const card = this.closest('.glass-card');
+                        const imgContainer = card.querySelector('.shrink-0');
+                        const contentContainer = card.querySelector('.flex-1');
+                        if(imgContainer) {
+                            imgContainer.classList.remove('opacity-50', 'grayscale');
+                            const overlay = imgContainer.querySelector('.absolute');
+                            if(overlay) overlay.remove();
+                        }
+                        if(contentContainer) contentContainer.classList.remove('opacity-70');
+                    } else {
+                        dot.style.transform = 'translateX(0)';
+                        label.textContent = 'Out of Stock';
+                        // Add logic here to visually disable the card
+                        const card = this.closest('.glass-card');
+                        const imgContainer = card.querySelector('.shrink-0');
+                        const contentContainer = card.querySelector('.flex-1');
+                        
+                        if(imgContainer) {
+                            imgContainer.classList.add('opacity-50', 'grayscale');
+                            if(!imgContainer.querySelector('.absolute')) {
+                                const overlay = document.createElement('div');
+                                overlay.className = 'absolute inset-0 flex items-center justify-center bg-black/40';
+                                overlay.innerHTML = '<span class="font-label-sm text-white bg-error px-2 py-1 rounded">86\'d</span>';
+                                imgContainer.appendChild(overlay);
+                            }
+                        }
+                        if(contentContainer) contentContainer.classList.add('opacity-70');
+                    }
+                });
+                
+                // Initialize state
+                const dot = toggle.nextElementSibling.nextElementSibling;
+                if(toggle.checked) {
+                    dot.style.transform = 'translateX(100%)';
+                } else {
+                    dot.style.transform = 'translateX(0)';
+                }
+            });
+
+            // Initialize SortableJS for drag and drop
+            const listElements = document.querySelectorAll('.menu-list');
+            listElements.forEach(el => {
+                new Sortable(el, {
+                    animation: 150,
+                    handle: '.drag-handle',
+                    ghostClass: 'sortable-ghost',
+                    dragClass: 'sortable-drag'
+                });
+            });
+        });
+    </script>
+</body></html>

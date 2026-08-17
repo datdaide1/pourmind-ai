@@ -1,6 +1,9 @@
 # Frontend
 
-Next.js App Router client for cocktail chat, catalog search, and menu planning. It renders structured UI blocks received from the backend over SSE.
+The web experience is the supplied Stitch **Liquid Gold** UI source. Its 19
+static B2C and B2B screens are served unchanged from `public/stitch/`; the
+minimal Next route layer maps product URLs to those source screens. The API
+rewrite remains available for later integration beneath this new UI.
 
 ## Run locally
 
@@ -21,12 +24,15 @@ Open `http://localhost:3000`. The development rewrite in `next.config.ts` forwar
 | `pnpm start` | Serve the production build |
 | `pnpm exec playwright test` | Run browser tests |
 
-## Structure
+## Screen routes
 
-- `src/app/`: routes and layouts
-- `src/components/chat/`: chat input and messages
-- `src/components/sdui/`: typed server-driven UI components
-- `src/lib/sseClient.ts`: streaming client
-- `tests/`: Playwright specifications
+- `/` — PourMind landing
+- `/start`, `/chat`, `/recipe`, `/search`, `/profile`, `/sessions` — B2C
+- `/b2b` — Bar Copilot dashboard
+- `/b2b/recipes`, `/b2b/guests`, `/b2b/menu`, `/b2b/copilot` — B2B modules
+- `public/stitch/DESIGN.md` — imported Liquid Gold design directives
+
+The original frontend app, component library, visual test, and former redesign
+prototype were removed. Do not add a second visual system alongside Stitch.
 
 Generated Playwright reports and test results are intentionally excluded from Git.

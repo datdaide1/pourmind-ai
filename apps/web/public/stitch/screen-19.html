@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Guest Data Settings &amp; Privacy - PourMind</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;family=Hanken+Grotesk:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-container": "#554300",
+                        "on-primary-fixed-variant": "#574500",
+                        "surface-dim": "#121414",
+                        "on-secondary-container": "#bab8b9",
+                        "primary-fixed": "#ffe088",
+                        "secondary": "#c8c6c7",
+                        "outline-variant": "#4d4635",
+                        "secondary-container": "#49494a",
+                        "surface-bright": "#37393a",
+                        "on-primary-fixed": "#241a00",
+                        "on-surface": "#e2e2e2",
+                        "surface-container-lowest": "#0c0f0f",
+                        "on-tertiary": "#303031",
+                        "surface-container-highest": "#333535",
+                        "inverse-primary": "#735c00",
+                        "tertiary-fixed-dim": "#c8c6c7",
+                        "on-error": "#690005",
+                        "on-error-container": "#ffdad6",
+                        "surface-container": "#1e2020",
+                        "error": "#ffb4ab",
+                        "on-secondary-fixed": "#1b1b1c",
+                        "error-container": "#93000a",
+                        "inverse-on-surface": "#2f3131",
+                        "tertiary-fixed": "#e4e2e3",
+                        "primary-fixed-dim": "#e9c349",
+                        "surface-tint": "#e9c349",
+                        "on-secondary": "#303031",
+                        "on-primary": "#3c2f00",
+                        "on-background": "#e2e2e2",
+                        "secondary-fixed": "#e5e2e3",
+                        "background": "#121414",
+                        "secondary-fixed-dim": "#c8c6c7",
+                        "tertiary-container": "#b4b2b3",
+                        "on-tertiary-container": "#454546",
+                        "surface-variant": "#333535",
+                        "surface": "#121414",
+                        "on-tertiary-fixed-variant": "#474648",
+                        "primary-container": "#d4af37",
+                        "primary": "#f2ca50",
+                        "on-tertiary-fixed": "#1b1b1c",
+                        "surface-container-low": "#1a1c1c",
+                        "outline": "#99907c",
+                        "on-secondary-fixed-variant": "#474647",
+                        "surface-container-high": "#282a2b",
+                        "on-surface-variant": "#d0c5af",
+                        "inverse-surface": "#e2e2e2",
+                        "tertiary": "#d0cdce"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-mobile": "20px",
+                        "margin-desktop": "64px",
+                        "container-max": "1280px",
+                        "gutter": "24px",
+                        "unit": "8px"
+                    },
+                    "fontFamily": {
+                        "display-lg-mobile": ["Libre Caslon Text"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "label-md": ["Hanken Grotesk"],
+                        "headline-sm": ["Libre Caslon Text"],
+                        "display-lg": ["Libre Caslon Text"],
+                        "label-sm": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "headline-md": ["Libre Caslon Text"]
+                    },
+                    "fontSize": {
+                        "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-sm": ["24px", {"lineHeight": "32px", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["32px", {"lineHeight": "40px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #1A1A1B;
+            color: #e2e2e2;
+        }
+        .glass-card {
+            background-color: rgba(45, 45, 46, 0.7);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            backdrop-filter: blur(20px) brightness(1.1);
+        }
+        .b2b-ghost-btn {
+            background: transparent;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            color: #e2e2e2;
+            transition: all 0.3s ease;
+        }
+        .b2b-ghost-btn:hover {
+            border-color: #f2ca50;
+            color: #f2ca50;
+        }
+        /* Custom Toggle Switch Styles */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #d4af37;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #d4af37;
+        }
+        .toggle-checkbox:checked + .toggle-label:after {
+            transform: translateX(100%);
+            border-color: white;
+        }
+    </style>
+</head>
+<body class="flex min-h-screen bg-background">
+<!-- SideNavBar -->
+<nav class="h-screen w-64 fixed left-0 top-0 border-r border-primary/20 shadow-2xl bg-surface-container flex flex-col p-unit gap-2 z-40 hidden md:flex">
+<!-- Header -->
+<div class="p-4 mb-6">
+<h1 class="font-display-lg text-headline-sm text-primary tracking-tight">Bar Copilot</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">The Ritz-Carlton Lounge</p>
+</div>
+<!-- Navigation Links -->
+<ul class="flex flex-col gap-2 flex-grow">
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-primary/5 transition-all duration-150 rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-primary/5 transition-all duration-150 rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="liquor">liquor</span>
+<span class="font-label-md text-label-md">Inventory</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-primary/5 transition-all duration-150 rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="font-label-md text-label-md">Menu Builder</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-primary/5 transition-all duration-150 rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span class="font-label-md text-label-md">Staff</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-primary/5 transition-all duration-150 rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="monitoring">monitoring</span>
+<span class="font-label-md text-label-md">Analytics</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-lg transition-all duration-150 shadow-sm" href="#">
+<span class="material-symbols-outlined" data-icon="settings" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="font-label-md text-label-md font-bold">Settings</span>
+</a>
+</li>
+</ul>
+<!-- CTA / Footer Area -->
+<div class="mt-auto pt-4 border-t border-primary/10 px-2">
+<button class="w-full py-2 px-4 rounded-DEFAULT bg-transparent border border-primary/20 text-primary font-label-md text-label-md hover:border-primary transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">add</span>
+                New Inventory Count
+            </button>
+<div class="mt-6 flex items-center gap-3 px-2 pb-2">
+<div class="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden border border-primary/20">
+<img alt="Bar Manager Profile" class="w-full h-full object-cover" data-alt="A close-up, dimly lit professional headshot of a seasoned bar manager with a refined expression, wearing a dark tailored vest over a crisp shirt. The background is a blurred out speakeasy bar setting with golden amber lighting reflecting off glass bottles, establishing a premium, corporate modern mixology brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnk9fQT-m50bf18nPzQ3QZqtK52ntdKyjYCMjK17ak0GNOh3_1faCUyECbJR70lgdpAWIYZbubzzWr9hVA9VUZX_G9F6v0DE4Npw8Tx5efYsamjLaASxq2l-lyrvUiaoCChqtutjJNCNndbMA_TrXbuUG2EXJPBsWfGQ-rsUS1VCO6k0qkwIFtXUtZQaYtjezU-VR4F-xS8ZlLFE7IgotLhGicy0c4yhW3E0aZwA4wEo7gy8yDYkEh4A"/>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface">J. Sterling</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant text-[10px]">Manager Admin</p>
+</div>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-64 p-margin-mobile md:p-margin-desktop w-full max-w-container-max mx-auto min-h-screen">
+<!-- Page Header -->
+<header class="mb-12">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-primary mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-3xl opacity-80" data-icon="shield_person">shield_person</span>
+                        Guest Data &amp; Privacy
+                    </h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+                        Manage patron consent, review data deletion requests, and configure archiving protocols to maintain compliance and exclusivity.
+                    </p>
+</div>
+<div class="flex gap-3">
+<button class="px-6 py-2 rounded-DEFAULT bg-primary text-on-primary font-label-md text-label-md hover:bg-primary-fixed transition-colors shadow-[0_0_15px_rgba(212,175,55,0.2)]">
+                        Save Configuration
+                    </button>
+</div>
+</div>
+</header>
+<!-- Main Bento Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column (Consent & Core Settings) -->
+<div class="lg:col-span-5 flex flex-col gap-gutter">
+<!-- Consent Rules Card -->
+<section class="glass-card rounded-xl p-6">
+<h3 class="font-label-md text-label-md text-primary mb-6 flex items-center gap-2 border-b border-primary/10 pb-4">
+<span class="material-symbols-outlined" data-icon="rule">rule</span>
+                        Consent &amp; Profiling Rules
+                    </h3>
+<div class="space-y-6">
+<!-- Toggle Item -->
+<div class="flex items-center justify-between">
+<div class="pr-4">
+<h4 class="font-label-sm text-label-sm text-on-surface mb-1">Mandatory Consent for Profiling</h4>
+<p class="font-body-md text-body-md text-xs text-on-surface-variant leading-relaxed">Require explicit opt-in before tracking preferred spirits, seating habits, and visit frequency.</p>
+</div>
+<!-- Custom Toggle -->
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-surface-bright border-4 border-surface-container appearance-none cursor-pointer z-10 transition-transform duration-300" id="toggle1" name="toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-surface-container-high cursor-pointer transition-colors duration-300" for="toggle1"></label>
+</div>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-surface-container-highest">
+<div class="pr-4">
+<h4 class="font-label-sm text-label-sm text-on-surface mb-1">Marketing Communications Opt-In</h4>
+<p class="font-body-md text-body-md text-xs text-on-surface-variant leading-relaxed">Allow guests to receive exclusive tasting event invitations.</p>
+</div>
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-surface-bright border-4 border-surface-container appearance-none cursor-pointer z-10 transition-transform duration-300" id="toggle2" name="toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-surface-container-high cursor-pointer transition-colors duration-300" for="toggle2"></label>
+</div>
+</div>
+</div>
+</section>
+<!-- Data Retention Card -->
+<section class="glass-card rounded-xl p-6 flex-grow">
+<h3 class="font-label-md text-label-md text-primary mb-6 flex items-center gap-2 border-b border-primary/10 pb-4">
+<span class="material-symbols-outlined" data-icon="hourglass_empty">hourglass_empty</span>
+                        Data Retention Protocols
+                    </h3>
+<div class="space-y-4">
+<div class="relative">
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-2">Inactive Profile Auto-Archive</label>
+<select class="w-full bg-surface-container-highest border-0 border-b border-on-surface-variant/30 text-on-surface py-2 px-3 focus:ring-0 focus:border-primary font-body-md text-body-md rounded-t-DEFAULT">
+<option>After 12 Months</option>
+<option selected="">After 24 Months</option>
+<option>After 36 Months</option>
+<option>Never (Manual Only)</option>
+</select>
+</div>
+<div class="relative mt-6">
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-2">Anonymize Historic Transaction Data</label>
+<select class="w-full bg-surface-container-highest border-0 border-b border-on-surface-variant/30 text-on-surface py-2 px-3 focus:ring-0 focus:border-primary font-body-md text-body-md rounded-t-DEFAULT">
+<option>Immediate upon archive</option>
+<option selected="">Retain for 1 Year post-archive</option>
+<option>Retain for 5 Years (Financial Compliance)</option>
+</select>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column (Queues and Tables) -->
+<div class="lg:col-span-7 flex flex-col gap-gutter">
+<!-- Privacy Request Queue -->
+<section class="glass-card rounded-xl p-0 overflow-hidden flex flex-col">
+<div class="p-6 border-b border-primary/10 flex justify-between items-center bg-surface-container-low/50">
+<h3 class="font-label-md text-label-md text-primary flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="mark_email_unread">mark_email_unread</span>
+                            Privacy Request Queue
+                        </h3>
+<span class="bg-error-container text-on-error-container font-label-sm text-[10px] px-2 py-1 rounded-full flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-error inline-block"></span>
+                            2 Pending Actions
+                        </span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-highest/30 border-b border-surface-container-highest">
+<th class="font-label-sm text-label-sm text-on-surface-variant py-3 px-6 font-semibold">Request ID</th>
+<th class="font-label-sm text-label-sm text-on-surface-variant py-3 px-6 font-semibold">Type</th>
+<th class="font-label-sm text-label-sm text-on-surface-variant py-3 px-6 font-semibold">Guest Tier</th>
+<th class="font-label-sm text-label-sm text-on-surface-variant py-3 px-6 font-semibold text-right">Action</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-sm">
+<tr class="border-b border-surface-container-highest hover:bg-surface-container-high/30 transition-colors">
+<td class="py-4 px-6 text-on-surface font-mono text-xs">REQ-8829</td>
+<td class="py-4 px-6 text-primary">Data Deletion</td>
+<td class="py-4 px-6 text-on-surface-variant">Standard</td>
+<td class="py-4 px-6 text-right">
+<button class="b2b-ghost-btn px-3 py-1 rounded text-xs">Review</button>
+</td>
+</tr>
+<tr class="border-b border-surface-container-highest hover:bg-surface-container-high/30 transition-colors">
+<td class="py-4 px-6 text-on-surface font-mono text-xs">REQ-8830</td>
+<td class="py-4 px-6 text-secondary">Export Profile</td>
+<td class="py-4 px-6 text-primary-fixed">Reserve Member</td>
+<td class="py-4 px-6 text-right">
+<button class="b2b-ghost-btn px-3 py-1 rounded text-xs">Process</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-high/30 transition-colors opacity-50">
+<td class="py-4 px-6 text-on-surface font-mono text-xs">REQ-8791</td>
+<td class="py-4 px-6 text-secondary">Correction</td>
+<td class="py-4 px-6 text-on-surface-variant">Standard</td>
+<td class="py-4 px-6 text-right">
+<span class="text-xs text-on-surface-variant flex items-center justify-end gap-1"><span class="material-symbols-outlined text-[14px]" data-icon="check_circle">check_circle</span> Resolved</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Archived Profiles Management -->
+<section class="glass-card rounded-xl p-0 overflow-hidden flex-grow flex flex-col">
+<div class="p-6 border-b border-primary/10 flex justify-between items-center bg-surface-container-low/50">
+<h3 class="font-label-md text-label-md text-primary flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+                            Archive Management
+                        </h3>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 transform -translate-y-1/2 text-on-surface-variant text-sm" data-icon="search">search</span>
+<input class="bg-surface-container-highest border-none text-on-surface py-1 pl-9 pr-3 rounded text-sm focus:ring-1 focus:ring-primary w-48 font-body-md placeholder-on-surface-variant/50" placeholder="Search archives..." type="text"/>
+</div>
+</div>
+<div class="p-6 flex-grow flex items-center justify-center">
+<div class="text-center">
+<span class="material-symbols-outlined text-4xl text-surface-container-highest mb-3" data-icon="folder_off">folder_off</span>
+<p class="font-body-md text-body-md text-on-surface-variant mb-1">No recent manual archive actions.</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant/70">Automated archiving runs next on 1st of month.</p>
+<button class="mt-4 text-primary font-label-sm text-label-sm hover:underline flex items-center justify-center gap-1 mx-auto">
+                                View Full Archive History <span class="material-symbols-outlined text-[14px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- Mobile Bottom Navigation (Hidden on md and up based on SideNav logic, implemented to cover all bases if needed, though SideNav is primary for B2B desktop) -->
+<!-- Note: Following instructions, SideNavBar is the top-level anchor, usually rendering full nav on desktop. 
+         For mobile B2B management, a simplified bottom nav might appear, but keeping it focused on the main layout provided. -->
+</body></html>

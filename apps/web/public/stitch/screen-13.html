@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PourMind - Discovery</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&amp;family=Libre+Caslon+Text:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary": "#303031",
+                      "on-primary-fixed": "#241a00",
+                      "surface-container-lowest": "#0c0f0f",
+                      "on-secondary-fixed-variant": "#474647",
+                      "on-error": "#690005",
+                      "outline-variant": "#4d4635",
+                      "on-tertiary-container": "#454546",
+                      "on-surface-variant": "#d0c5af",
+                      "on-tertiary-fixed-variant": "#474648",
+                      "on-surface": "#e2e2e2",
+                      "primary-fixed": "#ffe088",
+                      "on-primary-fixed-variant": "#574500",
+                      "surface-container-high": "#282a2b",
+                      "surface-dim": "#121414",
+                      "surface-container-low": "#1a1c1c",
+                      "on-error-container": "#ffdad6",
+                      "on-secondary-fixed": "#1b1b1c",
+                      "surface-bright": "#37393a",
+                      "inverse-on-surface": "#2f3131",
+                      "tertiary-container": "#b4b2b3",
+                      "inverse-primary": "#735c00",
+                      "secondary-container": "#49494a",
+                      "on-secondary-container": "#bab8b9",
+                      "secondary": "#c8c6c7",
+                      "error-container": "#93000a",
+                      "surface-container-highest": "#333535",
+                      "error": "#ffb4ab",
+                      "primary-container": "#d4af37",
+                      "secondary-fixed": "#e5e2e3",
+                      "outline": "#99907c",
+                      "tertiary-fixed-dim": "#c8c6c7",
+                      "tertiary": "#d0cdce",
+                      "on-tertiary-fixed": "#1b1b1c",
+                      "primary": "#f2ca50",
+                      "on-primary-container": "#554300",
+                      "surface-variant": "#333535",
+                      "on-background": "#e2e2e2",
+                      "on-primary": "#3c2f00",
+                      "background": "#121414",
+                      "surface": "#121414",
+                      "on-secondary": "#303031",
+                      "surface-tint": "#e9c349",
+                      "primary-fixed-dim": "#e9c349",
+                      "tertiary-fixed": "#e4e2e3",
+                      "secondary-fixed-dim": "#c8c6c7",
+                      "inverse-surface": "#e2e2e2",
+                      "surface-container": "#1e2020"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "margin-desktop": "64px",
+                      "container-max": "1280px",
+                      "margin-mobile": "20px",
+                      "gutter": "24px",
+                      "unit": "8px"
+              },
+              "fontFamily": {
+                      "headline-sm": [
+                              "Libre Caslon Text"
+                      ],
+                      "label-md": [
+                              "Hanken Grotesk"
+                      ],
+                      "body-md": [
+                              "Hanken Grotesk"
+                      ],
+                      "headline-md": [
+                              "Libre Caslon Text"
+                      ],
+                      "display-lg-mobile": [
+                              "Libre Caslon Text"
+                      ],
+                      "label-sm": [
+                              "Hanken Grotesk"
+                      ],
+                      "display-lg": [
+                              "Libre Caslon Text"
+                      ],
+                      "body-lg": [
+                              "Hanken Grotesk"
+                      ]
+              },
+              "fontSize": {
+                      "headline-sm": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "36px",
+                              {
+                                      "lineHeight": "44px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .glass-panel {
+            background-color: rgba(45, 45, 46, 0.7);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+        }
+        
+        .gold-glow:hover {
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+        }
+        
+        /* Smooth scrolling for horizontal lists */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+      </style>
+</head>
+<body class="bg-background text-on-background antialiased relative min-h-screen">
+<!-- Background Shader -->
+<div class="fixed inset-0 z-[-1] pointer-events-none opacity-40">
+
+</div>
+<!-- Top Navigation (From JSON) -->
+<nav class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-xl border-b border-primary-container/20 shadow-sm">
+<div class="flex justify-between items-center px-margin-mobile md:px-margin-desktop py-4 max-w-container-max mx-auto">
+<div class="flex items-center gap-8">
+<a class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary tracking-tight" href="#">PourMind</a>
+<div class="hidden md:flex gap-6 font-body-md text-body-md">
+<a class="text-on-surface-variant hover:text-on-surface transition-colors hover:bg-primary/10 hover:text-primary transition-all duration-300 px-3 py-2 rounded-lg" href="#">Mixologist</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors hover:bg-primary/10 hover:text-primary transition-all duration-300 px-3 py-2 rounded-lg" href="#">Bar Copilot</a>
+<a class="text-primary border-b-2 border-primary pb-1 px-3 py-2 hover:bg-primary/10 transition-all duration-300" href="#">Recipes</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors hover:bg-primary/10 hover:text-primary transition-all duration-300 px-3 py-2 rounded-lg" href="#">Insights</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden md:block group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors">search</span>
+<input class="bg-surface-container-low border-b border-white/20 focus:border-primary text-on-surface py-2 pl-10 pr-4 outline-none w-64 transition-colors font-body-md text-body-md placeholder-on-surface-variant" placeholder="Find cocktails, ingredients..." type="text"/>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md hidden md:block">Sign In</button>
+<button class="bg-primary text-on-primary font-label-md text-label-md px-6 py-2 rounded-lg hover:shadow-[0_0_15px_rgba(212,175,55,0.3)] transition-shadow">Join Exclusive</button>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="pt-[100px] pb-24 md:pb-32 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto space-y-16 md:space-y-24">
+<!-- Hero: Mood & Occasion Explorer -->
+<section class="mt-8">
+<h1 class="font-headline-md text-headline-md text-on-surface mb-2">What's the vibe tonight?</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mb-8">Discover craft cocktails perfectly matched to your mood and moment.</p>
+<div class="flex gap-4 overflow-x-auto hide-scrollbar pb-4 snap-x">
+<button class="flex-shrink-0 snap-start relative h-40 w-40 md:h-48 md:w-48 rounded-xl overflow-hidden group border border-primary-container/20 hover:border-primary-container transition-colors">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" data-alt="A moody, high-end photograph of a dark lounge with raindrops on the window, soft warm amber lighting illuminating a single complex cocktail on a wooden table, luxury aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBF8LcO8E0CrsqwDPIA57ju0D3m5RuMFH65G9VrKYZrsozNnqx1jNDsv7wzIysIGzMB5_nEvwdLxvVMMF1rJtvh3ii9RFRPN0PCVgQ20xvCVTltJjG2A8O5SAs8XqKSiN-t7_YgZhnM2H8JfdOcIt3VRO-bjS3d8xhONSOIyEBCAVtDJqLSoJxlJLqkLaivkL6LzyT8yZ0aFqud3kzLKmvrhVrMVbjxu2x721jelT9nvybfR8hi0emidQ')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
+<div class="absolute bottom-4 left-4 text-left">
+<span class="font-label-md text-label-md text-primary block">Mood</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Rainy Night</span>
+</div>
+</button>
+<button class="flex-shrink-0 snap-start relative h-40 w-40 md:h-48 md:w-48 rounded-xl overflow-hidden group border border-primary-container/20 hover:border-primary-container transition-colors">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" data-alt="Vibrant, high-energy scene of a clinking crystal champagne coupe, sparks and golden confetti in the background, sharp focus on the bubbly liquid, luxury celebration aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCP_t7jHbog0GgTWaZspFp_Rx7pqj36weHngp34IfFx9KoOSxC1nsHEHplZSp5UgyhHRh-a6SSnkeddyAJi-ZE-7lQB-S7m6AAg8vaAyEdovDogUEll0H4njgd62hZVi6CJ19BrRq_ueB1K_Zm_eyODC77YN8s_D6TMn3l31-VRqaeHWoTD4nwjizlTYtJJXJG5PUYavmH_O26nihhRtk6MXXrjXZ9lJR2Zr8Keg24LWa1PuXb4ubIRrw')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
+<div class="absolute bottom-4 left-4 text-left">
+<span class="font-label-md text-label-md text-primary block">Occasion</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Celebration</span>
+</div>
+</button>
+<button class="flex-shrink-0 snap-start relative h-40 w-40 md:h-48 md:w-48 rounded-xl overflow-hidden group border border-primary-container/20 hover:border-primary-container transition-colors">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" data-alt="Bright, crisp daytime shot of a botanical gin cocktail loaded with fresh green herbs and cucumber ribbons, condensation on the glass, soft natural sunlight, refreshing high-end aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB31CTSgIMgzFheNOkJwntFoM2hM8Xtj1lz6jwSsneUZttHfDSVScs2W5v6jNJZBV56OktJttyfS0Y8ufcXPVKlRAh0V9vbYwtTW_1PvwJwGlJ12haEaLat_tEW9ZtoqBm0ZEevwElyJwKPNpW9yBYi98MRhL3R3vnDddCGD_5c6zudUjqlCWKmmmFWXBGtX8aKbiWDVJJo1M5LXIxL94WnTpW22_kNWLVqICY0SNjScIHwlBzk5KQDzQ')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
+<div class="absolute bottom-4 left-4 text-left">
+<span class="font-label-md text-label-md text-primary block">Vibe</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Refreshing</span>
+</div>
+</button>
+<button class="flex-shrink-0 snap-start relative h-40 w-40 md:h-48 md:w-48 rounded-xl overflow-hidden group border border-primary-container/20 hover:border-primary-container transition-colors">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" data-alt="A sophisticated, minimalist shot of a classic Old Fashioned cocktail over a large clear ice cube, sitting on a dark marble bar top, dim dramatic lighting, intimate luxury aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCqTNV1seKQ-zdbC03XkmIvJ8G3xFJgb0Hqxdt6ds4TRARU4a0J0KCVPth5nsBqd3DDFdoYESMoYPHgwrQrSKfqtS4hS6UNAEBl5b1K4PlvTaS5Wp0vq7b7rK97mWIRC_7JJ9tlUsfF9tXFYESQYMywoe0PFet_kposPFeVvxVa2ghjDujDz4pPp3lG8B1hzs1tQRxtzfoFE9wNZxxnkv3lIkAOZu48vngR8crJj0iCjPoJ6AZmfEb6Ew')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
+<div class="absolute bottom-4 left-4 text-left">
+<span class="font-label-md text-label-md text-primary block">Classic</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Intimate</span>
+</div>
+</button>
+</div>
+</section>
+</main>
+<!-- Footer (From JSON) -->
+<footer class="bg-surface-container-lowest w-full py-12 border-t border-primary-container/10 mt-auto">
+<div class="max-w-container-max mx-auto px-margin-desktop grid grid-cols-1 md:grid-cols-4 gap-gutter">
+<div>
+<a class="font-display-lg text-headline-md text-primary block mb-4" href="#">PourMind</a>
+<p class="font-body-md text-body-md text-on-surface-variant">© 2024 PourMind. Elevating the Craft of Mixology.</p>
+</div>
+<div class="flex flex-col gap-2">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Press Kit</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Contact Us</a>
+</div>
+</div>
+</footer>
+</body></html>

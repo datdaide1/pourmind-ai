@@ -1,8 +1,9 @@
 import logging
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Mapping, Sequence
+from typing import Any, Dict, List, Literal, Mapping, Sequence, Union
 
 from app.db.cache import get_ingredient_by_name, get_liquor_price_by_name_case_insensitive
+from app.domain.schemas import IngredientLine
 
 logger = logging.getLogger(__name__)
 
@@ -111,6 +112,18 @@ async def calculate_cost_and_abv(ingredients_list: List[Dict[str, Any]]) -> Dict
 # estimated_cost_vnd.
 _VOLUME_UNIT = "ml"
 
+# A raw ingredient line as produced by RCP-01: either an `IngredientLine`
+# model instance or a plain mapping with the same shape (e.g. a dict from
+# `IngredientLine.model_dump()` or a JSON request body).
+IngredientLineLike = Union[IngredientLine, Mapping[str, Any]]
+
+# "unknown" means the lookup completed normally and found nothing (a
+# legitimate, expected gap). "lookup_error" means the lookup itself raised
+# (Redis/DB failure) -- kept distinct so an outage is never silently
+# indistinguishable from "this ingredient just isn't in the database yet".
+AbvSource = Literal["ingredients_table", "unit_not_volume_based", "unknown", "lookup_error"]
+PriceSource = Literal["liquor_prices_table", "unit_not_volume_based", "unknown", "lookup_error"]
+
 
 @dataclass(frozen=True)
 class IngredientCostAbvBreakdown:
@@ -122,9 +135,9 @@ class IngredientCostAbvBreakdown:
     unit: str
     volume_ml: float | None
     abv: float | None
-    abv_source: str  # "ingredients_table" | "unit_not_volume_based" | "unknown"
+    abv_source: AbvSource
     price_per_ml_vnd: float | None
-    price_source: str  # "liquor_prices_table" | "unit_not_volume_based" | "unknown"
+    price_source: PriceSource
     pure_alcohol_ml: float | None
     cost_vnd: float | None
 
@@ -153,13 +166,15 @@ class RecipeCostAbvResult:
 
 
 def _extract_ingredient_fields(
-    item: "Mapping[str, Any]",
+    item: IngredientLineLike,
 ) -> tuple[str, str | None, Any, str]:
-    """Read display_name/normalized_ingredient_id/amount/unit off a mapping.
+    """Read display_name/normalized_ingredient_id/amount/unit off a line.
 
-    Accepts anything shaped like an `IngredientLine` (a Pydantic model dump,
-    a plain dict, or the model instance itself via `dict(item)`/attribute
-    access), so callers can pass RCP-01 output directly.
+    Accepts anything shaped like an `IngredientLine`: the model instance
+    itself (read via attribute access) or a plain mapping (a
+    `model_dump()`, or a JSON request body), so callers can pass RCP-01
+    output directly. Any field a caller omits reads as `None`/`""` here and
+    is caught by the amount/unit validation below rather than raising.
     """
     getter = item.get if isinstance(item, Mapping) else lambda k: getattr(item, k, None)
     display_name = str(getter("display_name") or "").strip()
@@ -170,7 +185,7 @@ def _extract_ingredient_fields(
 
 
 async def calculate_recipe_cost_and_abv(
-    ingredients: Sequence[Mapping[str, Any]],
+    ingredients: Sequence[IngredientLineLike],
 ) -> RecipeCostAbvResult:
     """Compute best-effort, never-fabricated cost/ABV totals for a recipe.
 
@@ -265,30 +280,43 @@ async def calculate_recipe_cost_and_abv(
         known_volume_ml += volume_ml
 
         abv: float | None = None
-        abv_source = "unknown"
+        abv_source: AbvSource = "unknown"
         try:
             ing_data = await get_ingredient_by_name(display_name)
-        except Exception as exc:  # pragma: no cover - defensive, mirrors legacy tool
-            logger.error(f"Error querying ingredient '{display_name}' ABV: {exc}")
+        except Exception:  # noqa: BLE001 - defensive, mirrors legacy tool; a
+            # cache/DB outage must not crash recipe creation, but it is
+            # logged with a traceback and kept distinct from a normal
+            # "ingredient not in the database yet" miss (see AbvSource).
+            logger.exception(f"Lookup failed for ingredient ABV '{display_name}'")
             ing_data = None
+            abv_source = "lookup_error"
         if ing_data is not None and ing_data.get("abv") is not None:
             abv = float(ing_data["abv"])
             abv_source = "ingredients_table"
         else:
+            if abv_source != "lookup_error":
+                abv_source = "unknown"
             missing_data.append(f"{display_name}: ABV unknown, excluded from estimated_abv")
             abv_complete = False
 
         price_per_ml: float | None = None
-        price_source = "unknown"
+        price_source: PriceSource = "unknown"
         try:
             price_rows = await get_liquor_price_by_name_case_insensitive(display_name)
-        except Exception as exc:  # pragma: no cover - defensive, mirrors legacy tool
-            logger.error(f"Error querying price for ingredient '{display_name}': {exc}")
+        except Exception:  # noqa: BLE001 - defensive, mirrors legacy tool; see above
+            logger.exception(f"Lookup failed for ingredient price '{display_name}'")
             price_rows = None
-        if price_rows:
-            price_per_ml = float(price_rows[0].get("price_per_ml_vnd", 0.0))
+            price_source = "lookup_error"
+        raw_price_per_ml = price_rows[0].get("price_per_ml_vnd") if price_rows else None
+        if raw_price_per_ml is not None:
+            # A missing/null price_per_ml_vnd is treated the same as no row
+            # at all -- never coerced to 0.0, which would fabricate a "free"
+            # price instead of reporting it as unknown.
+            price_per_ml = float(raw_price_per_ml)
             price_source = "liquor_prices_table"
         else:
+            if price_source != "lookup_error":
+                price_source = "unknown"
             missing_data.append(f"{display_name}: price unknown, excluded from estimated_cost_vnd")
             cost_complete = False
 

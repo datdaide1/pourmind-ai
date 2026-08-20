@@ -238,6 +238,56 @@ async def test_accepts_ingredient_line_pydantic_model_instances():
     assert result.breakdown[0].display_name == "Soda Water"
 
 
+# ---------------------------------------------------------------------------
+# Sourcery PR #7 follow-ups.
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.asyncio
+@patch(PATCH_PRICE)
+@patch(PATCH_INGREDIENT)
+async def test_missing_price_per_ml_field_is_not_fabricated_as_zero(
+    mock_get_ingredient, mock_get_price
+):
+    # A price row exists but is missing/null price_per_ml_vnd (e.g. a data
+    # entry gap). This must be treated as unknown, never as a free price.
+    mock_get_ingredient.return_value = {"abv": 40.0}
+    mock_get_price.return_value = [{"name": "Gin", "price_per_ml_vnd": None}]
+
+    result = await calculate_recipe_cost_and_abv([line(display_name="Gin", amount=45, unit="ml")])
+
+    assert result.estimated_cost_vnd is None
+    assert result.breakdown[0].cost_vnd is None
+    assert result.breakdown[0].price_source == "unknown"
+    assert any("price unknown" in note for note in result.missing_data)
+
+
+@pytest.mark.asyncio
+@patch(PATCH_PRICE)
+@patch(PATCH_INGREDIENT)
+async def test_lookup_failure_is_distinguished_from_a_clean_not_found(
+    mock_get_ingredient, mock_get_price
+):
+    mock_get_ingredient.side_effect = RuntimeError("redis connection reset")
+    mock_get_price.side_effect = RuntimeError("redis connection reset")
+
+    result = await calculate_recipe_cost_and_abv([line(display_name="Gin", amount=45, unit="ml")])
+
+    assert result.estimated_abv is None
+    assert result.estimated_cost_vnd is None
+    assert result.breakdown[0].abv_source == "lookup_error"
+    assert result.breakdown[0].price_source == "lookup_error"
+
+
+@pytest.mark.asyncio
+async def test_accepts_plain_dict_missing_optional_fields():
+    # A caller-supplied dict need not carry every IngredientLine field.
+    result = await calculate_recipe_cost_and_abv([{"display_name": "Soda Water", "amount": 60, "unit": "ml"}])
+
+    assert result.total_volume_ml == 60.0
+    assert result.breakdown[0].normalized_ingredient_id is None
+
+
 @pytest.mark.asyncio
 async def test_as_dict_matches_recipe_version_field_names():
     result = await calculate_recipe_cost_and_abv([line(display_name="Soda Water", amount=60)])

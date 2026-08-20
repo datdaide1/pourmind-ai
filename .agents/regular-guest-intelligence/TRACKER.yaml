@@ -27,10 +27,10 @@ human_checkpoints:
     decision: mvp-release-acceptance
 summary:
   total_tasks: 47
-  planned: 40
+  planned: 39
   in_progress: 0
   blocked: 0
-  completed: 7
+  completed: 8
 tasks:
   - id: FND-01
     epic: foundation
@@ -210,8 +210,30 @@ tasks:
     handoff: "Stop at RCP-01 boundary; RCP-02 (adapt cost/ABV calculator to the normalized recipe contract) remains planned."
   - id: RCP-02
     epic: recipes
-    status: planned
+    status: completed
     plan: "tasks/rcp-02-adapt-cost-and-abv-calculator-to-normalized-recipes.yaml"
+    completed_at: "2026-08-20"
+    evidence:
+      implementation:
+        - "app/tools/cost_abv_calculator.py: new calculate_recipe_cost_and_abv() accepts RCP-01-normalized ingredient lines (IngredientLine-shaped dicts or model instances) with mixed units"
+        - "Legacy calculate_cost_and_abv() (used by the chat agent's calculate_cost_tool in app/agents/nodes.py) is untouched byte-for-byte; the new function is additive"
+        - "total_volume_ml sums only ml-unit lines; dash/drop/barspoon/piece have no approved conversion (RCP-01) and are structurally excluded, reported in missing_data, but never block the ml-based aggregate"
+        - "estimated_abv and estimated_cost_vnd are computed from the ml-unit set only when every one of those ingredients has a known ABV/price; a single unknown component nulls the aggregate instead of silently understating it, so no value is ever fabricated"
+        - "Per-ingredient breakdown records abv_source/price_source (ingredients_table, liquor_prices_table, unit_not_volume_based, or unknown) for input provenance, plus calculation_version = 'recipe-cost-abv-v1'"
+        - "Invalid/unparseable amounts are excluded and reported rather than crashing or defaulting to 0"
+        - "RecipeCostAbvResult.as_dict() exposes field names matching the FND-02 RecipeVersion/RecipeSnapshot contract (total_volume_ml, estimated_abv, estimated_cost_vnd, missing_data) for direct use by RCP-03"
+      regression_coverage:
+        - "tests/test_recipe_cost_abv_calculator.py: known-ingredient exact totals, case/whitespace-insensitive lookup, missing ABV, missing price, one unknown ingredient nulling the recipe-wide aggregate, all four non-ml units excluded without blocking the known-ml aggregate, an all-non-ml recipe (no volume totals), empty ingredient list, invalid/zero/negative amounts, IngredientLine model-instance input, and the as_dict() field-name contract"
+        - "tests/test_tools.py (legacy calculate_cost_and_abv tests) re-run unmodified to confirm no regression"
+      validation:
+        - command: "E:/anaconda3/envs/cocktail-ai/python.exe -m pytest tests/test_recipe_cost_abv_calculator.py -q"
+          result: "passed: 17 tests"
+        - command: "E:/anaconda3/envs/cocktail-ai/python.exe -m compileall -q app tests"
+          result: "passed"
+        - command: "E:/anaconda3/envs/cocktail-ai/python.exe -m pytest -q"
+          result: "145 passed, 57 skipped (pre-existing Postgres-dependent tests skipped by the existing offline policy; unrelated to this task)"
+      known_gap: "None functionally. RCP-03 still needs to wire a real IngredientRegistry (RCP-01) and call calculate_recipe_cost_and_abv() when persisting a RecipeVersion; this task only adds the calculator itself, per its planned_paths scope."
+    handoff: "Stop at RCP-02 boundary; RCP-03 (recipe creation and listing API) remains planned."
   - id: RCP-03
     epic: recipes
     status: planned

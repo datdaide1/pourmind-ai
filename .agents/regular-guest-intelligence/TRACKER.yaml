@@ -27,10 +27,10 @@ human_checkpoints:
     decision: mvp-release-acceptance
 summary:
   total_tasks: 47
-  planned: 41
+  planned: 40
   in_progress: 0
   blocked: 0
-  completed: 6
+  completed: 7
 tasks:
   - id: FND-01
     epic: foundation
@@ -185,8 +185,29 @@ tasks:
     handoff: "Stop at FND-06 boundary; the foundation epic is now complete. RCP-01 and other dependent tasks remain planned."
   - id: RCP-01
     epic: recipes
-    status: planned
+    status: completed
     plan: "tasks/rcp-01-implement-recipe-normalizer.yaml"
+    completed_at: "2026-08-20"
+    evidence:
+      implementation:
+        - "app/tools/recipe_normalizer.py: normalize_recipe_ingredients() turns raw bartender-entered lines into FND-02 IngredientLine entries"
+        - "Unit resolution accepts only the five schema-approved units (ml, dash, drop, barspoon, piece) via a deterministic alias table (case, plural, spacing variants); unsupported units (oz, tsp, cl, ...) have no approved conversion factor in the spec and are never guessed-converted"
+        - "Amount parsing accepts ints/floats, decimal strings and bartender-style fractions (1/2, 1 1/2) only; unparseable or out-of-range amounts are rejected without inventing precision"
+        - "IngredientRegistry is an optional, caller-supplied case/whitespace/Unicode-form-insensitive lookup; normalized_ingredient_id is only ever set from an exact registry match, never invented"
+        - "display_name is preserved verbatim (only whitespace-stripped) from the raw input, alongside the normalized unit/amount/id, matching the FND-02 IngredientLine contract"
+        - "Lines that cannot be normalized (missing name, unrecognized unit, invalid/out-of-range amount) are excluded from the ingredient list and reported in a separate unresolved list plus a missing_data note, instead of being silently dropped or fabricated"
+        - "Each raw line normalizes independently and in original order, so duplicate ingredient names in one recipe stay as separate lines"
+      regression_coverage:
+        - "tests/test_recipe_normalizer.py: table-driven coverage for all five supported units and their aliases, unsupported units, decimal/fraction amount parsing, unparseable and out-of-range amounts, Unicode/diacritic ingredient names with and without a registry match, missing display name, duplicate ingredient lines, dict-shaped input, and empty input"
+      validation:
+        - command: "E:/anaconda3/envs/cocktail-ai/python.exe -m pytest tests/test_recipe_normalizer.py -q"
+          result: "passed: 52 tests"
+        - command: "E:/anaconda3/envs/cocktail-ai/python.exe -m compileall -q app tests"
+          result: "passed"
+        - command: "E:/anaconda3/envs/cocktail-ai/python.exe -m pytest -q"
+          result: "128 passed, 57 skipped (pre-existing Postgres-dependent tests skipped by the existing offline policy; unrelated to this task)"
+      known_gap: "None: this task is pure/deterministic and has no database dependency. Wiring a real ingredient registry (e.g. from the ingredients table) is left to the RCP-03 API task, which owns request/response plumbing."
+    handoff: "Stop at RCP-01 boundary; RCP-02 (adapt cost/ABV calculator to the normalized recipe contract) remains planned."
   - id: RCP-02
     epic: recipes
     status: planned
